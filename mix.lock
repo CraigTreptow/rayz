@@ -1,0 +1,4 @@
+%{
+  "gherkin": {:hex, :gherkin, "1.6.0", "a7a2925e6153b7f475646e411e45eed657eb8648ae4bec4222334bf46d37798e", [:mix], [], "hexpm"},
+  "white_bread": {:hex, :white_bread, "4.1.1", "82721bdb19c24021adbb0b813d00a09b080b172fc7750060a9dc754086702abb", [:mix], [{:gherkin, "~> 1.4", [hex: :gherkin, repo: "hexpm", optional: false]}, {:poison, "~> 3.1", [hex: :poison, repo: "hexpm", optional: true]}], "hexpm"},
+}
