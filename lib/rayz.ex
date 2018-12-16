@@ -15,11 +15,11 @@ defmodule Rayz do
       %Rayz.Tuple{w: 0.0, x: 1.0, y: 2.0, z: -3.0}
 
   """
-  def point(x,y,z) do
-    Rayz.Tuple.point(x,y,z)
+  def point(x, y, z) do
+    Rayz.Tuple.point(x, y, z)
   end
 
-  def vector(x,y,z) do
-    Rayz.Tuple.vector(x,y,z)
+  def vector(x, y, z) do
+    Rayz.Tuple.vector(x, y, z)
   end
 end

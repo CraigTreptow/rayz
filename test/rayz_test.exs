@@ -3,7 +3,7 @@ defmodule RayzTest do
   doctest Rayz
 
   test "creates a point" do
-    assert Rayz.point(1.0,2.0,3.0) == %Rayz.Tuple{w: 1.0, x: 1.0, y: 2.0, z: 3.0}
+    assert Rayz.point(1.0, 2.0, 3.0) == %Rayz.Tuple{w: 1.0, x: 1.0, y: 2.0, z: 3.0}
   end
 
   test "saves the coordinates of a point" do
@@ -21,7 +21,7 @@ defmodule RayzTest do
   end
 
   test "creates a vector" do
-    assert Rayz.vector(1,2,3) == %Rayz.Tuple{w: 0.0, x: 1.0, y: 2.0, z: 3.0}
+    assert Rayz.vector(1, 2, 3) == %Rayz.Tuple{w: 0.0, x: 1.0, y: 2.0, z: 3.0}
   end
 
   test "saves the coordinates of a vector" do
