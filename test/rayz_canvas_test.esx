@@ -1,0 +1,28 @@
+defmodule Rayz.CanvasTest do
+  use ExUnit.Case
+  doctest Rayz.Canvas
+
+  test "can write a pixel in the canvas" do
+    c = Rayz.Canvas.create_canvas(10, 20)
+    red = Rayz.Color.new_color(1, 0, 0)
+    c = Rayz.Canvas.write_pixel(c, 2, 3, red)
+
+    assert c[2][3] == red
+  end
+
+  test "can create a canvas" do
+    c = Rayz.Canvas.create_canvas(2, 2)
+
+    expected = %{
+  0 => %{
+    0 => %Rayz.Color{blue: 0, green: 0, red: 0},
+    1 => %Rayz.Color{blue: 0, green: 0, red: 0}
+  },
+  1 => %{
+    0 => %Rayz.Color{blue: 0, green: 0, red: 0},
+    1 => %Rayz.Color{blue: 0, green: 0, red: 0}
+  }
+}
+    assert IO.inspect(c) == expected
+  end
+end

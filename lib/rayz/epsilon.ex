@@ -10,7 +10,7 @@ defmodule Rayz.Epsilon do
 
   ## Examples
 
-   iex> Rayz.Epsilon.equal(0.0000013, 0.0000012)
+   iex> Rayz.Epsilon.equal?(0.0000013, 0.0000012)
    true
   """
 
