@@ -7,9 +7,9 @@ defmodule Rayz.PPM do
     # a set of three numbers per canvas.x
     # a row per canvas.y
 
-    craig = body_helper(canvas)
+    raw_body = body_helper(canvas)
 
-    craig
+    raw_body
     |> List.flatten
     |> Rayz.Util.insert_at_every(canvas.x, fn -> "\n" end)
     |> List.to_string
@@ -17,8 +17,8 @@ defmodule Rayz.PPM do
   end
 
   def body_helper(canvas) do
-    for x <- 0..canvas.x - 1 do
-      for y <- 0..canvas.y - 1 do
+    for y <- 0..canvas.y - 1 do
+      for x <- 0..canvas.x - 1 do
         clamped_red  = clamp(canvas[x][y].red)
         clamped_green = clamp(canvas[x][y].green)
         clamped_blue  = clamp(canvas[x][y].blue)

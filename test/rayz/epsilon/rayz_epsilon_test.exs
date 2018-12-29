@@ -1,5 +1,5 @@
 defmodule RayzEpsilonTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Rayz.Epsilon
 
   @moduledoc """

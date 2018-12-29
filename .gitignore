@@ -21,4 +21,7 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 rayz-*.tar
+#
+# Ignore output files (typically via "Rayz.Cannon.fire()").
+*.ppm
 

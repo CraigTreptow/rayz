@@ -1,4 +1,8 @@
 defmodule Rayz.Util do
+  @moduledoc """
+    Implements miscellaneous functions used by other modules.
+  """
+
   #https://stackoverflow.com/questions/46867908/insert-at-every-nth-index-of-a-list
   def insert_at_every(list, every, fun) do
     list

@@ -137,7 +137,7 @@ defmodule Rayz.Tuple do
           w: float()
         }
   def new_point(x, y, z) do
-    %Rayz.Tuple{x: x, y: y, z: z, w: 1.0}
+    new_tuple(x, y, z, 1.0)
   end
 
   @spec new_vector(float(), float(), float()) :: %Rayz.Tuple{
@@ -147,7 +147,17 @@ defmodule Rayz.Tuple do
           w: float()
         }
   def new_vector(x, y, z) do
-    %Rayz.Tuple{x: x, y: y, z: z, w: 0.0}
+    new_tuple(x, y, z, 0.0)
+  end
+
+  @spec new_tuple(float(), float(), float(), float()) :: %Rayz.Tuple{
+          x: float(),
+          y: float(),
+          z: float(),
+          w: float()
+        }
+  def new_tuple(x, y, z, w) do
+    %Rayz.Tuple{x: x, y: y, z: z, w: w}
   end
 
   @spec equal?(%Rayz.Tuple{x: float(), y: float(), z: float(), w: float()}, %Rayz.Tuple{

@@ -1,5 +1,5 @@
 defmodule Rayz.ColorTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   doctest Rayz.Color
 
   alias Rayz.Epsilon, as: Epsilon
