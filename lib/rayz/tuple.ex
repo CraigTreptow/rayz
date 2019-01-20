@@ -17,6 +17,26 @@ defmodule Rayz.Tuple do
 
   @type rayztuple :: %Rayz.Tuple{}
 
+  @spec divide(rayztuple, float()) :: rayztuple
+  def divide(tuple, scalar) do
+    %Rayz.Tuple{
+      x: tuple.x / scalar,
+      y: tuple.y / scalar,
+      z: tuple.z / scalar,
+      w: tuple.w / scalar
+    }
+  end
+
+  @spec multiply(rayztuple, float()) :: rayztuple
+  def multiply(tuple, scalar) do
+    %Rayz.Tuple{
+      x: tuple.x * scalar,
+      y: tuple.y * scalar,
+      z: tuple.z * scalar,
+      w: tuple.w * scalar
+    }
+  end
+
   @spec negate(rayztuple) :: rayztuple
   def negate(tuple) do
     %Rayz.Tuple{

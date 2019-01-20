@@ -2,6 +2,40 @@ defmodule RayzTupleTest do
   use ExUnit.Case
   doctest Rayz.Tuple
 
+  describe "Rayz.Tuple.divide/2" do
+    test "Dividing a tuple by a scalar" do
+      a = Builder.tuple(1, -2, 3, -4)
+
+      b = Rayz.Tuple.divide(a, 2)
+
+      expected_tuple = Builder.tuple(0.5, -1, 1.5, -2)
+
+      assert Rayz.Tuple.equal?(b, expected_tuple) == true
+    end
+  end
+
+  describe "Rayz.Tuple.multiply/2" do
+    test "Multiplying a tuple by a scalar" do
+      a = Builder.tuple(1, -2, 3, -4)
+
+      b = Rayz.Tuple.multiply(a, 3.5)
+
+      expected_tuple = Builder.tuple(3.5, -7, 10.5, -14)
+
+      assert Rayz.Tuple.equal?(b, expected_tuple) == true
+    end
+
+    test "Multiplying a tuple by a fraction" do
+      a = Builder.tuple(1, -2, 3, -4)
+
+      b = Rayz.Tuple.multiply(a, 0.5)
+
+      expected_tuple = Builder.tuple(0.5, -1, 1.5, -2)
+
+      assert Rayz.Tuple.equal?(b, expected_tuple) == true
+    end
+  end
+
   describe "Rayz.Tuple.negate/1" do
     test "Negating a tuple" do
       a = Builder.tuple(1, -2, 3, -4)
