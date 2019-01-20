@@ -28,4 +28,4 @@ for speed, or simply ease of use.  There are libraries for faster
 - [X] Better description
 - [X] Convert Cucumber to `ExUnit` (nope, too much work)
 - [X] Limit lines in PPM to 70 characters
-- [ ] Make use of more `ExUnit` features, such as [`describe`](https://hexdocs.pm/ex_unit/ExUnit.Case.html)
+- [X] Make use of more `ExUnit` features, such as [`describe`](https://hexdocs.pm/ex_unit/ExUnit.Case.html)
