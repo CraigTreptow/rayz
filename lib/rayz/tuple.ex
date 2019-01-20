@@ -17,6 +17,16 @@ defmodule Rayz.Tuple do
 
   @type rayztuple :: %Rayz.Tuple{}
 
+  @spec negate(rayztuple) :: rayztuple
+  def negate(tuple) do
+    %Rayz.Tuple{
+      x: -tuple.x,
+      y: -tuple.y,
+      z: -tuple.z,
+      w: -tuple.w
+    }
+  end
+
   @spec subtract(rayztuple, rayztuple) :: rayztuple
   def subtract(tuple1, tuple2) do
     %Rayz.Tuple{

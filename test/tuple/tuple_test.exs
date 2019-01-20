@@ -2,6 +2,18 @@ defmodule RayzTupleTest do
   use ExUnit.Case
   doctest Rayz.Tuple
 
+  describe "Rayz.Tuple.negate/1" do
+    test "Negating a tuple" do
+      a = Builder.tuple(1, -2, 3, -4)
+
+      na = Rayz.Tuple.negate(a)
+
+      expected_tuple = Builder.tuple(-1, 2, -3, 4)
+
+      assert Rayz.Tuple.equal?(na, expected_tuple) == true
+    end
+  end
+
   describe "Rayz.Tuple.subtract/2" do
     test "Subtracting two points" do
       p1 = Builder.point(3, 2, 1)
@@ -32,6 +44,17 @@ defmodule RayzTupleTest do
 
       v = Rayz.Tuple.subtract(v1, v2)
       expected_vector = Builder.vector(-2, -4, -6)
+
+      assert Rayz.Tuple.is_vector?(v) == true
+      assert Rayz.Tuple.equal?(v, expected_vector) == true
+    end
+
+    test "Subtracting a vector from the zero vector" do
+      v0 = Builder.vector(0, 0, 0)
+      v1 = Builder.vector(1, -2, 3)
+
+      v = Rayz.Tuple.subtract(v0, v1)
+      expected_vector = Builder.vector(-1, 2, -3)
 
       assert Rayz.Tuple.is_vector?(v) == true
       assert Rayz.Tuple.equal?(v, expected_vector) == true
