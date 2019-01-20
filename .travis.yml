@@ -1,13 +1,19 @@
 language: elixir
 elixir:
-  - '1.8'
+  - 1.8
 otp_release:
-  - '21'
+  - 20.3
+sudo: false
 
 env:
   - MIX_ENV=test
 
-script: mix coveralls.travis
+before_script:
+  - mix deps.get
+
+script:
+  - mix test
+  - mix coveralls.travis
 
 after_script:
   - MIX_ENV=docs mix deps.get
