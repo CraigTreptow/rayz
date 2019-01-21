@@ -2,6 +2,27 @@ defmodule RayzTupleTest do
   use ExUnit.Case
   doctest Rayz.Tuple
 
+  describe "Rayz.Tuple.normalize/1" do
+    test "Normalizing vector(4, 0, 0) gives (1, 0, 0)" do
+      v = Builder.vector(4, 0, 0)
+      nv = Rayz.Tuple.normalize(v)
+
+      expected_vector = Builder.vector(1, 0, 0)
+
+      assert Rayz.Tuple.equal?(nv, expected_vector) == true
+    end
+
+    test "Normalizing vector(1, 2, 3)" do
+      v = Builder.vector(1, 2, 3)
+      nv = Rayz.Tuple.normalize(v)
+
+      #                                1/sqrt(14), 2/sqrt914), 3/sqrt(14)
+      expected_vector = Builder.vector(0.26726,    0.53452,    0.80178)
+
+      assert Rayz.Tuple.equal?(nv, expected_vector) == true
+    end
+  end
+
   describe "Rayz.Tuple.magnitude/1" do
     test "Computing the magnitude of vector(1, 0, 0)" do
       v = Builder.vector(1, 0, 0)
