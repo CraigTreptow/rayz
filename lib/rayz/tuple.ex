@@ -15,7 +15,18 @@ defmodule Rayz.Tuple do
     w: 0.0
   )
 
-  @type rayztuple :: %Rayz.Tuple{}
+  @type rayztuple :: %Rayz.Tuple{x: float(), y: float(), z: float(), w: float()}
+
+  @spec magnitude(rayztuple) :: float()
+  def magnitude(vector) do
+    x2 = vector.x * vector.x
+    y2 = vector.y * vector.y
+    z2 = vector.z * vector.z
+    w2 = vector.w * vector.w
+
+    # have to use Erlang's math library
+    :math.sqrt(x2 + y2 + z2 + w2)
+  end
 
   @spec divide(rayztuple, float()) :: rayztuple
   def divide(tuple, scalar) do

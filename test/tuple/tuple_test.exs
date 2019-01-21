@@ -2,6 +2,38 @@ defmodule RayzTupleTest do
   use ExUnit.Case
   doctest Rayz.Tuple
 
+  describe "Rayz.Tuple.magnitude/1" do
+    test "Computing the magnitude of vector(1, 0, 0)" do
+      v = Builder.vector(1, 0, 0)
+
+      assert Rayz.Tuple.magnitude(v) == 1.0
+    end
+
+    test "Computing the magnitude of vector(0, 1, 0)" do
+      v = Builder.vector(0, 1, 0)
+
+      assert Rayz.Tuple.magnitude(v) == 1.0
+    end
+
+    test "Computing the magnitude of vector(0, 0, 1)" do
+      v = Builder.vector(0, 0, 1)
+
+      assert Rayz.Tuple.magnitude(v) == 1.0
+    end
+
+    test "Computing the magnitude of vector(1, 2, 3)" do
+      v = Builder.vector(1, 2, 3)
+
+      assert Rayz.Tuple.magnitude(v) == :math.sqrt(14)
+    end
+
+    test "Computing the magnitude of vector(-1, -2, -3)" do
+      v = Builder.vector(-1, -2, -3)
+
+      assert Rayz.Tuple.magnitude(v) == :math.sqrt(14)
+    end
+  end
+
   describe "Rayz.Tuple.divide/2" do
     test "Dividing a tuple by a scalar" do
       a = Builder.tuple(1, -2, 3, -4)
