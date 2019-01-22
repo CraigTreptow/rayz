@@ -17,6 +17,15 @@ defmodule Rayz.Tuple do
 
   @type rayztuple :: %Rayz.Tuple{x: float(), y: float(), z: float(), w: float()}
 
+  @spec cross(rayztuple, rayztuple) :: rayztuple
+  def cross(vector_a, vector_b) do
+    Builder.vector(
+      vector_a.y * vector_b.z - vector_a.z * vector_b.y,
+      vector_a.z * vector_b.x - vector_a.x * vector_b.z,
+      vector_a.x * vector_b.y - vector_a.y * vector_b.x
+    )
+  end
+
   @spec dot(rayztuple, rayztuple) :: float()
   def dot(vector_a, vector_b) do
     vector_a.x * vector_b.x +

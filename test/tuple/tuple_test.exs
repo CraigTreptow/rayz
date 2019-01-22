@@ -2,6 +2,21 @@ defmodule RayzTupleTest do
   use ExUnit.Case
   doctest Rayz.Tuple
 
+  describe "Rayz.Tuple.cross/2" do
+    test "The cross product of two vectors" do
+      a = Builder.vector(1, 2, 3)
+      b = Builder.vector(2, 3, 4)
+
+      cp1 = Rayz.Tuple.cross(a, b)
+      expected_vector1 = Builder.vector(-1, 2, -1)
+      assert Rayz.Tuple.equal?(cp1, expected_vector1) == true
+
+      cp2 = Rayz.Tuple.cross(b, a)
+      expected_vector2 = Builder.vector(1, -2, 1)
+      assert Rayz.Tuple.equal?(cp2, expected_vector2) == true
+    end
+  end
+
   describe "Rayz.Tuple.dot/2" do
     test "The dot product of two tuples" do
       a = Builder.vector(1, 2, 3)
