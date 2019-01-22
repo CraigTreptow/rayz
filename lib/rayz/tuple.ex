@@ -17,6 +17,14 @@ defmodule Rayz.Tuple do
 
   @type rayztuple :: %Rayz.Tuple{x: float(), y: float(), z: float(), w: float()}
 
+  @spec dot(rayztuple, rayztuple) :: float()
+  def dot(vector_a, vector_b) do
+    vector_a.x * vector_b.x +
+    vector_a.y * vector_b.y +
+    vector_a.z * vector_b.z +
+    vector_a.w * vector_b.w
+  end
+
   @spec normalize(rayztuple) :: rayztuple
   def normalize(vector) do
     m = magnitude(vector)

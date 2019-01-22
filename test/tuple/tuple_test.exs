@@ -2,6 +2,15 @@ defmodule RayzTupleTest do
   use ExUnit.Case
   doctest Rayz.Tuple
 
+  describe "Rayz.Tuple.dot/2" do
+    test "The dot product of two tuples" do
+      a = Builder.vector(1, 2, 3)
+      b = Builder.vector(2, 3, 4)
+
+      assert Rayz.Tuple.dot(a, b) == 20
+    end
+  end
+
   describe "Rayz.Tuple.normalize/1" do
     test "Normalizing vector(4, 0, 0) gives (1, 0, 0)" do
       v = Builder.vector(4, 0, 0)
