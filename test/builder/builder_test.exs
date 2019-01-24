@@ -25,4 +25,15 @@ defmodule RayzBuilderTest do
       assert a == %Rayz.Tuple{x: 4, y: -4, z: 3, w: 0}
     end
   end
+
+  describe "Builder.color/3" do
+    test "Colors are (red, green, blue) tuples" do
+      c = Builder.color(-0.5, 0.4, 1.7)
+
+      assert c.red   == -0.5
+      assert c.green ==  0.4
+      assert c.blue  ==  1.7
+    end
+  end
+
 end

@@ -4,7 +4,11 @@ defmodule Builder do
   """
 
   @type rayztuple :: %Rayz.Tuple{x: float(), y: float(), z: float(), w: float()}
+  @type color :: %Rayz.Color{red: float(), green: float(), blue: float()}
   
+  @spec color(float(), float(), float()) :: color
+  def color(r, g, b), do: %Rayz.Color{red: r, green: g, blue: b}
+
   @spec tuple(float(), float(), float(), float()) :: rayztuple
   def tuple(x, y, z, w), do: %Rayz.Tuple{x: x, y: y, z: z, w: w}
 
