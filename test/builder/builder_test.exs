@@ -2,6 +2,19 @@ defmodule RayzBuilderTest do
   use ExUnit.Case
   doctest Builder
 
+  describe "Builder.canvas/2" do
+    test "Creating a canvas" do
+      c = Builder.canvas(10, 20)
+
+      assert c.width  == 10
+      assert c.height == 20
+
+      black = Builder.color(0, 0, 0)
+
+      assert Enum.all?(c.pixels, fn x -> Rayz.Color.equal?(x, black) == true end) == true
+    end
+  end
+
   describe "Builder.tuple/4" do
     test "A tuple can be created" do
       a = Builder.tuple(4.3, -4.2, 3.1, 1.0)
