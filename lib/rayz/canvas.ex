@@ -30,6 +30,65 @@ defmodule Rayz.Canvas do
   @type canvas :: %Rayz.Canvas{width: integer(), height: integer()}
   @type color :: %Rayz.Color{red: float(), green: float(), blue: float()}
 
+
+  def canvas_to_ppm(canvas, file_name \\ "rayz.ppm") do
+    output_file = open_file("rayz.ppm")
+    header      = ppm_header(canvas)
+    body        = ppm_body(canvas)
+
+    IO.binwrite(output_file, header)
+    IO.binwrite(output_file, body)
+
+    File.close(output_file)
+  end
+
+  def open_file(file) do
+    file
+    |> File.open([:write])
+    |> file_helper()
+  end
+
+  defp file_helper({:ok, file}), do: file
+  defp file_helper({:error, reason}) do
+    IO.puts "Error: #{reason}"
+    exit(:error)
+  end
+
+  def ppm_body(canvas) do
+    result = canvas.pixels
+             |> Enum.map(fn color -> "#{clamp(color.red)} #{clamp(color.green)} #{clamp(color.blue)} " end)
+             |> Enum.chunk_every(canvas.width)
+             |> Enum.intersperse("\n")
+             |> List.flatten
+             |> List.to_string
+
+
+    Regex.replace(~r/( \n| $)/, result, "\n")
+    # TODO add newline at 70 characters if it was a space
+  end
+
+  def clamp(color_value, min_value \\ 0, max_value \\ 255) do
+    adjusted_value = color_value * (max_value + 0.99)
+
+    cond do
+      adjusted_value < min_value ->
+        0
+      adjusted_value > max_value ->
+        255
+      true ->
+        Kernel.round(adjusted_value)
+    end
+  end
+
+  def ppm_header(canvas, max_color_value \\ 255) do
+    """
+    P3
+    #{canvas.width} #{canvas.height}
+    #{max_color_value}
+    """
+  end
+
+  # TODO implement out of bounds
   # x < 0 or > w - 1 is out of bounds
   # y < 0 or > h - 1 is out of bounds
   @spec write_pixel(canvas, integer(), integer(), color) :: canvas

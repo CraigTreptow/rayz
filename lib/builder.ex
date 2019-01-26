@@ -7,13 +7,12 @@ defmodule Builder do
   @type color :: %Rayz.Color{red: float(), green: float(), blue: float()}
   @type canvas :: %Rayz.Canvas{width: integer(), height: integer()}
   
-  @spec canvas(integer(), integer()) :: canvas
-  def canvas(w, h) do
-    black = color(0, 0, 0)
+  @spec canvas(integer(), integer(), color) :: canvas
+  def canvas(w, h, color \\ %Rayz.Color{red: 0, green: 0, blue: 0}) do
     %Rayz.Canvas{
-      width: w,
+      width:  w,
       height: h,
-      pixels: List.duplicate(black, w * h)
+      pixels: List.duplicate(color, w * h)
     }
   end
 
