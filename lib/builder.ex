@@ -39,6 +39,15 @@ defmodule Builder do
     }
   end
 
+  def identity_matrix() do
+    {
+      1, 0, 0, 0,
+      0, 1, 0, 0,
+      0, 0, 1, 0,
+      0, 0, 0, 1
+    }
+  end
+
   @spec matrix(float(), float(), float(),
                float(), float(), float(),
                float(), float(), float()) :: matrix3x3()

@@ -50,6 +50,55 @@ defmodule Rayz.Matrix do
       float(), float()
     }
 
+  def multiply(
+    m = {
+      a_a, a_b, a_c, a_d,
+      b_a, b_b, b_c, b_d,
+      c_a, c_b, c_c, c_d,
+      d_a, d_b, d_c, d_d
+    },
+    t = %Rayz.Tuple
+      {
+        x: _x,
+        y: _y,
+        z: _z,
+        w: _w,
+      }
+  ) do
+    Builder.tuple(
+      Rayz.Tuple.dot(Builder.tuple(a_a, a_b, a_c, a_d), t),
+      Rayz.Tuple.dot(Builder.tuple(b_a, b_b, b_c, b_d), t),
+      Rayz.Tuple.dot(Builder.tuple(c_a, c_b, c_c, c_d), t),
+      Rayz.Tuple.dot(Builder.tuple(d_a, d_b, d_c, d_d), t)
+    )
+  end
+
+  def multiply(
+    m1 = {
+      _m1_a_a, _m1_a_b, _m1_a_c, _m1_a_d,
+      _m1_b_a, _m1_b_b, _m1_b_c, _m1_b_d,
+      _m1_c_a, _m1_c_b, _m1_c_c, _m1_c_d,
+      _m1_d_a, _m1_d_b, _m1_d_c, _m1_d_d
+    },
+    m2 = {
+      _m2_a_a, _m2_a_b, _m2_a_c, _m2_a_d,
+      _m2_b_a, _m2_b_b, _m2_b_c, _m2_b_d,
+      _m2_c_a, _m2_c_b, _m2_c_c, _m2_c_d,
+      _m2_d_a, _m2_d_b, _m2_d_c, _m2_d_d
+    }
+  ) do
+    for r <- 0..3 do
+      for c <- 0..3 do
+        (value_at(m1, r, 0) * value_at(m2, 0, c)) +
+        (value_at(m1, r, 1) * value_at(m2, 1, c)) +
+        (value_at(m1, r, 2) * value_at(m2, 2, c)) +
+        (value_at(m1, r, 3) * value_at(m2, 3, c))
+      end
+    end
+    |> List.flatten
+    |> List.to_tuple
+  end
+
   def equal?(
     {
       m1_a_a, m1_a_b, m1_a_c, m1_a_d,
@@ -64,22 +113,10 @@ defmodule Rayz.Matrix do
       m2_d_a, m2_d_b, m2_d_c, m2_d_d
     }
   ) do
-    m1_a_a == m2_a_a &&
-    m1_a_b == m2_a_b &&
-    m1_a_c == m2_a_c &&
-    m1_a_d == m2_a_d &&
-    m1_b_a == m2_b_a &&
-    m1_b_b == m2_b_b &&
-    m1_b_c == m2_b_c &&
-    m1_b_d == m2_b_d &&
-    m1_c_a == m2_c_a &&
-    m1_c_b == m2_c_b &&
-    m1_c_c == m2_c_c &&
-    m1_c_d == m2_c_d &&
-    m1_d_a == m2_d_a &&
-    m1_d_b == m2_d_b &&
-    m1_d_c == m2_d_c &&
-    m1_d_d == m2_d_d
+    m1_a_a == m2_a_a && m1_a_b == m2_a_b && m1_a_c == m2_a_c && m1_a_d == m2_a_d &&
+    m1_b_a == m2_b_a && m1_b_b == m2_b_b && m1_b_c == m2_b_c && m1_b_d == m2_b_d &&
+    m1_c_a == m2_c_a && m1_c_b == m2_c_b && m1_c_c == m2_c_c && m1_c_d == m2_c_d &&
+    m1_d_a == m2_d_a && m1_d_b == m2_d_b && m1_d_c == m2_d_c && m1_d_d == m2_d_d
   end
 
   @spec value_at(matrix4x4, float(), float()) :: float()
