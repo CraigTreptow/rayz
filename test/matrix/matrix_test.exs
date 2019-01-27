@@ -2,6 +2,39 @@ defmodule RayzMatrixTest do
   use ExUnit.Case
   doctest Rayz.Matrix
 
+  describe "Rayz.Matrix.transpose/1" do
+    test "Transposing the identity matrix" do
+      a = Builder.identity_matrix()
+          |> Rayz.Matrix.transpose
+
+      i = Builder.identity_matrix()
+
+      assert Rayz.Matrix.equal?(a, i) == true
+    end
+
+    test "Transposing a matrix" do
+      m =
+        Builder.matrix(
+          0, 9, 3, 0,
+          9, 8, 0, 8,
+          1, 8, 5, 3,
+          0, 0, 5, 8
+        )
+
+      t = Rayz.Matrix.transpose(m)
+
+      expected_m =
+        Builder.matrix(
+          0, 9, 1, 0,
+          9, 8, 8, 0,
+          3, 0, 5, 5,
+          0, 8, 3, 8
+        )
+
+      assert Rayz.Matrix.equal?(t, expected_m) == true
+    end
+  end
+
   describe "Rayz.Matrix.multiply/2" do
     test "Multiplying a matrix by the identity matrix" do
       m =

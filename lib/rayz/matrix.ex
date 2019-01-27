@@ -50,6 +50,22 @@ defmodule Rayz.Matrix do
       float(), float()
     }
 
+  def transpose(
+    m = {
+      a_a, a_b, a_c, a_d,
+      b_a, b_b, b_c, b_d,
+      c_a, c_b, c_c, c_d,
+      d_a, d_b, d_c, d_d
+    }
+  ) do
+    {
+      a_a, b_a, c_a, d_a,
+      a_b, b_b, c_b, d_b,
+      a_c, b_c, c_c, d_c,
+      a_d, b_d, c_d, d_d
+    }
+  end
+
   def multiply(
     m = {
       a_a, a_b, a_c, a_d,
