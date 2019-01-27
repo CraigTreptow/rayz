@@ -6,7 +6,59 @@ defmodule Builder do
   @type rayztuple :: %Rayz.Tuple{x: float(), y: float(), z: float(), w: float()}
   @type color :: %Rayz.Color{red: float(), green: float(), blue: float()}
   @type canvas :: %Rayz.Canvas{width: integer(), height: integer()}
+  @type matrix4x4() :: 
+    {
+      float(), float(), float(), float(),
+      float(), float(), float(), float(),
+      float(), float(), float(), float(),
+      float(), float(), float(), float()
+    }
+  @type matrix3x3() :: 
+    {
+      float(), float(), float(),
+      float(), float(), float(),
+      float(), float(), float()
+    }
+  @type matrix2x2() :: 
+    {
+      float(), float(),
+      float(), float()
+    }
+
   
+  @spec matrix(float(), float(), float(), float(),
+               float(), float(), float(), float(),
+               float(), float(), float(), float(),
+               float(), float(), float(), float()) :: matrix4x4()
+  def matrix(a_a, a_b, a_c, a_d, b_a, b_b, b_c, b_d, c_a, c_b, c_c, c_d, d_a, d_b, d_c, d_d) do
+    {
+      a_a, a_b, a_c, a_d,
+      b_a, b_b, b_c, b_d,
+      c_a, c_b, c_c, c_d,
+      d_a, d_b, d_c, d_d
+    }
+  end
+
+  @spec matrix(float(), float(), float(),
+               float(), float(), float(),
+               float(), float(), float()) :: matrix3x3()
+  def matrix(a_a, a_b, a_c, b_a, b_b, b_c, c_a, c_b, c_c) do
+    {
+      a_a, a_b, a_c,
+      b_a, b_b, b_c,
+      c_a, c_b, c_c
+    }
+  end
+
+  @spec matrix(float(), float(),
+               float(), float()) :: matrix2x2()
+  def matrix(a_a, a_b, b_a, b_b) do
+    {
+      a_a, a_b,
+      b_a, b_b
+    }
+  end
+
   @spec canvas(integer(), integer(), color) :: canvas
   def canvas(w, h, color \\ %Rayz.Color{red: 0, green: 0, blue: 0}) do
     %Rayz.Canvas{

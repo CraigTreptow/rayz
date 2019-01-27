@@ -2,6 +2,80 @@ defmodule RayzBuilderTest do
   use ExUnit.Case
   doctest Builder
 
+  describe "Builder.matrix/16" do
+    test "can create a 4x4 matrix" do
+      m =
+        Builder.matrix(
+          1,    2,    3,    4,
+          5.5,  6.5,  7.5,  8.5,
+          9,    10,   11,   12,
+          13.5, 14.5, 15.5, 16.5
+        )
+
+      assert m ==
+        {
+          1,    2,    3,    4,
+          5.5,  6.5,  7.5,  8.5,
+          9,    10,   11,   12,
+          13.5, 14.5, 15.5, 16.5
+        }
+
+      assert Rayz.Matrix.value_at(m, 0, 0) == 1
+      assert Rayz.Matrix.value_at(m, 0, 3) == 4
+      assert Rayz.Matrix.value_at(m, 1, 0) == 5.5
+      assert Rayz.Matrix.value_at(m, 1, 2) == 7.5
+      assert Rayz.Matrix.value_at(m, 2, 2) == 11
+      assert Rayz.Matrix.value_at(m, 3, 0) == 13.5
+      assert Rayz.Matrix.value_at(m, 3, 2) == 15.5
+      assert Rayz.Matrix.value_at(m, 3, 3) == 16.5
+    end
+  end
+
+  describe "Builder.matrix/9" do
+    test "can create a 3x3 matrix" do
+      m =
+        Builder.matrix(
+          1,    2,    3,
+          5.5,  6.5,  7.5,
+          9,    10,   11
+        )
+
+      assert m ==
+        {
+          1,    2,    3,
+          5.5,  6.5,  7.5,
+          9,    10,   11
+        }
+
+      assert Rayz.Matrix.value_at(m, 0, 0) == 1
+      assert Rayz.Matrix.value_at(m, 0, 2) == 3
+      assert Rayz.Matrix.value_at(m, 1, 1) == 6.5
+      assert Rayz.Matrix.value_at(m, 1, 2) == 7.5
+      assert Rayz.Matrix.value_at(m, 2, 2) == 11
+    end
+  end
+
+  describe "Builder.matrix/4" do
+    test "can create a 4x4 matrix" do
+      m =
+        Builder.matrix(
+          1,    2,
+          5.5,  6.5
+        )
+
+      assert m ==
+        {
+          1,    2,
+          5.5,  6.5
+        }
+
+      assert Rayz.Matrix.value_at(m, 0, 0) == 1
+      assert Rayz.Matrix.value_at(m, 0, 1) == 2
+      assert Rayz.Matrix.value_at(m, 1, 0) == 5.5
+      assert Rayz.Matrix.value_at(m, 1, 1) == 6.5
+    end
+  end
+
   describe "Builder.canvas/2" do
     test "Creating a canvas" do
       c = Builder.canvas(10, 20)
