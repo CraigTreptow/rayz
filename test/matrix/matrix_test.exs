@@ -2,6 +2,56 @@ defmodule RayzMatrixTest do
   use ExUnit.Case
   doctest Rayz.Matrix
 
+  describe "Rayz.Matrix.submatrix/3" do
+    test "A submatrix of a 3x3 matrix is a 2x2 matrix" do
+      m = Builder.matrix(
+             1, 5,  0,
+            -3, 2,  7,
+             0, 6, -3
+          )
+
+      sm = Rayz.Matrix.submatrix(m, 0, 2)
+
+      expected_m = Builder.matrix(
+                     -3, 2,
+                      0, 6
+                   )
+
+      assert Rayz.Matrix.equal?(sm, expected_m) == true
+    end
+
+    test "A submatrix of a 4x4 matrix is a 3x3 matrix" do
+      m = Builder.matrix(
+            -6, 1, 1, 6, 
+            -8, 5, 8, 6, 
+            -1, 0, 8, 2, 
+            -7, 1,-1, 1
+          )
+
+      sm = Rayz.Matrix.submatrix(m, 2, 1)
+
+      expected_m = Builder.matrix(
+                     -6,  1, 6,
+                     -8,  8, 6,
+                     -7, -1, 1
+                   )
+
+      assert Rayz.Matrix.equal?(sm, expected_m) == true
+    end
+  end
+
+  describe "Rayz.Matrix.determinant/1" do
+    test "Calculating the determinant of a 2x2 matrix" do
+      m =
+        Builder.matrix(
+           1, 5,
+          -3, 2
+        )
+
+      assert Rayz.Matrix.determinant(m) == 17
+    end
+  end
+
   describe "Rayz.Matrix.transpose/1" do
     test "Transposing the identity matrix" do
       a = Builder.identity_matrix()
