@@ -2,6 +2,36 @@ defmodule RayzMatrixTest do
   use ExUnit.Case
   doctest Rayz.Matrix
 
+  describe "Rayz.Matrix.cofactor/3" do
+    test "Calculating a cofactor of a 3x3 matrix" do
+      m = Builder.matrix(
+        3,  5,  0,
+        2, -1, -7,
+        6, -1,  5
+      )
+
+      assert Rayz.Matrix.minor(m, 0, 0)    == -12
+      assert Rayz.Matrix.cofactor(m, 0, 0) == -12
+      assert Rayz.Matrix.minor(m, 1, 0)    ==  25
+      assert Rayz.Matrix.cofactor(m, 1, 0) == -25
+    end
+  end
+
+  describe "Rayz.Matrix.minor/3" do
+    test "Calculating a minor of a 3x3 matrix" do
+      m = Builder.matrix(
+        3,  5,  0,
+        2, -1, -7,
+        6, -1,  5
+      )
+
+      sm = Rayz.Matrix.submatrix(m, 1, 0)
+
+      assert Rayz.Matrix.determinant(sm) == 25
+      assert Rayz.Matrix.minor(m, 1, 0) == 25
+    end
+  end
+
   describe "Rayz.Matrix.submatrix/3" do
     test "Test all submatrices" do
       on = [

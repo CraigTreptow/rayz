@@ -50,6 +50,24 @@ defmodule Rayz.Matrix do
       float(), float()
     }
 
+  @spec cofactor(matrix3x3(), integer(), integer()) :: integer()
+  def cofactor(m, 0, 0), do:  minor(m, 0, 0)
+  def cofactor(m, 0, 1), do: -minor(m, 0, 1)
+  def cofactor(m, 0, 2), do:  minor(m, 0, 2)
+  def cofactor(m, 1, 0), do: -minor(m, 1, 0)
+  def cofactor(m, 1, 1), do:  minor(m, 1, 1)
+  def cofactor(m, 1, 2), do: -minor(m, 1, 2)
+  def cofactor(m, 2, 0), do:  minor(m, 2, 0)
+  def cofactor(m, 2, 1), do: -minor(m, 2, 1)
+  def cofactor(m, 2, 2), do:  minor(m, 2, 2)
+
+  @spec minor(matrix3x3(), integer(), integer()) :: integer()
+  def minor(m, r, c) do
+    m
+    |> submatrix(r, c)
+    |> determinant
+  end
+
   @spec submatrix(matrix3x3(), integer(), integer()) :: matrix2x2()
   def submatrix({_, _, _, _, b_b, b_c, _, c_b, c_c}, 0, 0) do
     {
