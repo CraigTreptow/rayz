@@ -109,65 +109,65 @@ defmodule Rayz.Matrix do
   @spec submatrix(matrix4x4(), integer(), integer()) :: matrix3x3()
   def submatrix({_, _, _, _, _, b_b, b_c, b_d, _, c_b, c_c, c_d, _, d_b, d_c, d_d}, 0, 0) do
     {
-      b_b, c_b, d_b,
-      b_c, c_c, d_c,
-      b_d, c_d, d_d
+      b_b, b_c, b_d,
+      c_b, c_c, c_d,
+      d_b, d_c, d_d
     }
   end
-  def submatrix({_, a_b, a_c, a_d, _, _, _, _, _, c_b, c_c, c_d, _, d_b, d_c, d_d}, 0, 1) do
+  def submatrix({_, _, _, _, b_a, _, b_c, b_d, c_a, _, c_c, c_d, d_a, _, d_c, d_d}, 0, 1) do
     {
-      a_b, c_b, d_b,
-      a_c, c_c, d_c,
-      a_d, c_d, d_d
+      b_a, b_c, b_d,
+      c_a, c_c, c_d,
+      d_a, d_c, d_d
     }
   end
-  def submatrix({_, a_b, a_c, a_d, _, b_b, b_c, b_d, _, _, _, _, _, d_b, d_c, d_d}, 0, 2) do
+  def submatrix({_, _, _, _, b_a, b_b, _, b_d, c_a, c_b, _, c_d, d_a, d_b, _, d_d}, 0, 2) do
     {
-      a_b, b_b, d_b,
-      a_c, b_c,d_c,
-      a_d, b_d, d_d
+      b_a, b_b, b_d,
+      c_a, c_b, c_d,
+      d_a, d_b, d_d
     }
   end
-  def submatrix({_, a_b, a_c, a_d, _, b_b, b_c, b_d, _, c_b, c_c, c_d, _, _, _, _}, 0, 3) do
+  def submatrix({_, _, _, _, b_a, b_b, b_c, _, c_a, c_b, c_c, _, d_a, d_b, d_c, _}, 0, 3) do
     {
-      a_b, b_b, c_b,
-      a_c, b_c, c_c,
-      a_d, b_d, c_d
+      b_a, b_b, b_c,
+      c_a, c_b, c_c,
+      d_a, d_b, d_c
     }
   end
-  def submatrix({_, _, _, _, b_a, _, b_c, b_d, c_a, _, c_c, c_d, d_a, _, d_c, d_d}, 1, 0) do
+  def submatrix({_, a_b, a_c, a_d, _, _, _, _, _, c_b, c_c, c_d, _, d_b, d_c, d_d}, 1, 0) do
     {
-      b_a, c_a, d_a,
-      b_c, c_c, d_c,
-      b_d, c_d, d_d
+      a_b, a_c, a_d,
+      c_b, c_c, d_d,
+      d_b, d_c, d_d
     }
   end
   def submatrix({a_a, _, a_c, a_d, _, _, _, _, c_a, _, c_c, c_d, d_a, _, d_c, d_d}, 1, 1) do
     {
-      a_a, c_a, d_a,
-      a_c, c_c, d_c,
-      a_d, c_d, d_d
+      a_a, a_c, a_d,
+      c_a, c_c, c_d,
+      d_a, d_c, d_d
     }
   end
-  def submatrix({a_a, _, a_c, a_d, b_a, _, b_c, b_d, _, _, _, _, d_a, _, d_c, d_d}, 1, 2) do
+  def submatrix({a_a, a_b, _, a_d, _, _, _, _, c_a, c_b, _, c_d, d_a, d_b, _, d_d}, 1, 2) do
     {
-      a_a, b_a, d_a,
-      a_c, b_c, d_c,
-      a_d, b_d, d_d
+      a_a, a_b, a_d,
+      c_a, c_b, c_d,
+      d_a, d_b, d_d
     }
   end
-  def submatrix({a_a, _, a_c, a_d, b_a, _, b_c, b_d, c_a, _, c_c, c_d, _, _, _, _}, 1, 3) do
+  def submatrix({a_a, a_b, a_c, _, _, _, _, _, c_a, c_b, c_c, _, d_a, d_b, d_c, _}, 1, 3) do
     {
-      a_a, b_a, c_a,
-      a_c, b_c, c_c,
-      a_d, b_d, c_d
+      a_a, a_b, a_c,
+      c_a, c_b, c_c,
+      d_a, d_b, d_c
     }
   end
-  def submatrix({_, _, _, _, b_a, b_b, _, b_d, c_a, c_b, _, c_d, d_a, d_b, _, d_d}, 2, 0) do
+  def submatrix({_, a_b, a_c, a_d, _, b_b, b_c, b_d, _, _, _, _, _, d_b, d_c, d_d}, 2, 0) do
     {
-      b_a, c_a, d_a,
-      b_b, c_b, d_b,
-      b_d, c_d, d_d
+      a_b, a_c, a_d,
+      b_b, b_c, b_d,
+      d_b, d_c, d_d
     }
   end
   def submatrix({a_a, _, a_c, a_d, b_a, _, b_c, b_d, _, _, _, _, d_a, _, d_c, d_d}, 2, 1) do
@@ -179,16 +179,16 @@ defmodule Rayz.Matrix do
   end
   def submatrix({a_a, a_b, _, a_d, b_a, b_b, _, b_d, _, _, _, _, d_a, d_b, _, d_d}, 2, 2) do
     {
-      a_a, b_a, d_a,
-      a_b, b_b, d_b,
-      a_d, b_d, d_d
+      a_a, a_b, a_d,
+      b_a, b_b, b_d,
+      d_a, d_b, d_d
     }
   end
-  def submatrix({a_a, a_b, _, a_d, b_a, b_b, _, b_d, c_a, c_b, _, c_d, _, _, _, _}, 2, 3) do
+  def submatrix({a_a, a_b, a_c, _, b_a, b_b, b_c, _, _, _, _, _, d_a, d_b, d_c, _}, 2, 3) do
     {
-      a_a, b_a, c_a,
-      a_b, b_b, c_b,
-      a_d, b_d, c_d
+      a_a, a_b, a_c,
+      b_a, b_b, b_c,
+      d_a, d_b, d_c
     }
   end
   def submatrix({_, a_b, a_c, a_d, _, b_b, b_c, b_d, _, c_b, c_c, c_d, _, _, _, _}, 3, 0) do
