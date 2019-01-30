@@ -2,6 +2,125 @@ defmodule RayzMatrixTest do
   use ExUnit.Case
   doctest Rayz.Matrix
 
+  describe "Rayz.Matrix.inverse/1" do
+    test "Calculating the inverse of a matrix" do
+      a = Builder.matrix(
+        -5,  2,  6, -8,
+         1, -5,  1,  8,
+         7,  7, -6, -7,
+         1, -3,  7,  4
+      )
+
+      b = Rayz.Matrix.inverse(a)
+
+      assert Rayz.Matrix.determinant(a)    ==  532
+      assert Rayz.Matrix.cofactor(a, 2, 3) == -160
+      assert Rayz.Matrix.value_at(b, 3, 2) == -160 / 532
+
+      assert Rayz.Matrix.cofactor(a, 3, 2) == 105
+      assert Rayz.Matrix.value_at(b, 2, 3) == 105 / 532
+
+
+      expected_m = Builder.matrix(
+         0.21805,  0.45113,  0.24060, -0.04511,
+        -0.80827, -1.45677, -0.44361,  0.52068,
+        -0.07895, -0.22368, -0.05263,  0.19737,
+        -0.52256, -0.81391, -0.30075,  0.30639)
+
+      assert Rayz.Matrix.equal?(b, expected_m) == true
+    end
+
+    test "Calculating the inverse of another matrix" do
+      a = Builder.matrix(
+         8, -5,  9,  2,
+         7,  5,  6,  1,
+        -6,  0,  9,  6,
+        -3,  0, -9, -4
+      )
+
+      b = Rayz.Matrix.inverse(a)
+
+      expected_m = Builder.matrix(
+        -0.15385, -0.15385, -0.28205, -0.53846, 
+        -0.07692,  0.12308,  0.02564,  0.03077, 
+         0.35897,  0.35897,  0.43590,  0.92308, 
+        -0.69231, -0.69231, -0.76923, -1.92308
+      )
+
+      assert Rayz.Matrix.equal?(b, expected_m) == true
+    end
+
+    test "Calculating the inverse of a third matrix" do
+      a = Builder.matrix(
+         9,  3,  0,  9,
+        -5, -2, -6, -3,
+        -4,  9,  6,  4,
+        -7,  6,  6,  2
+      )
+
+      b = Rayz.Matrix.inverse(a)
+
+      expected_m = Builder.matrix(
+        -0.04074, -0.07778,  0.14444, -0.22222,
+        -0.07778,  0.03333,  0.36667, -0.33333,
+        -0.02901, -0.14630, -0.10926,  0.12963,
+         0.17778,  0.06667, -0.26667,  0.33333
+      )
+
+      assert Rayz.Matrix.equal?(b, expected_m) == true
+    end
+
+    test "Multiplying a product by its inverse" do
+      a = Builder.matrix(
+         3, -9,  7,  3,
+         3, -8,  2, -9,
+        -4,  4,  4,  1,
+        -6,  5, -1,  1
+      )
+
+      b = Builder.matrix(
+        8,  2, 2, 2,
+        3, -1, 7, 0, 
+        7,  0, 5, 4,
+        6, -2, 0, 5
+      )
+
+      c = Rayz.Matrix.multiply(a, b)
+
+      bi = Rayz.Matrix.inverse(b)
+
+      d = Rayz.Matrix.multiply(c, bi)
+
+      assert Rayz.Matrix.equal?(d, a) == true
+    end
+  end
+
+  describe "Rayz.Matrix.invertible?/1" do
+    test "Testing an invertible matrix for invertibility" do
+      m = Builder.matrix(
+        6,  4, 4,  4,
+        5,  5, 7,  6,
+        4, -9, 3, -7,
+        9,  1, 7, -6
+      )
+
+      assert Rayz.Matrix.determinant(m) == -2120
+      assert Rayz.Matrix.invertible?(m) == true
+    end
+
+    test "Testing a non-invertible matrix for invertibility" do
+      m = Builder.matrix(
+        -4,  2, -2, -3,
+         9,  6,  2,  6,
+         0, -5,  1, -5,
+         0,  0,  0,  0
+      )
+
+      assert Rayz.Matrix.determinant(m) == 0
+      assert Rayz.Matrix.invertible?(m) == false
+    end
+  end
+
   describe "Rayz.Matrix.cofactor/3" do
     test "Calculating a cofactor of a 3x3 matrix" do
       m = Builder.matrix(
@@ -64,7 +183,7 @@ defmodule RayzMatrixTest do
         ],
         # row 1 removed
         [
-          {1, 2, 3, 9, 10, 15, 13, 14, 15}, # col 0 removed
+          {1, 2, 3, 9, 10, 11, 13, 14, 15}, # col 0 removed
           {0, 2, 3, 8, 10, 11, 12, 14, 15}, # col 1 removed
           {0, 1, 3, 8, 9, 11, 12, 13, 15},  # col 2 removed
           {0, 1, 2, 8, 9, 10, 12, 13, 14}   # col 3 removed

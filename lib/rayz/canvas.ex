@@ -32,7 +32,7 @@ defmodule Rayz.Canvas do
 
 
   def canvas_to_ppm(canvas, file_name \\ "rayz.ppm") do
-    output_file = open_file("rayz.ppm")
+    output_file = open_file(file_name)
     header      = ppm_header(canvas)
     body        = ppm_body(canvas)
 

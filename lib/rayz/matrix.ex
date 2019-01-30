@@ -50,6 +50,42 @@ defmodule Rayz.Matrix do
       float(), float()
     }
 
+  @spec inverse(matrix4x4()) :: boolean()
+  def inverse(m = {
+      _, _, _, _,
+      _, _, _, _,
+      _, _, _, _,
+      _, _, _, _}
+      ) do
+
+    if invertible?(m) do
+      d = determinant(m)
+
+      m1 = Builder.matrix(
+        cofactor(m, 0, 0), cofactor(m, 0, 1), cofactor(m, 0, 2), cofactor(m, 0, 3),
+        cofactor(m, 1, 0), cofactor(m, 1, 1), cofactor(m, 1, 2), cofactor(m, 1, 3),
+        cofactor(m, 2, 0), cofactor(m, 2, 1), cofactor(m, 2, 2), cofactor(m, 2, 3),
+        cofactor(m, 3, 0), cofactor(m, 3, 1), cofactor(m, 3, 2), cofactor(m, 3, 3)
+      )
+
+      m2 = transpose(m1)
+
+      Builder.matrix(
+        value_at(m2, 0, 0) / d, value_at(m2, 0, 1) / d, value_at(m2, 0, 2) / d,  value_at(m2, 0, 3) / d,
+        value_at(m2, 1, 0) / d, value_at(m2, 1, 1) / d, value_at(m2, 1, 2) / d,  value_at(m2, 1, 3) / d,
+        value_at(m2, 2, 0) / d, value_at(m2, 2, 1) / d, value_at(m2, 2, 2) / d,  value_at(m2, 2, 3) / d,
+        value_at(m2, 3, 0) / d, value_at(m2, 3, 1) / d, value_at(m2, 3, 2) / d,  value_at(m2, 3, 3) / d
+      )
+    else
+      {:error, "not invertible"}
+    end
+  end
+
+  @spec invertible?(matrix4x4()) :: boolean()
+  def invertible?(m) do
+    determinant(m) != 0
+  end
+
   @spec cofactor(matrix3x3(), integer(), integer()) :: integer()
   def cofactor(m, 0, 0), do:  minor(m, 0, 0)
   def cofactor(m, 0, 1), do: -minor(m, 0, 1)
@@ -64,7 +100,7 @@ defmodule Rayz.Matrix do
   def cofactor(m, 2, 2), do:  minor(m, 2, 2)
   def cofactor(m, 2, 3), do: -minor(m, 2, 3)
   def cofactor(m, 3, 0), do: -minor(m, 3, 0)
-  def cofactor(m, 3, 1), do: -minor(m, 3, 1)
+  def cofactor(m, 3, 1), do:  minor(m, 3, 1)
   def cofactor(m, 3, 2), do: -minor(m, 3, 2)
   def cofactor(m, 3, 3), do:  minor(m, 3, 3)
 
@@ -163,7 +199,7 @@ defmodule Rayz.Matrix do
   def submatrix({_, a_b, a_c, a_d, _, _, _, _, _, c_b, c_c, c_d, _, d_b, d_c, d_d}, 1, 0) do
     {
       a_b, a_c, a_d,
-      c_b, c_c, d_d,
+      c_b, c_c, c_d,
       d_b, d_c, d_d
     }
   end
@@ -351,23 +387,39 @@ defmodule Rayz.Matrix do
   end
 
   def equal?(
-    {
-      m1_a_a, m1_a_b, m1_a_c, m1_a_d,
-      m1_b_a, m1_b_b, m1_b_c, m1_b_d,
-      m1_c_a, m1_c_b, m1_c_c, m1_c_d,
-      m1_d_a, m1_d_b, m1_d_c, m1_d_d
+    m1 = {
+      _m1_a_a, _m1_a_b, _m1_a_c, _m1_a_d,
+      _m1_b_a, _m1_b_b, _m1_b_c, _m1_b_d,
+      _m1_c_a, _m1_c_b, _m1_c_c, _m1_c_d,
+      _m1_d_a, _m1_d_b, _m1_d_c, _m1_d_d
     },
-    {
-      m2_a_a, m2_a_b, m2_a_c, m2_a_d,
-      m2_b_a, m2_b_b, m2_b_c, m2_b_d,
-      m2_c_a, m2_c_b, m2_c_c, m2_c_d,
-      m2_d_a, m2_d_b, m2_d_c, m2_d_d
+    m2 = {
+      _m2_a_a, _m2_a_b, _m2_a_c, _m2_a_d,
+      _m2_b_a, _m2_b_b, _m2_b_c, _m2_b_d,
+      _m2_c_a, _m2_c_b, _m2_c_c, _m2_c_d,
+      _m2_d_a, _m2_d_b, _m2_d_c, _m2_d_d
     }
   ) do
-    m1_a_a == m2_a_a && m1_a_b == m2_a_b && m1_a_c == m2_a_c && m1_a_d == m2_a_d &&
-    m1_b_a == m2_b_a && m1_b_b == m2_b_b && m1_b_c == m2_b_c && m1_b_d == m2_b_d &&
-    m1_c_a == m2_c_a && m1_c_b == m2_c_b && m1_c_c == m2_c_c && m1_c_d == m2_c_d &&
-    m1_d_a == m2_d_a && m1_d_b == m2_d_b && m1_d_c == m2_d_c && m1_d_d == m2_d_d
+    Util.equal?(value_at(m1, 0, 0), value_at(m2, 0, 0)) &&
+    Util.equal?(value_at(m1, 0, 1), value_at(m2, 0, 1)) &&
+    Util.equal?(value_at(m1, 0, 2), value_at(m2, 0, 2)) &&
+    Util.equal?(value_at(m1, 0, 3), value_at(m2, 0, 3)) &&
+    Util.equal?(value_at(m1, 1, 0), value_at(m2, 1, 0)) &&
+    Util.equal?(value_at(m1, 1, 1), value_at(m2, 1, 1)) &&
+    Util.equal?(value_at(m1, 1, 2), value_at(m2, 1, 2)) &&
+    Util.equal?(value_at(m1, 1, 3), value_at(m2, 1, 3)) &&
+    Util.equal?(value_at(m1, 2, 0), value_at(m2, 2, 0)) &&
+    Util.equal?(value_at(m1, 2, 1), value_at(m2, 2, 1)) &&
+    Util.equal?(value_at(m1, 2, 2), value_at(m2, 2, 2)) &&
+    Util.equal?(value_at(m1, 2, 3), value_at(m2, 2, 3)) &&
+    Util.equal?(value_at(m1, 3, 0), value_at(m2, 3, 0)) &&
+    Util.equal?(value_at(m1, 3, 1), value_at(m2, 3, 1)) &&
+    Util.equal?(value_at(m1, 3, 2), value_at(m2, 3, 2)) &&
+    Util.equal?(value_at(m1, 3, 3), value_at(m2, 3, 3))
+    #m1_a_a == m2_a_a && m1_a_b == m2_a_b && m1_a_c == m2_a_c && m1_a_d == m2_a_d &&
+    #m1_b_a == m2_b_a && m1_b_b == m2_b_b && m1_b_c == m2_b_c && m1_b_d == m2_b_d &&
+    #m1_c_a == m2_c_a && m1_c_b == m2_c_b && m1_c_c == m2_c_c && m1_c_d == m2_c_d &&
+    #m1_d_a == m2_d_a && m1_d_b == m2_d_b && m1_d_c == m2_d_c && m1_d_d == m2_d_d
   end
 
   def equal?(
@@ -400,6 +452,41 @@ defmodule Rayz.Matrix do
     m1_a_a == m2_a_a && m1_a_b == m2_a_b &&
     m1_b_a == m2_b_a && m1_b_b == m2_b_b
   end
+
+  @spec put_value(matrix4x4, integer(), integer(), float()) :: float()
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 0, 0, value), do: put_elem(m,  0, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 0, 1, value), do: put_elem(m,  1, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 0, 2, value), do: put_elem(m,  2, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 0, 3, value), do: put_elem(m,  3, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 1, 0, value), do: put_elem(m,  4, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 1, 1, value), do: put_elem(m,  5, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 1, 2, value), do: put_elem(m,  6, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 1, 3, value), do: put_elem(m,  7, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 2, 0, value), do: put_elem(m,  8, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 2, 1, value), do: put_elem(m,  9, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 2, 2, value), do: put_elem(m, 10, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 2, 3, value), do: put_elem(m, 11, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 3, 0, value), do: put_elem(m, 12, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 3, 1, value), do: put_elem(m, 13, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 3, 2, value), do: put_elem(m, 14, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _}, 3, 3, value), do: put_elem(m, 15, value)
+
+  @spec put_value(matrix3x3, integer(), integer(), float()) :: float()
+  def put_value(m = {_, _, _, _, _, _, _, _, _}, 0, 0, value), do: put_elem(m, 0, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _}, 0, 1, value), do: put_elem(m, 1, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _}, 0, 2, value), do: put_elem(m, 2, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _}, 1, 0, value), do: put_elem(m, 3, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _}, 1, 1, value), do: put_elem(m, 4, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _}, 1, 2, value), do: put_elem(m, 5, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _}, 2, 0, value), do: put_elem(m, 6, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _}, 2, 1, value), do: put_elem(m, 7, value)
+  def put_value(m = {_, _, _, _, _, _, _, _, _}, 2, 2, value), do: put_elem(m, 8, value)
+
+  @spec put_value(matrix2x2, integer(), integer(), float()) :: float()
+  def put_value(m = {_, _, _, _}, 0, 0, value), do: put_elem(m, 0, value)
+  def put_value(m = {_, _, _, _}, 0, 1, value), do: put_elem(m, 1, value)
+  def put_value(m = {_, _, _, _}, 1, 0, value), do: put_elem(m, 2, value)
+  def put_value(m = {_, _, _, _}, 1, 1, value), do: put_elem(m, 3, value)
 
   @spec value_at(matrix4x4, float(), float()) :: float()
   def value_at({a_a, _a_b, _a_c, _a_d, _b_a, _b_b, _b_c, _b_d, _c_a, _c_b, _c_c, _c_d, _d_a, _d_b, _d_c, _d_d}, 0, 0), do: a_a

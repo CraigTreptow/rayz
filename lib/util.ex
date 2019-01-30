@@ -15,6 +15,7 @@ defmodule Util do
   """
 
   def equal?(a, b) do
+
     if abs(a - b) < @epsilon do
       true
     else
