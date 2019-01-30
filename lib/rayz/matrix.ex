@@ -54,12 +54,19 @@ defmodule Rayz.Matrix do
   def cofactor(m, 0, 0), do:  minor(m, 0, 0)
   def cofactor(m, 0, 1), do: -minor(m, 0, 1)
   def cofactor(m, 0, 2), do:  minor(m, 0, 2)
+  def cofactor(m, 0, 3), do: -minor(m, 0, 3)
   def cofactor(m, 1, 0), do: -minor(m, 1, 0)
   def cofactor(m, 1, 1), do:  minor(m, 1, 1)
   def cofactor(m, 1, 2), do: -minor(m, 1, 2)
+  def cofactor(m, 1, 3), do:  minor(m, 1, 3)
   def cofactor(m, 2, 0), do:  minor(m, 2, 0)
   def cofactor(m, 2, 1), do: -minor(m, 2, 1)
   def cofactor(m, 2, 2), do:  minor(m, 2, 2)
+  def cofactor(m, 2, 3), do: -minor(m, 2, 3)
+  def cofactor(m, 3, 0), do: -minor(m, 3, 0)
+  def cofactor(m, 3, 1), do: -minor(m, 3, 1)
+  def cofactor(m, 3, 2), do: -minor(m, 3, 2)
+  def cofactor(m, 3, 3), do:  minor(m, 3, 3)
 
   @spec minor(matrix3x3(), integer(), integer()) :: integer()
   def minor(m, r, c) do
@@ -237,8 +244,36 @@ defmodule Rayz.Matrix do
       c_a, c_b, c_c,
     }
   end
-
+ 
   @spec determinant(matrix4x4()) :: float()
+  def determinant(
+    m = {
+          a, b, c, d,
+          _, _, _, _,
+          _, _, _, _,
+          _, _, _, _
+        }
+  ) do
+    a * cofactor(m, 0, 0) +
+    b * cofactor(m, 0, 1) +
+    c * cofactor(m, 0, 2) +
+    d * cofactor(m, 0, 3)
+  end
+
+  @spec determinant(matrix3x3()) :: float()
+  def determinant(
+    m = {
+          a, b, c,
+          _, _, _,
+          _, _, _
+    }
+  ) do
+    a * cofactor(m, 0, 0) +
+    b * cofactor(m, 0, 1) +
+    c * cofactor(m, 0, 2)
+  end
+
+  @spec determinant(matrix2x2()) :: float()
   def determinant(
     {
       a, b,
