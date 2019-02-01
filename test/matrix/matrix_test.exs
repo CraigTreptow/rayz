@@ -2,6 +2,53 @@ defmodule RayzMatrixTest do
   use ExUnit.Case
   doctest Rayz.Matrix
 
+  describe "Rayz.Matrix.scaling/1" do
+    test "A scaling matrix applied to a point" do
+      transform = Builder.scaling(2, 3, 4)
+      p = Builder.point(-4, 6, 8)
+
+      transformed = Rayz.Matrix.multiply(transform, p)
+
+      expected_p = Builder.point(-8, 18, 32)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+
+    test "A scaling matrix applied to a vector" do
+      transform = Builder.scaling(2, 3, 4)
+      v = Builder.vector(-4, 6, 8)
+
+      transformed = Rayz.Matrix.multiply(transform, v)
+
+      expected_v = Builder.vector(-8, 18, 32)
+
+      assert Equality.equal?(transformed, expected_v)
+    end
+
+    test "Multiplying by the inverse of a scaling matrix" do
+      transform = Builder.scaling(2, 3, 4)
+      inverse = Rayz.Matrix.inverse(transform)
+      v = Builder.vector(-4, 6, 8)
+
+      transformed = Rayz.Matrix.multiply(inverse, v)
+
+      expected_v = Builder.vector(-2, 2, 2)
+
+      assert Equality.equal?(transformed, expected_v)
+    end
+
+    test "Reflection is scaling by a negative value" do
+      transform = Builder.scaling(-1, 1, 1)
+      p = Builder.point(2, 3, 4)
+
+      transformed = Rayz.Matrix.multiply(transform, p)
+
+      expected_p = Builder.point(-2, 3, 4)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+  end
+
   describe "Rayz.Matrix.transform/1" do
     test "Multiplying by a translation matrix" do
       transform = Builder.translation(5, -3, 2)
