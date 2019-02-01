@@ -2,6 +2,40 @@ defmodule RayzMatrixTest do
   use ExUnit.Case
   doctest Rayz.Matrix
 
+  describe "Rayz.Matrix.transform/1" do
+    test "Multiplying by a translation matrix" do
+      transform = Builder.translation(5, -3, 2)
+      p = Builder.point(-3, 4, 5)
+
+      transformed = Rayz.Matrix.multiply(transform, p)
+
+      expected_p = Builder.point(2, 1, 7)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+
+    test "Multiplying by the inverse of a translation matrix" do
+      transform = Builder.translation(5, -3, 2)
+      inverse = Rayz.Matrix.inverse(transform)
+      p = Builder.point(-3, 4, 5)
+
+      m = Rayz.Matrix.multiply(inverse, p)
+
+      expected_p = Builder.point(-8, 7, 3)
+
+      assert Equality.equal?(m, expected_p)
+    end
+
+    test "Translation does not affect vectors" do
+      transform = Builder.translation(5, -3, 2)
+      v = Builder.vector(-3, 4, 5)
+
+      transformed = Rayz.Matrix.multiply(transform, v)
+
+      assert Equality.equal?(transformed, v)
+    end
+  end
+
   describe "Rayz.Matrix.inverse/1" do
     test "Calculating the inverse of a matrix" do
       a = Builder.matrix(
@@ -27,7 +61,7 @@ defmodule RayzMatrixTest do
         -0.07895, -0.22368, -0.05263,  0.19737,
         -0.52256, -0.81391, -0.30075,  0.30639)
 
-      assert Rayz.Matrix.equal?(b, expected_m) == true
+      assert Equality.equal?(b, expected_m) == true
     end
 
     test "Calculating the inverse of another matrix" do
@@ -47,7 +81,7 @@ defmodule RayzMatrixTest do
         -0.69231, -0.69231, -0.76923, -1.92308
       )
 
-      assert Rayz.Matrix.equal?(b, expected_m) == true
+      assert Equality.equal?(b, expected_m) == true
     end
 
     test "Calculating the inverse of a third matrix" do
@@ -67,7 +101,7 @@ defmodule RayzMatrixTest do
          0.17778,  0.06667, -0.26667,  0.33333
       )
 
-      assert Rayz.Matrix.equal?(b, expected_m) == true
+      assert Equality.equal?(b, expected_m) == true
     end
 
     test "Multiplying a product by its inverse" do
@@ -91,7 +125,7 @@ defmodule RayzMatrixTest do
 
       d = Rayz.Matrix.multiply(c, bi)
 
-      assert Rayz.Matrix.equal?(d, a) == true
+      assert Equality.equal?(d, a) == true
     end
   end
 
@@ -221,7 +255,7 @@ defmodule RayzMatrixTest do
                       0, 6
                    )
 
-      assert Rayz.Matrix.equal?(sm, expected_m) == true
+      assert Equality.equal?(sm, expected_m) == true
     end
 
     test "A submatrix of a 4x4 matrix is a 3x3 matrix" do
@@ -240,7 +274,7 @@ defmodule RayzMatrixTest do
                      -7, -1, 1
                    )
 
-      assert Rayz.Matrix.equal?(sm, expected_m) == true
+      assert Equality.equal?(sm, expected_m) == true
     end
   end
 
@@ -290,7 +324,7 @@ defmodule RayzMatrixTest do
 
       i = Builder.identity_matrix()
 
-      assert Rayz.Matrix.equal?(a, i) == true
+      assert Equality.equal?(a, i) == true
     end
 
     test "Transposing a matrix" do
@@ -312,7 +346,7 @@ defmodule RayzMatrixTest do
           0, 8, 3, 8
         )
 
-      assert Rayz.Matrix.equal?(t, expected_m) == true
+      assert Equality.equal?(t, expected_m) == true
     end
   end
 
@@ -330,7 +364,7 @@ defmodule RayzMatrixTest do
 
       p = Rayz.Matrix.multiply(m, i)
 
-      assert Rayz.Matrix.equal?(p, m) == true
+      assert Equality.equal?(p, m) == true
     end
 
     test "Multiplying the identity matrix by a tuple" do
@@ -339,7 +373,7 @@ defmodule RayzMatrixTest do
 
       p = Rayz.Matrix.multiply(i, a)
 
-      assert Rayz.Tuple.equal?(p, a) == true
+      assert Equality.equal?(p, a) == true
     end
 
     test "A matrix multiplied by a tuple" do
@@ -357,7 +391,7 @@ defmodule RayzMatrixTest do
 
       expected_tuple = Builder.tuple(18, 24, 33, 1)
 
-      assert Rayz.Tuple.equal?(p, expected_tuple)
+      assert Equality.equal?(p, expected_tuple)
     end
 
     test "Multiplying two matrices" do
@@ -387,11 +421,11 @@ defmodule RayzMatrixTest do
           16, 26,  46,  42
         )
 
-      assert Rayz.Matrix.equal?(m3, expected_m) == true
+      assert Equality.equal?(m3, expected_m) == true
     end
   end
 
-  describe "Rayz.Matrix.equal?/2" do
+  describe "Equality.equal?/2" do
     test "Matrix equality with identical matrices" do
       m1 =
         Builder.matrix(
@@ -409,7 +443,7 @@ defmodule RayzMatrixTest do
           5, 4, 3, 2
         )
 
-      assert Rayz.Matrix.equal?(m1, m2) == true
+      assert Equality.equal?(m1, m2) == true
     end
 
     test "Matrix equality with different matrices" do
@@ -429,7 +463,7 @@ defmodule RayzMatrixTest do
           4, 3, 2, 1
         )
 
-      assert Rayz.Matrix.equal?(m1, m2) == false
+      assert Equality.equal?(m1, m2) == false
     end
   end
 end

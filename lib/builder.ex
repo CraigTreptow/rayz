@@ -25,7 +25,16 @@ defmodule Builder do
       float(), float()
     }
 
-  
+  @spec translation(float(), float(), float()) :: matrix4x4()
+  def translation(x, y, z) do
+    i = Builder.identity_matrix()
+
+    i
+    |> Rayz.Matrix.put_value(0, 3, x)
+    |> Rayz.Matrix.put_value(1, 3, y)
+    |> Rayz.Matrix.put_value(2, 3, z)
+  end
+
   @spec matrix(float(), float(), float(), float(),
                float(), float(), float(), float(),
                float(), float(), float(), float(),

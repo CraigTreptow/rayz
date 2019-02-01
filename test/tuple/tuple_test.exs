@@ -9,11 +9,11 @@ defmodule RayzTupleTest do
 
       cp1 = Rayz.Tuple.cross(a, b)
       expected_vector1 = Builder.vector(-1, 2, -1)
-      assert Rayz.Tuple.equal?(cp1, expected_vector1) == true
+      assert Equality.equal?(cp1, expected_vector1) == true
 
       cp2 = Rayz.Tuple.cross(b, a)
       expected_vector2 = Builder.vector(1, -2, 1)
-      assert Rayz.Tuple.equal?(cp2, expected_vector2) == true
+      assert Equality.equal?(cp2, expected_vector2) == true
     end
   end
 
@@ -33,7 +33,7 @@ defmodule RayzTupleTest do
 
       expected_vector = Builder.vector(1, 0, 0)
 
-      assert Rayz.Tuple.equal?(nv, expected_vector) == true
+      assert Equality.equal?(nv, expected_vector) == true
     end
 
     test "Normalizing vector(1, 2, 3)" do
@@ -43,7 +43,7 @@ defmodule RayzTupleTest do
       #                                1/sqrt(14), 2/sqrt914), 3/sqrt(14)
       expected_vector = Builder.vector(0.26726,    0.53452,    0.80178)
 
-      assert Rayz.Tuple.equal?(nv, expected_vector) == true
+      assert Equality.equal?(nv, expected_vector) == true
     end
   end
 
@@ -87,7 +87,7 @@ defmodule RayzTupleTest do
 
       expected_tuple = Builder.tuple(0.5, -1, 1.5, -2)
 
-      assert Rayz.Tuple.equal?(b, expected_tuple) == true
+      assert Equality.equal?(b, expected_tuple) == true
     end
   end
 
@@ -99,7 +99,7 @@ defmodule RayzTupleTest do
 
       expected_tuple = Builder.tuple(3.5, -7, 10.5, -14)
 
-      assert Rayz.Tuple.equal?(b, expected_tuple) == true
+      assert Equality.equal?(b, expected_tuple) == true
     end
 
     test "Multiplying a tuple by a fraction" do
@@ -109,7 +109,7 @@ defmodule RayzTupleTest do
 
       expected_tuple = Builder.tuple(0.5, -1, 1.5, -2)
 
-      assert Rayz.Tuple.equal?(b, expected_tuple) == true
+      assert Equality.equal?(b, expected_tuple) == true
     end
   end
 
@@ -121,7 +121,7 @@ defmodule RayzTupleTest do
 
       expected_tuple = Builder.tuple(-1, 2, -3, 4)
 
-      assert Rayz.Tuple.equal?(na, expected_tuple) == true
+      assert Equality.equal?(na, expected_tuple) == true
     end
   end
 
@@ -135,7 +135,7 @@ defmodule RayzTupleTest do
       expected_vector = Builder.vector(-2, -4, -6)
 
       assert Rayz.Tuple.is_vector?(v) == true
-      assert Rayz.Tuple.equal?(v, expected_vector) == true
+      assert Equality.equal?(v, expected_vector) == true
     end
 
     test "Subtracting a vector from a point" do
@@ -146,7 +146,7 @@ defmodule RayzTupleTest do
       expected_point = Builder.point(-2, -4, -6)
 
       assert Rayz.Tuple.is_point?(p) == true
-      assert Rayz.Tuple.equal?(p, expected_point) == true
+      assert Equality.equal?(p, expected_point) == true
     end
 
     test "Subtracting two vectors" do 
@@ -157,7 +157,7 @@ defmodule RayzTupleTest do
       expected_vector = Builder.vector(-2, -4, -6)
 
       assert Rayz.Tuple.is_vector?(v) == true
-      assert Rayz.Tuple.equal?(v, expected_vector) == true
+      assert Equality.equal?(v, expected_vector) == true
     end
 
     test "Subtracting a vector from the zero vector" do
@@ -168,7 +168,7 @@ defmodule RayzTupleTest do
       expected_vector = Builder.vector(-1, 2, -3)
 
       assert Rayz.Tuple.is_vector?(v) == true
-      assert Rayz.Tuple.equal?(v, expected_vector) == true
+      assert Equality.equal?(v, expected_vector) == true
     end
   end
 
@@ -181,42 +181,42 @@ defmodule RayzTupleTest do
 
       expected_tuple = Builder.tuple(1, 1, 6, 1)
 
-      assert Rayz.Tuple.equal?(a3, expected_tuple) == true
+      assert Equality.equal?(a3, expected_tuple) == true
     end
   end
 
-  describe "Rayz.Tuple.equal?/2" do
+  describe "Equality.equal?/2" do
     test "the same point is equal to itself" do
       p = Builder.point(1.0, 2.0, 3.0)
 
-      assert Rayz.Tuple.equal?(p, p) == true
+      assert Equality.equal?(p, p) == true
     end
 
     test "two different points are different" do
       p1 = Builder.point(1.0, 2.0, 3.0)
       p2 = Builder.point(4.0, 5.0, 6.0)
 
-      assert Rayz.Tuple.equal?(p1, p2) == false
+      assert Equality.equal?(p1, p2) == false
     end
 
     test "the same vector is equal to itself" do
       v = Builder.vector(1.0, 2.0, 3.0)
 
-      assert Rayz.Tuple.equal?(v, v) == true
+      assert Equality.equal?(v, v) == true
     end
 
     test "two different vectors are different" do
       v1 = Builder.vector(1.0, 2.0, 3.0)
       v2 = Builder.vector(4.0, 5.0, 6.0)
 
-      assert Rayz.Tuple.equal?(v1, v2) == false
+      assert Equality.equal?(v1, v2) == false
     end
 
     test "vector is different than point" do
       v = Builder.vector(1.0, 2.0, 3.0)
       p = Builder.point(1.0, 2.0, 3.0)
 
-      assert Rayz.Tuple.equal?(v, p) == false
+      assert Equality.equal?(v, p) == false
     end
   end
 

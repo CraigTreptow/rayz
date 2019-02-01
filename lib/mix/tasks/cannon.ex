@@ -60,8 +60,9 @@ defmodule Mix.Tasks.Cannon do
     # projectile starts one unit above the origin.
     # velocity is normalized to 1 unit/tick.
     initial_position = Builder.point(0, 1, 0)
+    v = Builder.vector(1, 1.8, 0)
     initial_velocity = 
-      Builder.vector(1, 1.8, 0)
+      v
       |> Rayz.Tuple.normalize
       |> Rayz.Tuple.multiply(multiplier)
 
