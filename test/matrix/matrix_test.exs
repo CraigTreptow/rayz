@@ -2,6 +2,19 @@ defmodule RayzMatrixTest do
   use ExUnit.Case
   doctest Rayz.Matrix
 
+  describe "clock" do
+    test "from the clock project" do
+      twelve = Builder.point(0, 0, 1)
+      r = Builder.rotation_y(3 * (:math.pi() / 6))
+
+      computed_three = Rayz.Matrix.multiply(r, twelve)
+
+      expected_three = Builder.point(1, 0, 0)
+
+      assert Equality.equal?(computed_three, expected_three)
+    end
+  end
+
   describe "Chaining transformations" do
     test "Individual transformations are applied in sequence" do
       p = Builder.point(1, 0, 1)

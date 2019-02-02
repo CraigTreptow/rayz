@@ -50,6 +50,8 @@ defmodule Rayz.Matrix do
       float(), float()
     }
 
+  @type rayztuple :: %Rayz.Tuple{x: float(), y: float(), z: float(), w: float()}
+
   @spec inverse(matrix4x4()) :: boolean()
   def inverse(m = {
       _, _, _, _,
@@ -336,7 +338,7 @@ defmodule Rayz.Matrix do
     }
   end
 
-  @spec multiply(matrix4x4(), matrix4x4()) :: matrix4x4()
+  @spec multiply(matrix4x4(), rayztuple()) :: matrix4x4()
   def multiply(
     {
       a_a, a_b, a_c, a_d,
@@ -360,6 +362,7 @@ defmodule Rayz.Matrix do
     )
   end
 
+  @spec multiply(matrix4x4(), matrix4x4()) :: matrix4x4()
   def multiply(
     m1 = {
       _m1_a_a, _m1_a_b, _m1_a_c, _m1_a_d,
