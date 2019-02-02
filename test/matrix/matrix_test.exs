@@ -2,6 +2,69 @@ defmodule RayzMatrixTest do
   use ExUnit.Case
   doctest Rayz.Matrix
 
+  describe "Rayz.Matrix.rotation_z/1" do
+    test "Rotating a point around the z axis" do
+      p = Builder.point(0, 1, 0)
+
+      half_quarter = Builder.rotation_z(:math.pi / 4)
+      full_quarter = Builder.rotation_z(:math.pi / 2)
+
+      rotated_half    = Rayz.Matrix.multiply(half_quarter, p)
+      expected_half_p = Builder.point(-:math.sqrt(2) / 2, :math.sqrt(2) / 2, 0)
+      assert Equality.equal?(rotated_half, expected_half_p)
+
+      rotated_full    = Rayz.Matrix.multiply(full_quarter, p)
+      expected_full_p = Builder.point(-1, 0, 0)
+      assert Equality.equal?(rotated_full, expected_full_p)
+    end
+  end
+
+  describe "Rayz.Matrix.rotation_y/1" do
+    test "Rotating a point around the y axis" do
+      p = Builder.point(0, 0, 1)
+
+      half_quarter = Builder.rotation_y(:math.pi / 4)
+      full_quarter = Builder.rotation_y(:math.pi / 2)
+
+      rotated_half    = Rayz.Matrix.multiply(half_quarter, p)
+      expected_half_p = Builder.point(:math.sqrt(2) / 2, 0, :math.sqrt(2) / 2)
+      assert Equality.equal?(rotated_half, expected_half_p)
+
+      rotated_full    = Rayz.Matrix.multiply(full_quarter, p)
+      expected_full_p = Builder.point(1, 0, 0)
+      assert Equality.equal?(rotated_full, expected_full_p)
+    end
+  end
+
+  describe "Rayz.Matrix.rotation_x/1" do
+    test "Rotating a point around the x axis" do
+      p = Builder.point(0, 1, 0)
+
+      half_quarter = Builder.rotation_x(:math.pi / 4)
+      full_quarter = Builder.rotation_x(:math.pi / 2)
+
+      rotated_half    = Rayz.Matrix.multiply(half_quarter, p)
+      expected_half_p = Builder.point(0, :math.sqrt(2) / 2, :math.sqrt(2) / 2)
+      assert Equality.equal?(rotated_half, expected_half_p)
+
+      rotated_full    = Rayz.Matrix.multiply(full_quarter, p)
+      expected_full_p = Builder.point(0, 0, 1)
+      assert Equality.equal?(rotated_full, expected_full_p)
+    end
+
+    test "The inverse of an x-rotation rotates in the opposite direction" do
+      p = Builder.point(0, 1, 0)
+
+      half_quarter = Builder.rotation_x(:math.pi / 4)
+      inverse = Rayz.Matrix.inverse(half_quarter)
+
+      rotated_inverse = Rayz.Matrix.multiply(inverse, p)
+      expected_half_p = Builder.point(0, :math.sqrt(2) / 2, -:math.sqrt(2) / 2)
+
+      assert Equality.equal?(rotated_inverse, expected_half_p)
+    end
+  end
+
   describe "Rayz.Matrix.scaling/1" do
     test "A scaling matrix applied to a point" do
       transform = Builder.scaling(2, 3, 4)

@@ -25,6 +25,39 @@ defmodule Builder do
       float(), float()
     }
 
+  @spec rotation_z(float()) :: matrix4x4()
+  def rotation_z(r) do
+    i = Builder.identity_matrix()
+
+    i
+    |> Rayz.Matrix.put_value(0, 0,  :math.cos(r))
+    |> Rayz.Matrix.put_value(0, 1, -:math.sin(r))
+    |> Rayz.Matrix.put_value(1, 0,  :math.sin(r))
+    |> Rayz.Matrix.put_value(1, 1,  :math.cos(r))
+  end
+
+  @spec rotation_y(float()) :: matrix4x4()
+  def rotation_y(r) do
+    i = Builder.identity_matrix()
+
+    i
+    |> Rayz.Matrix.put_value(0, 0,  :math.cos(r))
+    |> Rayz.Matrix.put_value(0, 2,  :math.sin(r))
+    |> Rayz.Matrix.put_value(2, 0, -:math.sin(r))
+    |> Rayz.Matrix.put_value(2, 2,  :math.cos(r))
+  end
+
+  @spec rotation_x(float()) :: matrix4x4()
+  def rotation_x(r) do
+    i = Builder.identity_matrix()
+
+    i
+    |> Rayz.Matrix.put_value(1, 1,  :math.cos(r))
+    |> Rayz.Matrix.put_value(1, 2, -:math.sin(r))
+    |> Rayz.Matrix.put_value(2, 1,  :math.sin(r))
+    |> Rayz.Matrix.put_value(2, 2,  :math.cos(r))
+  end
+
   @spec scaling(float(), float(), float()) :: matrix4x4()
   def scaling(x, y, z) do
     i = Builder.identity_matrix()
