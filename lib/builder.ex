@@ -25,6 +25,19 @@ defmodule Builder do
       float(), float()
     }
 
+  @spec shearing(float(), float(), float(), float(), float(), float()) :: matrix4x4()
+  def shearing(xy, xz, yx, yz, zx, zy) do
+    i = Builder.identity_matrix()
+
+    i
+    |> Rayz.Matrix.put_value(0, 1, xy)
+    |> Rayz.Matrix.put_value(0, 2, xz)
+    |> Rayz.Matrix.put_value(1, 0, yx)
+    |> Rayz.Matrix.put_value(1, 2, yz)
+    |> Rayz.Matrix.put_value(2, 0, zx)
+    |> Rayz.Matrix.put_value(2, 1, zy)
+  end
+
   @spec rotation_z(float()) :: matrix4x4()
   def rotation_z(r) do
     i = Builder.identity_matrix()

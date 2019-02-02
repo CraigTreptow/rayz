@@ -2,6 +2,103 @@ defmodule RayzMatrixTest do
   use ExUnit.Case
   doctest Rayz.Matrix
 
+  describe "Chaining transformations" do
+    test "Individual transformations are applied in sequence" do
+      p = Builder.point(1, 0, 1)
+      a = Builder.rotation_x(:math.pi / 2)
+      b = Builder.scaling(5, 5, 5)
+      c = Builder.translation(10, 5, 7)
+
+      # apply rotation first
+      p2 = Rayz.Matrix.multiply(a, p)
+      expected_p2 = Builder.point(1, -1, 0)
+      assert Equality.equal?(p2, expected_p2)
+
+      # then apply scaling
+      p3 = Rayz.Matrix.multiply(b, p2)
+      expected_p3 = Builder.point(5, -5, 0)
+      assert Equality.equal?(p3, expected_p3)
+
+      # then apply translation
+      p4 = Rayz.Matrix.multiply(c, p3)
+      expected_p4 = Builder.point(15, 0, 7)
+      assert Equality.equal?(p4, expected_p4)
+    end
+
+    test "Chained transformations must be applied in reverse order" do
+      p = Builder.point(1, 0, 1)
+      a = Builder.rotation_x(:math.pi / 2)
+      b = Builder.scaling(5, 5, 5)
+      c = Builder.translation(10, 5, 7)
+
+      t = 
+        c
+        |> Rayz.Matrix.multiply(b)
+        |> Rayz.Matrix.multiply(a)
+
+      transformed = Rayz.Matrix.multiply(t, p)
+      expected_p  = Builder.point(15, 0, 7)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+  end
+
+  describe "Rayz.Matrix.shearing/1" do
+    test "A shearing transformtion moves x in proportion to y" do
+      transform   = Builder.shearing(1, 0, 0, 0, 0, 0)
+      p           = Builder.point(2, 3, 4)
+      transformed = Rayz.Matrix.multiply(transform, p)
+      expected_p  = Builder.point(5, 3, 4)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+
+    test "Scenario: A shearing transformation moves x in proportion to z" do
+      transform   = Builder.shearing(0, 1, 0, 0, 0, 0)
+      p           = Builder.point(2, 3, 4)
+      transformed = Rayz.Matrix.multiply(transform, p)
+      expected_p  = Builder.point(6, 3, 4)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+
+    test "Scenario: A shearing transformation moves y in proportion to x" do
+      transform   = Builder.shearing(0, 0, 1, 0, 0, 0)
+      p           = Builder.point(2, 3, 4)
+      transformed = Rayz.Matrix.multiply(transform, p)
+      expected_p  = Builder.point(2, 5, 4)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+
+    test "Scenario: A shearing transformation moves y in proportion to z" do
+      transform   = Builder.shearing(0, 0, 0, 1, 0, 0)
+      p           = Builder.point(2, 3, 4)
+      transformed = Rayz.Matrix.multiply(transform, p)
+      expected_p  = Builder.point(2, 7, 4)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+
+    test "Scenario: A shearing transformation moves z in proportion to x" do
+      transform   = Builder.shearing(0, 0, 0, 0, 1, 0)
+      p           = Builder.point(2, 3, 4)
+      transformed = Rayz.Matrix.multiply(transform, p)
+      expected_p  = Builder.point(2, 3, 6)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+
+    test "Scenario: A shearing transformation moves z in proportion to y" do
+      transform   = Builder.shearing(0, 0, 0, 0, 0, 1)
+      p           = Builder.point(2, 3, 4)
+      transformed = Rayz.Matrix.multiply(transform, p)
+      expected_p  = Builder.point(2, 3, 7)
+
+      assert Equality.equal?(transformed, expected_p)
+    end
+  end
+
   describe "Rayz.Matrix.rotation_z/1" do
     test "Rotating a point around the z axis" do
       p = Builder.point(0, 1, 0)
