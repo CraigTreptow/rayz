@@ -26,6 +26,13 @@ defmodule Builder do
     }
   @type ray :: %Rayz.Ray{origin: rayztuple(), direction: rayztuple()}
 
+  #@spec sphere(rayztuple(), rayztuple()) :: ray()
+  def sphere() do
+    %Rayz.Sphere{
+      id: Integer.to_string(:rand.uniform(4_294_967_296), 32)
+    }
+  end
+
   @spec ray(rayztuple(), rayztuple()) :: ray()
   def ray(origin, direction), do: %Rayz.Ray{origin: origin, direction: direction}
 
