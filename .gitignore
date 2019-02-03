@@ -22,3 +22,6 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 rayz-*.tar
 
+# Ignore the default generate file for cannon, clock, and the project
+rayz.ppm
+
