@@ -24,6 +24,10 @@ defmodule Builder do
       float(), float(),
       float(), float()
     }
+  @type ray :: %Rayz.Ray{origin: rayztuple(), direction: rayztuple()}
+
+  @spec ray(rayztuple(), rayztuple()) :: ray()
+  def ray(origin, direction), do: %Rayz.Ray{origin: origin, direction: direction}
 
   @spec shearing(float(), float(), float(), float(), float(), float()) :: matrix4x4()
   def shearing(xy, xz, yx, yz, zx, zy) do
