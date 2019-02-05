@@ -26,6 +26,14 @@ defmodule Builder do
     }
   @type ray :: %Rayz.Ray{origin: rayztuple(), direction: rayztuple()}
 
+  @type intersection :: %Rayz.Intersection{t: float(), object: map()}
+
+  @spec intersections(intersection(), intersection()) :: list()
+  def intersections(object1, object2), do: [object1, object2]
+
+  @spec intersection(float(), map()) :: intersection()
+  def intersection(t, object), do: %Rayz.Intersection{t: t, object: object}
+
   #@spec sphere(rayztuple(), rayztuple()) :: ray()
   def sphere() do
     %Rayz.Sphere{
