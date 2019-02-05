@@ -2,6 +2,54 @@ defmodule RayzIntersectionTest do
   use ExUnit.Case
   #doctest Rayz.Intersection
 
+  describe "Rayz.Intersection.hit/1" do
+    test "The hit, when all intersections have positive t" do
+      s = Builder.sphere()
+      i1 = Builder.intersection(1, s)
+      i2 = Builder.intersection(2, s)
+
+      xs = Builder.intersections(i2, i1)
+      i = Rayz.Intersection.hit(xs)
+
+      assert i.t == i1.t
+    end
+
+    test "The hit, when some intersections have negative t" do
+      s = Builder.sphere()
+      i1 = Builder.intersection(-1, s)
+      i2 = Builder.intersection(1, s)
+
+      xs = Builder.intersections(i2, i1)
+      i = Rayz.Intersection.hit(xs)
+
+      assert i == i2
+    end
+
+    test "The hit, when all intersections have negative t" do
+      s = Builder.sphere()
+      i1 = Builder.intersection(-2, s)
+      i2 = Builder.intersection(-1, s)
+
+      xs = Builder.intersections(i2, i1)
+      i = Rayz.Intersection.hit(xs)
+
+      assert i == nil
+    end
+
+    test "The hit is always the lowest non-negative intersection" do
+      s = Builder.sphere()
+      i1 = Builder.intersection(5, s)
+      i2 = Builder.intersection(7, s)
+      i3 = Builder.intersection(-3, s)
+      i4 = Builder.intersection(2, s)
+
+      xs = Builder.intersections(i1, i2, i3, i4)
+      i = Rayz.Intersection.hit(xs)
+
+      assert i == i4
+    end
+  end
+
   describe "Rayz.Intersection.intersections/2" do
     test "Intersect sets the object on the intersection" do
       origin    = Builder.point(0, 0, -5)

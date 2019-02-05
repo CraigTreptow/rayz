@@ -28,8 +28,11 @@ defmodule Builder do
 
   @type intersection :: %Rayz.Intersection{t: float(), object: map()}
 
+  @spec intersections(intersection(), intersection(), intersection(), intersection()) :: list()
+  def intersections(i1, i2, i3, i4), do: [i1, i2, i3, i4]
+
   @spec intersections(intersection(), intersection()) :: list()
-  def intersections(object1, object2), do: [object1, object2]
+  def intersections(i1, i2), do: [i1, i2]
 
   @spec intersection(float(), map()) :: intersection()
   def intersection(t, object), do: %Rayz.Intersection{t: t, object: object}

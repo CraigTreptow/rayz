@@ -17,6 +17,13 @@ defmodule Rayz.Intersection do
   @type ray :: %Rayz.Ray{origin: rayztuple(), direction: rayztuple()}
   @type sphere :: %Rayz.Sphere{id: integer()}
 
+  def hit(hits) do
+    hits
+    |> Enum.sort(&(&1.t < &2.t))
+    |> Enum.filter(fn o -> o.t >= 0 end)
+    |> Enum.at(0)
+  end
+
   @spec intersect(sphere(), ray()) :: list()
   def intersect(sphere, ray) do
     # the vector from the sphere's center, to the ray origin
