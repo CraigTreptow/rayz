@@ -40,7 +40,8 @@ defmodule Builder do
   #@spec sphere(rayztuple(), rayztuple()) :: ray()
   def sphere() do
     %Rayz.Sphere{
-      id: Integer.to_string(:rand.uniform(4_294_967_296), 32)
+      id:        Integer.to_string(:rand.uniform(4_294_967_296), 32),
+      transform: Builder.identity_matrix()
     }
   end
 

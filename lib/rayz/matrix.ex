@@ -52,7 +52,7 @@ defmodule Rayz.Matrix do
 
   @type rayztuple :: %Rayz.Tuple{x: float(), y: float(), z: float(), w: float()}
 
-  @spec inverse(matrix4x4()) :: boolean()
+  @spec inverse(matrix4x4()) :: matrix4x4()
   def inverse(m = {
       _, _, _, _,
       _, _, _, _,

@@ -2,68 +2,47 @@ defmodule RayzSphereTest do
   use ExUnit.Case
   #doctest Rayz.Sphere
 
-  #describe "Rayz.Sphere.intersect/2" do
-  #  test "A ray intersects a sphere at two points" do
-  #    origin    = Builder.point(0, 0, -5)
-  #    direction = Builder.vector(0, 0, 1)
-  #    r = Builder.ray(origin, direction)
-  #    s = Builder.sphere()
+  test "Intersecting a scaled sphere with a ray" do
+    origin = Builder.point(0, 0, -5)
+    direction = Builder.vector(0, 0, 1)
+    r = Builder.ray(origin, direction)
+    s = 
+      Builder.sphere()
+      |> Rayz.Sphere.set_transform(Builder.scaling(2, 2, 2))
 
-  #    xs = Rayz.Sphere.intersect(s, r)
+    xs = Rayz.Intersection.intersect(s, r)
 
-  #    assert Kernel.length(xs) == 2
-  #    assert Enum.at(xs, 0) == 4.0
-  #    assert Enum.at(xs, 1) == 6.0
-  #  end
+    assert Kernel.length(xs) == 2
+    assert Enum.at(xs, 0).t == 3.0
+    assert Enum.at(xs, 1).t == 7.0
+  end
 
-  #  test "A ray intersects a sphere at a tangent" do
-  #    origin    = Builder.point(0, 1, -5)
-  #    direction = Builder.vector(0, 0, 1)
-  #    r = Builder.ray(origin, direction)
-  #    s = Builder.sphere()
+  test "Intersecting a translated sphere with a ray" do
+    origin = Builder.point(0, 0, -5)
+    direction = Builder.vector(0, 0, 1)
+    r = Builder.ray(origin, direction)
+    s = 
+      Builder.sphere()
+      |> Rayz.Sphere.set_transform(Builder.translation(5, 0, 0))
 
-  #    xs = Rayz.Sphere.intersect(s, r)
+    xs = Rayz.Intersection.intersect(s, r)
 
-  #    assert Kernel.length(xs) == 2
-  #    assert Enum.at(xs, 0) == 5.0
-  #    assert Enum.at(xs, 1) == 5.0
-  #  end
+    assert Kernel.length(xs) == 0
+  end
 
-  #  test "A ray misses a sphere" do
-  #    origin    = Builder.point(0, 2, -5)
-  #    direction = Builder.vector(0, 0, 1)
-  #    r = Builder.ray(origin, direction)
-  #    s = Builder.sphere()
+  test "A sphere's default transformation" do
+    s = Builder.sphere()
+    i = Builder.identity_matrix()
 
-  #    xs = Rayz.Sphere.intersect(s, r)
+    assert Equality.equal?(s.transform, i)
+  end
 
-  #    assert Kernel.length(xs) == 0
-  #  end
+  test "Changing a sphere's transformation" do
+    s = Builder.sphere()
+    t = Builder.translation(2, 3, 4) 
 
-  #  test "A ray originates inside a sphere" do
-  #    origin    = Builder.point(0, 0, 0)
-  #    direction = Builder.vector(0, 0, 1)
-  #    r = Builder.ray(origin, direction)
-  #    s = Builder.sphere()
+    s = Rayz.Sphere.set_transform(s, t)
 
-  #    xs = Rayz.Sphere.intersect(s, r)
-
-  #    assert Kernel.length(xs) == 2
-  #    assert Enum.at(xs, 0) == -1.0
-  #    assert Enum.at(xs, 1) == 1.0
-  #  end
-
-  #  test "A sphere is behind a ray" do
-  #    origin    = Builder.point(0, 0, 5)
-  #    direction = Builder.vector(0, 0, 1)
-  #    r = Builder.ray(origin, direction)
-  #    s = Builder.sphere()
-
-  #    xs = Rayz.Sphere.intersect(s, r)
-
-  #    assert Kernel.length(xs) == 2
-  #    assert Enum.at(xs, 0) == -6.0
-  #    assert Enum.at(xs, 1) == -4.0
-  #  end
-  #end
+    assert Equality.equal?(s.transform, t)
+  end
 end

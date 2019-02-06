@@ -22,6 +22,22 @@ defmodule Rayz.Ray do
 
   @type rayztuple :: %Rayz.Tuple{x: float(), y: float(), z: float(), w: float()}
   @type ray :: %Rayz.Ray{origin: rayztuple(), direction: rayztuple()}
+  @type matrix4x4() :: 
+    {
+      float(), float(), float(), float(),
+      float(), float(), float(), float(),
+      float(), float(), float(), float(),
+      float(), float(), float(), float()
+    }
+
+
+  @spec transform(ray(), matrix4x4()) :: rayztuple()
+  def transform(ray, transformation) do
+    Builder.ray(
+      Rayz.Matrix.multiply(transformation, ray.origin),
+      Rayz.Matrix.multiply(transformation, ray.direction)
+    )
+  end
 
   @spec position(ray(), float()) :: rayztuple()
   def position(ray, time) do

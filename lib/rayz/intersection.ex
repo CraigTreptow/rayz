@@ -26,12 +26,15 @@ defmodule Rayz.Intersection do
 
   @spec intersect(sphere(), ray()) :: list()
   def intersect(sphere, ray) do
+    ray2 = 
+      ray
+      |> Rayz.Ray.transform(Rayz.Matrix.inverse(sphere.transform))
     # the vector from the sphere's center, to the ray origin
     # Remember: the sphere is centered at the world origin
-    sphere_to_ray = Rayz.Tuple.subtract(ray.origin, Builder.point(0, 0, 0))
+    sphere_to_ray = Rayz.Tuple.subtract(ray2.origin, Builder.point(0, 0, 0))
 
-    a = Rayz.Tuple.dot(ray.direction, ray.direction)
-    b = 2 * Rayz.Tuple.dot(ray.direction, sphere_to_ray)
+    a = Rayz.Tuple.dot(ray2.direction, ray2.direction)
+    b = 2 * Rayz.Tuple.dot(ray2.direction, sphere_to_ray)
     c = Rayz.Tuple.dot(sphere_to_ray, sphere_to_ray) - 1
 
     discriminant = (b * b) - (4 * a * c)
