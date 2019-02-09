@@ -2,6 +2,54 @@ defmodule RayzSphereTest do
   use ExUnit.Case
   #doctest Rayz.Sphere
 
+  describe "Rayz.Sphere.normal_at/2" do
+    test "The normal on a sphere at a point on the x axis" do
+      s = Builder.sphere()
+      p = Builder.point(1, 0, 0)
+      n = Rayz.Sphere.normal_at(s, p)
+
+      expected_v = Builder.vector(1, 0, 0)
+
+      assert Equality.equal?(n, expected_v)
+    end
+
+    test "The normal on a sphere at a point on the y axis" do
+      s = Builder.sphere()
+      p = Builder.point(0, 1, 0)
+      n = Rayz.Sphere.normal_at(s, p)
+      expected_v = Builder.vector(0, 1, 0)
+
+      assert Equality.equal?(n, expected_v)
+    end
+
+    test "The normal on a sphere at a point on the z axis" do
+      s = Builder.sphere()
+      p = Builder.point(0, 0, 1)
+      n = Rayz.Sphere.normal_at(s, p)
+      expected_v = Builder.vector(0, 0, 1)
+
+      assert Equality.equal?(n, expected_v)
+    end
+
+    test "The normal on a sphere at a non-axial point" do
+      s = Builder.sphere()
+      p = Builder.point(:math.sqrt(3) / 3, :math.sqrt(3) / 3, :math.sqrt(3) / 3)
+      n = Rayz.Sphere.normal_at(s, p)
+      expected_v = Builder.vector(:math.sqrt(3) / 3, :math.sqrt(3) / 3, :math.sqrt(3) / 3)
+
+      assert Equality.equal?(n, expected_v)
+    end
+
+    test "The normal is a normalized vector" do
+      s = Builder.sphere()
+      p = Builder.point(1, 0, 0)
+      n = Rayz.Sphere.normal_at(s, p)
+      nv = Rayz.Tuple.normalize(n)
+
+      assert Equality.equal?(n, nv)
+    end
+  end
+
   test "Intersecting a scaled sphere with a ray" do
     origin = Builder.point(0, 0, -5)
     direction = Builder.vector(0, 0, 1)

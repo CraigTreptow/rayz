@@ -13,6 +13,18 @@ defmodule Rayz.Sphere do
     transform: nil
   )
 
+  def normal_at(_sphere, p) do
+    o = Builder.point(0, 0, 0)
+    # Note that, because this is a unit sphere, the vector will be normalized by
+    # default for any point on its surface, so it’s not strictly necessary to 
+    # explicitly normalize it here.)
+
+    p
+    |> Rayz.Tuple.subtract(o)
+    |> Rayz.Tuple.normalize()
+
+  end
+
   def set_transform(sphere, transform) do
     Map.put(sphere, :transform, transform)
   end
