@@ -3,6 +3,36 @@ defmodule RayzSphereTest do
   #doctest Rayz.Sphere
 
   describe "Rayz.Sphere.normal_at/2" do
+    test "Computing the normal on a translated sphere" do
+      s = Builder.sphere()
+      m = Builder.translation(0, 1, 0)
+      Rayz.Sphere.set_transform(s, m)
+      p = Builder.point(0, 1.70711, -0.70711) 
+      n = Rayz.Sphere.normal_at(s, p)
+
+      IO.inspect n
+
+      expected_v = Builder.vector(0, 0.70711, -0.70711)
+
+      assert Equality.equal?(n, expected_v)
+    end
+
+    #test "Computing the normal on a transformed sphere" do
+    #  s        = Builder.sphere()
+    #  scaling  = Builder.scaling(1, 0.5, 1)
+    #  rotation = Builder.rotation_z(:math.pi / 5)
+    #  m        = Rayz.Matrix.multiply(scaling, rotation)
+    #  Rayz.Sphere.set_transform(s, m)
+    #  p = Builder.point(0, :math.sqrt(2) / 2, -:math.sqrt(2) / 2)
+    #  n = Rayz.Sphere.normal_at(s, p)
+
+    #  IO.inspect n
+
+    #  expected_v = Builder.vector(0, 0.97014, -0.24254)
+
+    #  assert Equality.equal?(n, expected_v)
+    #end
+
     test "The normal on a sphere at a point on the x axis" do
       s = Builder.sphere()
       p = Builder.point(1, 0, 0)
