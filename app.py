@@ -2,7 +2,6 @@ import pandas as pd
 import dash
 from dash import html, dcc, Input, Output
 import dash_bootstrap_components as dbc
-import plotly.graph_objects as go
 import plotly.express as px
 import sys
 import argparse
@@ -15,8 +14,8 @@ class CrashData():
             self.df = self.df.loc[self.df['Loc_Local_Government_Area'] != 'Unknown', 
                 ['Crash_Year','Crash_Type','Crash_Longitude','Crash_Latitude']]
             print(f'The shape after cleansing {self.df.shape}')
-        except:
-            sys.exit('Unable to load data file')
+        except Exception as e:
+            sys.exit("Unable to load data file % s" % e)
         self.year_min, self.year_max = self.df['Crash_Year'].min().item(), self.df['Crash_Year'].max().item()
         self.center_long, self.center_lat = self.df['Crash_Longitude'].mean().item(), self.df['Crash_Latitude'].mean().item()
         self.center_long, self.center_lat = 153.0260, -27.4705
