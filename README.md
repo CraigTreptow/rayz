@@ -10,6 +10,10 @@ An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](http
 
 `behave`
 
+## Linting
+
+`ruff check .`
+
 ### Plan
 
 1. Make it work.
