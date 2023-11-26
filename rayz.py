@@ -1,8 +1,8 @@
-import toopal as T
+from toople_dataclass import Toople
 
 def main():
     print("Hello from Rayz!!")
-    t = T.Toopal(1.1, 2.2, 3.3, 4.4)
+    t = Toople(x=1.1, y=2.2, z=3.3, w=4.4)
     print("X: % s" % t.x)
 
 if __name__ == "__main__":

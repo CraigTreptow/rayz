@@ -1,3 +1,5 @@
+# type: ignore
+
 from behave import *
 from toople_dataclass import Toople
 
