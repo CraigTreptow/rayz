@@ -1,7 +1,7 @@
 # type: ignore
 
 from behave import *
-from toople_dataclass import Toople
+from rayz.toople import Toople
 
 @given('a ← tuple(4.3, -4.2, 3.1, 1.0)')
 def step_impl(context):
