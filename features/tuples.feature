@@ -1,5 +1,4 @@
 Feature: Tuples, Vectors, and Points
-
   Scenario: A tuple with w=1.0 is a point
     Given a ← tuple(4.3, -4.2, 3.1, 1.0)
     Then a.x = 4.3
@@ -9,19 +8,15 @@ Feature: Tuples, Vectors, and Points
     And a is a point
     And a is not a vector
 
-#     test "A tuple with w=0 is a vector" do
-#       a = Builder.tuple(4.3, -4.2, 3.1, 0.0)
-# 
-#       assert a.x ==  4.3
-#       assert a.y == -4.2
-#       assert a.z ==  3.1
-#       assert a.w ==  0
-# 
-#       assert Rayz.Tuple.is_point?(a) == false
-#       assert Rayz.Tuple.is_vector?(a) == true
-#     end
-#   end
-# 
+  Scenario: A tuple with w=0 is a vector
+    Given a ← tuple(4.3, -4.2, 3.1, 0)
+    Then a.x = 4.3
+    And a.y = -4.2
+    And a.z = 3.1
+    And a.w = 0
+    And a is a vector
+    And a is not a point
+
 #   describe "Rayz.Tuple.cross/2" do
 #     test "The cross product of two vectors" do
 #       a = Builder.vector(1, 2, 3)
