@@ -4,28 +4,31 @@
 # if output is needed, add `print("\n\n")` at the end
 from behave import *
 import rayz.util as U
+import rayz.tuple_util as TU
 
 @given('a ← tuple({x}, {y}, {z}, {w})')
 def step_impl(context, x, y, z, w):
-    context.a = U.new_tuple(x=float(x), y=float(y), z=float(z), w=float(w))
+    context.a = TU.new_tuple(x=float(x), y=float(y), z=float(z), w=float(w))
 
 @given('p ← point({x}, {y}, {z})')
 def step_impl(context, x, y, z):
-    context.p = U.new_point(x=float(x), y=float(y), z=float(z))
+    context.p = TU.new_point(x=float(x), y=float(y), z=float(z))
 
 @given('v ← vector({x}, {y}, {z})')
 def step_impl(context, x, y, z):
-    context.v = U.new_vector(x=float(x), y=float(y), z=float(z))
+    context.v = TU.new_vector(x=float(x), y=float(y), z=float(z))
 
 # THEN
 
 @then('v = tuple({x}, {y}, {z}, {w})')
 def step_impl(context, x, y, z, w):
-    assert (context.v == U.new_tuple(x=float(x), y=float(y), z=float(z), w=float(w))) is True
+    new = TU.new_tuple(x=float(x), y=float(y), z=float(z), w=float(w))
+    assert TU.equal(context.v, new) is True
 
 @then('p = tuple({x}, {y}, {z}, {w})')
 def step_impl(context, x, y, z, w):
-    assert (context.p == U.new_tuple(x=float(x), y=float(y), z=float(z), w=float(w))) is True
+    new = TU.new_tuple(x=float(x), y=float(y), z=float(z), w=float(w))
+    assert TU.equal(context.p, new) is True
 
 @then('a.{x} = {v}')
 def step_impl(context, x, v):
@@ -33,13 +36,13 @@ def step_impl(context, x, v):
 
     match x:
         case 'x':
-            assert (a[0] == float(v)) is True
+            assert U.equal(a[0], float(v)) is True
         case 'y':
-            assert (a[1] == float(v)) is True
+            assert U.equal(a[1], float(v)) is True
         case 'z':
-            assert (a[2] == float(v)) is True
+            assert U.equal(a[2], float(v)) is True
         case 'w':
-            assert (a[3] == float(v)) is True
+            assert U.equal(a[3], float(v)) is True
 
 @then('a is a {type}')
 def step_impl(context, type):
@@ -47,9 +50,9 @@ def step_impl(context, type):
 
     match a:
         case 'point':
-            assert U.is_point(a) is True
+            assert TU.is_point(a) is True
         case 'vector':
-            assert U.is_vector(a) is True
+            assert TU.is_vector(a) is True
 
 @then('a is not a {type}')
 def step_impl(context, type):
@@ -57,6 +60,6 @@ def step_impl(context, type):
 
     match a:
         case 'point':
-            assert U.is_point(a) is False
+            assert TU.is_point(a) is False
         case 'vector':
-            assert U.is_vector(a) is False
+            assert TU.is_vector(a) is False
