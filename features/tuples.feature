@@ -17,6 +17,14 @@ Feature: Tuples, Vectors, and Points
     And a is a vector
     And a is not a point
 
+  Scenario: point() creates tuples with w=1
+    Given p ← point(4, -4, 3)
+    Then p = tuple(4, -4, 3, 1)
+    
+  Scenario: vector() creates tuples with w=0
+    Given v ← vector(4, -4, 3)
+    Then v = tuple(4, -4, 3, 0)
+
 #   describe "Rayz.Tuple.cross/2" do
 #     test "The cross product of two vectors" do
 #       a = Builder.vector(1, 2, 3)

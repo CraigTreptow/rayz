@@ -15,6 +15,9 @@ An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](http
 
 `behave`
 
+_Note_: If you need print output while these are running, the `behave.ini` is configured to allow it, but you will also need to run with the `--no-color` option.
+_Note_: Even easier than the above is the add a couple of lines to all output, then behave will get rid of them and you can see the output *and* the color.
+
 ## Linting
 
 `ruff check .`
