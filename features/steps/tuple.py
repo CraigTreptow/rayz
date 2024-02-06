@@ -32,9 +32,17 @@ def step_impl(context, p, x, y, z):
         case 'p2':
             context.p2 = new_point
 
-@given('v ← vector({x}, {y}, {z})')
-def step_impl(context, x, y, z):
-    context.v = Vector(x=float(x), y=float(y), z=float(z))
+@given('{v} ← vector({x}, {y}, {z})')
+def step_impl(context, v, x, y, z):
+    new_vector = Vector(x=float(x), y=float(y), z=float(z))
+
+    match v:
+        case 'v':
+            context.v = new_vector
+        case 'v1':
+            context.v1 = new_vector
+        case 'v2':
+            context.v2 = new_vector
 
 # THEN
 
@@ -55,6 +63,19 @@ def step_impl(context, a, b, x, y, z):
 
     if (a == 'p1' and b == 'p2'):
         result = context.p1 - context.p2
+
+    if (a == 'v1' and b == 'v2'):
+        result = context.v1 - context.v2
+
+    assert (result == expected) is True
+
+@then('{a} - {b} = point({x}, {y}, {z})')
+def step_impl(context, a, b, x, y, z):
+    expected = Point(x=float(x), y=float(y), z=float(z))
+    result = None
+
+    if (a == 'p' and b == 'v'):
+        result = context.p - context.v
 
     assert (result == expected) is True
 
