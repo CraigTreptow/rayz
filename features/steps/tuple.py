@@ -43,8 +43,20 @@ def step_impl(context, v, x, y, z):
             context.v1 = new_vector
         case 'v2':
             context.v2 = new_vector
+        case 'zero':
+            context.zero = Vector(x=0.0, y=0.0, z=0.0)
 
 # THEN
+
+@then('-{a} = tuple({x}, {y}, {z}, {w})')
+def step_impl(context, a, x, y, z, w):
+    expected = Toople(x=float(x), y=float(y), z=float(z), w=float(w))
+    result = None
+
+    if (a == 'a'):
+        result = -context.a
+
+    assert (result == expected) is True
 
 @then('{a} + {b} = tuple({x}, {y}, {z}, {w})')
 def step_impl(context, a, b, x, y, z, w):
@@ -66,6 +78,9 @@ def step_impl(context, a, b, x, y, z):
 
     if (a == 'v1' and b == 'v2'):
         result = context.v1 - context.v2
+
+    if (a == 'zero' and b == 'v'):
+        result = context.zero - context.v
 
     assert (result == expected) is True
 

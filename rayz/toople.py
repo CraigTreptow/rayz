@@ -19,6 +19,13 @@ class Toople:
     def __sub__(self, other):
         return Toople(x=self.x - other.x, y=self.y - other.y, z=self.z - other.z, w=self.w - other.w)
 
+    def __neg__(self):
+        nx = self.x * -1
+        ny = self.y * -1
+        nz = self.z * -1
+        nw = self.w * -1
+        return Toople(x=nx, y=ny, z=nz, w=nw)
+
     def is_point(self):
         return self.w == 1.0
 
