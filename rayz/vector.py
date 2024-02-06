@@ -1,0 +1,8 @@
+from rayz.toople import *
+
+class Vector(Toople):
+    def __init__(self, x:float=0.0, y:float=0.0, z:float=0.0):
+        super().__init__(x=x, y=y, z=z, w=0.0)
+
+    def __str__(self):
+        return f"Vector({self.x}, {self.y}, {self.z}, {self.w})"
