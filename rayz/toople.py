@@ -1,7 +1,7 @@
 import rayz.util as U
 
 class Toople:
-    def __init__(self, x:float=0.0, y:float=0.0, z:float=0.0, w:float=0.0)  -> 'Toople':
+    def __init__(self, x:float=0.0, y:float=0.0, z:float=0.0, w:float=0.0)  -> None:
         self.x = x
         self.y = y
         self.z = z
@@ -26,7 +26,7 @@ class Toople:
         nw = self.w * -1
         return Toople(x=nx, y=ny, z=nz, w=nw)
 
-    def scalar_mult(self, scalar) -> 'Toople':
+    def scalar_mult(self, scalar:float) -> 'Toople':
         nx = self.x * scalar
         ny = self.y * scalar
         nz = self.z * scalar
