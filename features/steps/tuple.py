@@ -58,6 +58,18 @@ def step_impl(context, a, x, y, z, w):
 
     assert (result == expected) is True
 
+@then('{a} * {scalar} = tuple({x}, {y}, {z}, {w})')
+def step_impl(context, a, scalar, x, y, z, w):
+    expected = Toople(x=float(x), y=float(y), z=float(z), w=float(w))
+    result = None
+
+    if (a == 'a' and scalar == '3.5'):
+        result = context.a.scalar_mult(3.5)
+    if (a == 'a' and scalar == '0.5'):
+        result = context.a.scalar_mult(0.5)
+
+    assert (result == expected) is True
+
 @then('{a} + {b} = tuple({x}, {y}, {z}, {w})')
 def step_impl(context, a, b, x, y, z, w):
     expected = Toople(x=float(x), y=float(y), z=float(z), w=float(w))

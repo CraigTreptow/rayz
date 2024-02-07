@@ -26,6 +26,13 @@ class Toople:
         nw = self.w * -1
         return Toople(x=nx, y=ny, z=nz, w=nw)
 
+    def scalar_mult(self, scalar) -> 'Toople':
+        nx = self.x * scalar
+        ny = self.y * scalar
+        nz = self.z * scalar
+        nw = self.w * scalar
+        return Toople(x=nx, y=ny, z=nz, w=nw)
+
     def is_point(self) -> bool:
         return self.w == 1.0
 
