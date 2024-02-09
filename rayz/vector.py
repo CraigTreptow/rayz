@@ -1,3 +1,4 @@
+import math
 from rayz.toople import *
 
 class Vector(Toople):
@@ -6,3 +7,6 @@ class Vector(Toople):
 
     def __str__(self) -> str:
         return f"Vector({self.x}, {self.y}, {self.z}, {self.w})"
+
+    def magnitude(self) -> float:
+        return math.sqrt(self.x**2 + self.y**2 + self.z**2)

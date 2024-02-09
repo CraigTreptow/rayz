@@ -1,5 +1,6 @@
 # type: ignore
 from behave import *
+import math
 
 # from pprint import pprint
 # if output is needed, add `print("\n\n")` at the end
@@ -159,3 +160,12 @@ def step_impl(context, type):
             assert a.is_point() is False
         case 'vector':
             assert a.is_vector() is False
+
+@then('magnitude(v) = {result}')
+def step_impl(context, result):
+    v = context.v
+    match result:
+        case '1':
+            assert (v.magnitude() == 1) is True
+        case '√14':
+            assert (v.magnitude() == math.sqrt(14)) is True
