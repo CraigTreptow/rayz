@@ -46,8 +46,12 @@ def step_impl(context, v, x, y, z):
             context.v2 = new_vector
         case 'zero':
             context.zero = Vector(x=0.0, y=0.0, z=0.0)
+# WHEN #######################################################################
+@when('norm ← normalize(v)')
+def step_impl(context):
+    context.norm = context.v.normalize()
 
-# THEN
+# THEN #######################################################################
 
 @then('-{a} = tuple({x}, {y}, {z}, {w})')
 def step_impl(context, a, x, y, z, w):
@@ -161,11 +165,28 @@ def step_impl(context, type):
         case 'vector':
             assert a.is_vector() is False
 
-@then('magnitude(v) = {result}')
-def step_impl(context, result):
-    v = context.v
+@then('magnitude({v}) = {result}')
+def step_impl(context, v, result):
+    match v:
+        case 'v':
+            v = context.v
+        case 'norm':
+            v = context.norm
+
     match result:
         case '1':
             assert (v.magnitude() == 1) is True
         case '√14':
             assert (v.magnitude() == math.sqrt(14)) is True
+
+@then('normalize(v) = vector({x}, {y}, {z})')
+def step_impl(context, x, y, z):
+    expected = Vector(x=float(x), y=float(y), z=float(z))
+
+    assert (context.v.normalize() == expected) is True
+
+@then('normalize(v) = approximately vector({x}, {y}, {z})')
+def step_impl(context, x, y, z):
+    expected = Vector(x=float(x), y=float(y), z=float(z))
+
+    assert (context.v.normalize() == expected) is True

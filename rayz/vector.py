@@ -10,3 +10,10 @@ class Vector(Toople):
 
     def magnitude(self) -> float:
         return math.sqrt(self.x**2 + self.y**2 + self.z**2)
+
+    def normalize(self) -> 'Vector':
+        mag = self.magnitude()
+        nx = self.x / mag
+        ny = self.y / mag
+        nz = self.z / mag
+        return Vector(x=nx, y=ny, z=nz)
