@@ -1,6 +1,5 @@
 # type: ignore
 from behave import *
-import math
 
 # from pprint import pprint
 # if output is needed, add `print("\n\n")` at the end
@@ -20,36 +19,6 @@ def step_impl(context, t, x, y, z, w):
             context.a1 = new_tuple
         case 'a2':
             context.a2 = new_tuple
-
-@given('{p} ← point({x}, {y}, {z})')
-def step_impl(context, p, x, y, z):
-    new_point = Point(x=float(x), y=float(y), z=float(z))
-
-    match p:
-        case 'p':
-            context.p = new_point
-        case 'p1':
-            context.p1 = new_point
-        case 'p2':
-            context.p2 = new_point
-
-@given('{v} ← vector({x}, {y}, {z})')
-def step_impl(context, v, x, y, z):
-    new_vector = Vector(x=float(x), y=float(y), z=float(z))
-
-    match v:
-        case 'v':
-            context.v = new_vector
-        case 'v1':
-            context.v1 = new_vector
-        case 'v2':
-            context.v2 = new_vector
-        case 'zero':
-            context.zero = Vector(x=0.0, y=0.0, z=0.0)
-# WHEN #######################################################################
-@when('norm ← normalize(v)')
-def step_impl(context):
-    context.norm = context.v.normalize()
 
 # THEN #######################################################################
 
@@ -95,37 +64,6 @@ def step_impl(context, a, b, x, y, z, w):
 
     assert (result == expected) is True
 
-@then('{a} - {b} = vector({x}, {y}, {z})')
-def step_impl(context, a, b, x, y, z):
-    expected = Vector(x=float(x), y=float(y), z=float(z))
-    result = None
-
-    if (a == 'p1' and b == 'p2'):
-        result = context.p1 - context.p2
-
-    if (a == 'v1' and b == 'v2'):
-        result = context.v1 - context.v2
-
-    if (a == 'zero' and b == 'v'):
-        result = context.zero - context.v
-
-    assert (result == expected) is True
-
-@then('{a} - {b} = point({x}, {y}, {z})')
-def step_impl(context, a, b, x, y, z):
-    expected = Point(x=float(x), y=float(y), z=float(z))
-    result = None
-
-    if (a == 'p' and b == 'v'):
-        result = context.p - context.v
-
-    assert (result == expected) is True
-
-@then('v = tuple({x}, {y}, {z}, {w})')
-def step_impl(context, x, y, z, w):
-    new = Toople(x=float(x), y=float(y), z=float(z), w=float(w))
-    assert (context.v == new) is True
-
 @then('p = tuple({x}, {y}, {z}, {w})')
 def step_impl(context, x, y, z, w):
     new = Toople(x=float(x), y=float(y), z=float(z), w=float(w))
@@ -164,29 +102,3 @@ def step_impl(context, type):
             assert a.is_point() is False
         case 'vector':
             assert a.is_vector() is False
-
-@then('magnitude({v}) = {result}')
-def step_impl(context, v, result):
-    match v:
-        case 'v':
-            v = context.v
-        case 'norm':
-            v = context.norm
-
-    match result:
-        case '1':
-            assert (v.magnitude() == 1) is True
-        case '√14':
-            assert (v.magnitude() == math.sqrt(14)) is True
-
-@then('normalize(v) = vector({x}, {y}, {z})')
-def step_impl(context, x, y, z):
-    expected = Vector(x=float(x), y=float(y), z=float(z))
-
-    assert (context.v.normalize() == expected) is True
-
-@then('normalize(v) = approximately vector({x}, {y}, {z})')
-def step_impl(context, x, y, z):
-    expected = Vector(x=float(x), y=float(y), z=float(z))
-
-    assert (context.v.normalize() == expected) is True
