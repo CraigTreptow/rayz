@@ -33,6 +33,13 @@ class Toople:
         nw = self.w * scalar
         return Toople(x=nx, y=ny, z=nz, w=nw)
 
+    def scalar_div(self, scalar:float) -> 'Toople':
+        nx = self.x / scalar
+        ny = self.y / scalar
+        nz = self.z / scalar
+        nw = self.w / scalar
+        return Toople(x=nx, y=ny, z=nz, w=nw)
+
     def is_point(self) -> bool:
         return self.w == 1.0
 

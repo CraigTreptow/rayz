@@ -70,6 +70,16 @@ def step_impl(context, a, scalar, x, y, z, w):
 
     assert (result == expected) is True
 
+@then('{a} / {scalar} = tuple({x}, {y}, {z}, {w})')
+def step_impl(context, a, scalar, x, y, z, w):
+    expected = Toople(x=float(x), y=float(y), z=float(z), w=float(w))
+    result = None
+
+    if (a == 'a' and scalar == '2'):
+        result = context.a.scalar_div(2)
+
+    assert (result == expected) is True
+
 @then('{a} + {b} = tuple({x}, {y}, {z}, {w})')
 def step_impl(context, a, b, x, y, z, w):
     expected = Toople(x=float(x), y=float(y), z=float(z), w=float(w))
