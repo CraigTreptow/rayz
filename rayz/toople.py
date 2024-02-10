@@ -10,7 +10,10 @@ class Toople:
     def __str__(self) -> str:
         return f"Toople({self.x}, {self.y}, {self.z}, {self.w})"
 
-    def __eq__(self, other:'Toople') -> bool:
+    def __eq__(self, other:object) -> bool:
+        if not isinstance(other, Toople):
+            return NotImplemented
+
         return U.equal(self.x, other.x) and U.equal(self.y, other.y) and U.equal(self.z, other.z) and U.equal(self.w, other.w)
 
     def __add__(self, other:'Toople') -> 'Toople':
