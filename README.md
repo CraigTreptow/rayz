@@ -22,11 +22,32 @@ _Note_: Even easier than the above is the add a couple of lines to all output, t
 
 `ruff check .`
 
-## Current Status
-
-Getting up to speed on Python and Dev containers/Docker.
-
 ## TODO
 
 - [ ] Generate new project
 - [ ] Set up CI/build pipeline
+
+## Chapter 1
+
+A projectile is shot and the position is reported until it hits the ground.
+
+```
+Position at tick 000 -> X:   0.707  Y:   1.707  Z:   0.000
+Position at tick 001 -> X:   1.404  Y:   2.314  Z:   0.000
+Position at tick 002 -> X:   2.091  Y:   2.821  Z:   0.000
+Position at tick 003 -> X:   2.768  Y:   3.228  Z:   0.000
+Position at tick 004 -> X:   3.436  Y:   3.536  Z:   0.000
+Position at tick 005 -> X:   4.093  Y:   3.743  Z:   0.000
+Position at tick 006 -> X:   4.740  Y:   3.850  Z:   0.000
+Position at tick 007 -> X:   5.377  Y:   3.857  Z:   0.000
+Position at tick 008 -> X:   6.004  Y:   3.764  Z:   0.000
+Position at tick 009 -> X:   6.621  Y:   3.571  Z:   0.000
+Position at tick 010 -> X:   7.228  Y:   3.278  Z:   0.000
+Position at tick 011 -> X:   7.825  Y:   2.885  Z:   0.000
+Position at tick 012 -> X:   8.412  Y:   2.392  Z:   0.000
+Position at tick 013 -> X:   8.989  Y:   1.799  Z:   0.000
+Position at tick 014 -> X:   9.557  Y:   1.107  Z:   0.000
+Position at tick 015 -> X:  10.114  Y:   0.314  Z:   0.000
+Position at tick 016 -> X:  10.661  Y:  -0.579  Z:   0.000
+Projectile hit the ground after 16 ticks.
+```
