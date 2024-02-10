@@ -13,6 +13,10 @@ def step_impl(context, v, x, y, z):
     new_vector = Vector(x=float(x), y=float(y), z=float(z))
 
     match v:
+        case 'a':
+            context.a = new_vector
+        case 'b':
+            context.b = new_vector
         case 'v':
             context.v = new_vector
         case 'v1':
@@ -76,3 +80,17 @@ def step_impl(context, x, y, z):
     expected = Vector(x=float(x), y=float(y), z=float(z))
 
     assert (context.v.normalize() == expected) is True
+
+@then('dot(a, b) = {s}')
+def step_impl(context, s):
+    assert (context.a.dot(context.b) == float(s)) is True
+
+@then('cross({i}, {j}) = vector({x}, {y}, {z})')
+def step_impl(context, i, j, x, y, z):
+    expected = Vector(x=float(x), y=float(y), z=float(z))
+
+    if i == 'a' and j == 'b':
+        assert (context.a.cross(context.b) == expected) is True
+
+    if i == 'b' and j == 'a':
+        assert (context.b.cross(context.a) == expected) is True

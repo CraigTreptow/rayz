@@ -101,17 +101,17 @@ Scenario: The magnitude of a normalized vector
   When norm ← normalize(v)
   Then magnitude(norm) = 1
 
-# Scenario: The dot product of two tuples
-#   Given a ← vector(1, 2, 3)
-#     And b ← vector(2, 3, 4)
-#   Then dot(a, b) = 20
-# 
-# Scenario: The cross product of two vectors
-#   Given a ← vector(1, 2, 3)
-#     And b ← vector(2, 3, 4)
-#   Then cross(a, b) = vector(-1, 2, -1)
-#     And cross(b, a) = vector(1, -2, 1)
-# 
+Scenario: The dot product of two tuples
+  Given a ← vector(1, 2, 3)
+    And b ← vector(2, 3, 4)
+  Then dot(a, b) = 20
+
+Scenario: The cross product of two vectors
+  Given a ← vector(1, 2, 3)
+    And b ← vector(2, 3, 4)
+  Then cross(a, b) = vector(-1, 2, -1)
+    And cross(b, a) = vector(1, -2, 1)
+
 # Scenario: Colors are (red, green, blue) tuples
 #   Given c ← color(-0.5, 0.4, 1.7)
 #   Then c.red = -0.5
