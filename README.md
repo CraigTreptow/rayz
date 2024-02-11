@@ -27,6 +27,19 @@ _Note_: Even easier than the above is the add a couple of lines to all output, t
 - [ ] Generate new project
 - [ ] Set up CI/build pipeline
 
+## Grid
+
+The canvas is a grid of pixels.  The grid is defined by the number of rows and columns.  The rows are the Y axis and the columns are the X axis.  The origin is the top left corner of the grid.  The X axis increases to the right and the Y axis increases down.:
+
+0  1  2  3 ... C
+1
+2
+3
+.
+.
+.
+R
+
 ## Chapter 1
 
 A projectile is shot and the position is reported until it hits the ground.
@@ -51,3 +64,6 @@ Position at tick 015 -> X:  10.114  Y:   0.314  Z:   0.000
 Position at tick 016 -> X:  10.661  Y:  -0.579  Z:   0.000
 Projectile hit the ground after 16 ticks.
 ```
+## Chapter 2
+
+stuff
