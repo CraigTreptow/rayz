@@ -19,5 +19,5 @@ jobs:
           extra-pycodestyle-options: ""
           extra-flake8-options: ""
           extra-black-options: ""
-          extra-mypy-options: ""
+          extra-mypy-options: "."
           extra-isort-options: ""
