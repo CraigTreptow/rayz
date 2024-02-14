@@ -15,6 +15,8 @@ def step_impl(context, c, r, g, b):
             context.c1 = new_color
         case "c2":
             context.c2 = new_color
+        case "c3":
+            context.c3 = new_color
 
 # THEN #######################################################################
 

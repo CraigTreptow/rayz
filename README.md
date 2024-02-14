@@ -22,23 +22,19 @@ _Note_: Even easier than the above is the add a couple of lines to all output, t
 
 `ruff check .`
 
-## TODO
-
-- [ ] Generate new project
-- [ ] Set up CI/build pipeline
-
 ## Grid
 
-The canvas is a grid of pixels.  The grid is defined by the number of rows and columns.  The rows are the Y axis and the columns are the X axis.  The origin is the top left corner of the grid.  The X axis increases to the right and the Y axis increases down.:
+The canvas is a grid of pixels.  The grid is defined by the number of rows and columns.  The rows are the Y axis and the columns are the X axis.
+The origin is the bottom left corner of the grid.  The X axis increases to the right and the Y axis increases up.
 
-0  1  2  3 ... C
-1
-2
+R(y)
+.
+.
+.
 3
-.
-.
-.
-R
+2
+1
+0  1  2  3 ... C (x)
 
 ## Chapter 1
 

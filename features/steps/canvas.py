@@ -1,7 +1,7 @@
 # type: ignore
 from behave import *
 
-# from pprint import pprint
+from pprint import pprint
 # if output is needed, add `print("\n\n")` at the end
 # import rayz.util as U
 from rayz.canvas import *
@@ -24,30 +24,35 @@ def step_impl(context, w, h):
         color = context.canvas.pixel_at(int(w), int(h))
         assert (color == red) is True
 
+@then('lines 1-3 of ppm are')
+def step_impl(context):
+        lines = context.ppm.split("\n")
+        assert (lines[0] == "P3") is True
+        assert (lines[1] == "5 3") is True
+        assert (lines[2] == "255") is True
+
+@then('lines 4-6 of ppm are')
+def step_impl(context):
+        lines = context.ppm.split("\n")
+        assert (lines[3] == "255 0 0 0 0 0 0 0 0 0 0 0 0 0 0") is True
+        assert (lines[4] == "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0") is True
+        assert (lines[5] == "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255") is True
+
 # WHEN #######################################################################
 
-@when('write_pixel(c, {w}, {h}, red)')
-def step_impl(context, w, h):
-        red = Color(red=1, green=0, blue=0)
-        context.canvas.write_pixel(int(w), int(h), red)
+@when('write_pixel(c, {w}, {h}, {color})')
+def step_impl(context, w, h, color):
+        match color:
+            case 'red':
+                red = Color(red=1, green=0, blue=0)
+                context.canvas.write_pixel(int(w), int(h), red)
+            case 'c1':
+                context.canvas.write_pixel(int(w), int(h), context.c1)
+            case 'c2':
+                context.canvas.write_pixel(int(w), int(h), context.c2)
+            case 'c3':
+                context.canvas.write_pixel(int(w), int(h), context.c3)
 
-# @then('c1 + c2 = color({r}, {g}, {b})')
-# def step_impl(context, r, g, b):
-#     expected = Color(red=float(r), green=float(g), blue=float(b))
-#     assert (context.c1 + context.c2 == expected) is True
-# 
-# @then('c1 - c2 = color({r}, {g}, {b})')
-# def step_impl(context, r, g, b):
-#     expected = Color(red=float(r), green=float(g), blue=float(b))
-#     assert (context.c1 - context.c2 == expected) is True
-# 
-# @then('c1 * c2 = color({r}, {g}, {b})')
-# def step_impl(context, r, g, b):
-#     expected = Color(red=float(r), green=float(g), blue=float(b))
-#     assert (context.c1 * context.c2 == expected) is True
-# 
-# @then('c * {s} = color({r}, {g}, {b})')
-# def step_impl(context, s, r, g, b):
-#     expected = Color(red=float(r), green=float(g), blue=float(b))
-#     assert (context.c.scalar_mult(float(s)) == expected) is True
-# 
+@when('ppm ← canvas_to_ppm(c)')
+def step_impl(context):
+        context.ppm = context.canvas.to_ppm()
