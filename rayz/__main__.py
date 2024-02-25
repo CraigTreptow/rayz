@@ -17,7 +17,7 @@ def main():
     print(f"height: {canvas.height}")
     print("\n")
     print(canvas)
-    print(canvas.to_ppm())
+    # print(canvas.to_ppm())
 
     # canvas = Canvas(width=10, height=20)
     # canvas.write_pixel(x=2, y=3, color=red)

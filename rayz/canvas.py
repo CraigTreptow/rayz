@@ -10,7 +10,7 @@ class Canvas:
 
     def __str__(self) -> str:
         result = ""
-        for y in reversed(range(self.height)):
+        for y in range(self.height):
             for x in range(self.width):
                 result += f"[{x},{y}]-{self.pixel_at(x=x, y=y)} "
 
@@ -45,6 +45,7 @@ class Canvas:
         for row in self.grid:
             for color in row:
                 ppm  = ppm + f"{clamp(color.red)} {clamp(color.green)} {clamp(color.blue)} "
-            ppm += "\n"
+            ppm = ppm.rstrip()
+            ppm = ppm + "\n"
 
         return ppm
