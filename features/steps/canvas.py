@@ -38,6 +38,18 @@ def step_impl(context):
     assert (lines[4] == "0 0 0 0 0 0 0 128 0 0 0 0 0 0 0") is True
     assert (lines[5] == "0 0 0 0 0 0 0 0 0 0 0 0 0 0 255") is True
 
+@then('ppm ends with a newline character')
+def step_impl(context):
+    assert (context.ppm.endswith("\n")) is True
+
+# @then(u'lines 4-7 of ppm are')
+# def step_impl(context):
+#     lines = context.ppm.split("\n")
+#     assert (lines[3] == "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204") is True
+#     assert (lines[4] == "153 255 204 153 255 204 153 255 204 153 255 204 153") is True
+#     assert (lines[5] == "255 204 153 255 204 153 255 204 153 255 204 153 255 204 153 255 204") is True
+#     assert (lines[6] == "153 255 204 153 255 204 153 255 204 153 255 204 153") is True
+
 # WHEN #######################################################################
 
 @when('write_pixel(c, {w}, {h}, {color})')
@@ -56,3 +68,8 @@ def step_impl(context, w, h, color):
 @when('ppm ← canvas_to_ppm(c)')
 def step_impl(context):
     context.ppm = context.canvas.to_ppm()
+
+@when('every pixel of c is set to color({r}, {g}, {b})')
+def step_impl(context, r, g, b):
+    for index, row in enumerate(context.canvas.grid):
+        assert (row == [Color(red=float(r), green=float(g), blue=float(b)) for _ in range(len(row))]) is True

@@ -48,4 +48,5 @@ class Canvas:
             ppm = ppm.rstrip()
             ppm = ppm + "\n"
 
+        ppm = ppm + "\n"
         return ppm
