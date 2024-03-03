@@ -2,6 +2,10 @@ from rayz.point import *
 from rayz.vector import *
 
 class Chapter1:
+    """
+    A projectile is an object in motion, affected by gravity and wind.
+    """
+
     @classmethod
     def run(cls):
         # projectile starts one unit above the origin.

@@ -62,4 +62,9 @@ Projectile hit the ground after 16 ticks.
 ```
 ## Chapter 2
 
-stuff
+A projectile is shot and the position is reported until it hits the ground.
+The path of the projectile is plotted on a canvas.
+
+Run example:
+
+`python -m rayz && cp projectile.ppm /mnt/c/Users/craig`
