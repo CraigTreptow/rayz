@@ -4,8 +4,13 @@ An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](http
 
 ## Set Up
 
-1. `source venv/bin/activate`
-1. `pip install -r requirements.txt`
+This uses [Jetlify's devbox](https://www.jetify.com/devbox), so you'll need to install that first.
+
+See `devbox.json` for details on what is installed.
+
+1. `devbox shell`
+1. _I think I don't need this anymore_ - `source venv/bin/activate`
+1. _I think I don't need this anymore_ - `pip install -r requirements.txt`
 
 ## Running
 
