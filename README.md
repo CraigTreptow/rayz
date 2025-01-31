@@ -14,11 +14,11 @@ See `devbox.json` for details on what is installed.
 
 ## Running
 
-`python -m rayz`
+`ruby -m rayz`
 
 ## Testing
 
-`behave`
+`rspec`
 
 _Note_: If you need print output while these are running, the `behave.ini` is configured to allow it, but you will also need to run with the `--no-color` option.
 _Note_: Even easier than the above is the add a couple of lines to all output, then behave will get rid of them and you can see the output *and* the color.

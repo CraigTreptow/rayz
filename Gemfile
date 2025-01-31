@@ -1,18 +1,19 @@
 source 'https://rubygems.org'
 
-ruby '3.4.1'
+ruby "3.4.1"
+
+gem "psych", "~> 3.0"
 
 # Type checking
-gem 'sorbet'
-gem 'sorbet-runtime'
-gem 'tapioca', require: false
+gem "sorbet"
+gem "sorbet-runtime"
+gem "tapioca", require: false
 
 # Testing
-gem 'rspec'
-gem 'cucumber'
-gem 'capybara'
+gem "rspec"
+gem "cucumber"
 
 # Development tools
-gem 'rubocop'
-gem 'solargraph'
-gem 'debug'
+gem "debug"
+gem "standard"
+gem "standard-performance"

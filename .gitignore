@@ -1,0 +1,8 @@
+.DS_Store
+/.bundle/
+/vendor/
+/tmp/
+/coverage/
+/sorbet/rbi/hidden-definitions/
+/sorbet/rbi/todo.rbi
+
