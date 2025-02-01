@@ -156,6 +156,7 @@ PLATFORMS
 DEPENDENCIES
   cucumber
   debug
+  minitest
   psych (~> 3.0)
   standard
   steep

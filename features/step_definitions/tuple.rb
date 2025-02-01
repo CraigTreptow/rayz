@@ -3,35 +3,35 @@ Given('a ← tuple\({float}, {float}, {float}, {float})') do |float, float2, flo
 end
 
 Then("a.x = {float}") do |float|
-  expect(@a.x).to eql(float)
+  assert_equal(@a.x, float)
 end
 
 Then("a.y = {float}") do |float|
-  expect(@a.y).to eql(float)
+  assert_equal(@a.y, float)
 end
 
 Then("a.z = {float}") do |float|
-  expect(@a.z).to eql(float)
+  assert_equal(@a.z, float)
 end
 
 Then("a.w = {float}") do |float|
-  expect(@a.w).to eql(float)
+  assert_equal(@a.w, float)
 end
 
 Then("a is a point") do
-  expect(@a.point?).to be true
+  assert_equal(@a.point?, true)
 end
 
 Then("a is not a vector") do
-  expect(@a.vector?).to be false
+  assert_equal(@a.vector?, false)
 end
 
 Then("a is not a point") do
-  expect(@a.point?).to be false
+  assert_equal(@a.point?, false)
 end
 
 Then("a is a vector") do
-  expect(@a.vector?).to be true
+  assert_equal(@a.vector?, true)
 end
 
 When("I do an action") do
