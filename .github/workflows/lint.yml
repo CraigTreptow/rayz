@@ -7,7 +7,7 @@ permissions:
 
 jobs:
   standard:
-    name: runner / standard
+    name: StandardRB Linter
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
@@ -15,8 +15,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.4.1
-      - name: standard
-        uses: kirillplatonov/action-standard@v1
-        with:
-          standard_version: gemfile
-          reporter: github-pr-review # Default is github-pr-check
+      - name: Run standardrb
+        uses: kmcphillips/standardrb-action@v1.1.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
