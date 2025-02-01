@@ -6,9 +6,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: ruby/setup-ruby@v1
         with:
-          python-version: '3.12'
-          cache: 'pip' # caching pip dependencies
-      - run: pip install -r requirements.txt
-      - run: behave
+          ruby-version: 3.4.1
+      - run: bundle install
+      - run: cucumber

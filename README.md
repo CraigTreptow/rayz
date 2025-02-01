@@ -25,7 +25,9 @@ See `devbox.json` for details on what is installed.
 
 ## Linting
 
-Generate signatures for new class: `typeprof lib/class_name.rb > sig/class_name.rbs`
+Generate signatures for new class: `typeprof lib/class_name.rb > sig/lib/class_name.rbs`
+
+Type check with `steep check`
 
 ## Grid
 
@@ -72,4 +74,4 @@ The path of the projectile is plotted on a canvas.
 
 Run example:
 
-`python -m rayz && cp projectile.ppm /mnt/c/Users/craig`
+`ruby rayz.rb && cp projectile.ppm /mnt/c/Users/craig`
