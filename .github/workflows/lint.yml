@@ -16,6 +16,6 @@ jobs:
         with:
           ruby-version: 3.4.1
       - name: Run standardrb
-        uses: kmcphillips/standardrb-action@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -e
+          bundle exec standardrb
