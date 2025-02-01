@@ -10,4 +10,4 @@ jobs:
         with:
           ruby-version: 3.4.1
       - run: bundle install
-      - run: cucumber
+      - run: bundle exec cucumber

@@ -19,5 +19,4 @@ jobs:
         uses: kirillplatonov/action-standard@v1
         with:
           standard_version: gemfile
-          standard_plugins: standard-performance:gemfile
           reporter: github-pr-review # Default is github-pr-check

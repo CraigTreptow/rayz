@@ -9,7 +9,8 @@ class Tuple
   end
 
   def point?
-    @w == 1.0
+    Util.==(@w, 1.0)
+    # @w == 1.0
   end
 
   def vector?

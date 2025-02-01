@@ -158,7 +158,6 @@ DEPENDENCIES
   debug
   psych (~> 3.0)
   standard
-  standard-performance
   steep
 
 RUBY VERSION
