@@ -1,6 +1,6 @@
 # Rayz
 
-An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book in Python.
+An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book in Ruby.
 
 ## Set Up
 
@@ -9,8 +9,7 @@ This uses [Jetlify's devbox](https://www.jetify.com/devbox), so you'll need to i
 See `devbox.json` for details on what is installed.
 
 1. `devbox shell`
-1. _I think I don't need this anymore_ - `source venv/bin/activate`
-1. _I think I don't need this anymore_ - `pip install -r requirements.txt`
+1. `bundle install`
 
 ## Running
 
@@ -18,14 +17,15 @@ See `devbox.json` for details on what is installed.
 
 ## Testing
 
-`rspec`
+`cucumber`
 
-_Note_: If you need print output while these are running, the `behave.ini` is configured to allow it, but you will also need to run with the `--no-color` option.
-_Note_: Even easier than the above is the add a couple of lines to all output, then behave will get rid of them and you can see the output *and* the color.
+## Formatting
+
+`standardrb`
 
 ## Linting
 
-`ruff check .`
+Generate signatures for new class: `typeprof lib/class_name.rb > sig/class_name.rbs`
 
 ## Grid
 

@@ -1,0 +1,12 @@
+# TypeProf 0.30.1
+
+# lib/tuple.rb
+class Tuple
+  def x: -> Float
+  def y: -> Float
+  def z: -> Float
+  def w: -> Float
+  def initialize: (x: Float, y: Float, z: Float, w: Float) -> void
+  def point?: -> bool
+  def vector?: -> bool
+end
