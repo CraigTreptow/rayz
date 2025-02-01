@@ -1,0 +1,6 @@
+# TypeProf 0.30.1
+
+# lib/util.rb
+class Util
+  def self.==: (Float, Float) -> bool
+end

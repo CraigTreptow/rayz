@@ -2,6 +2,8 @@ require "minitest/autorun"
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "..", "lib"))
 
-# Require your Ruby classes
-require "util"
-require "tuple"
+classes = %w[ util tuple point vector]
+
+classes.each do |class_file_name|
+  require class_file_name
+end

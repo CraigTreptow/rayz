@@ -13,6 +13,6 @@ class Tuple
   end
 
   def vector?
-    Util.==(@w, 0)
+    Util.==(@w, 0.0)
   end
 end
