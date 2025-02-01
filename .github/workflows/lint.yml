@@ -18,4 +18,5 @@ jobs:
       - name: Run standardrb
         run: |
           set -e
+          bundle install
           bundle exec standardrb

@@ -9,5 +9,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.4.1
-      - run: bundle install
-      - run: bundle exec cucumber
+      - run: |
+          set -e
+          bundle install
+          bundle exec cucumber
