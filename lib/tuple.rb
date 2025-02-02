@@ -8,12 +8,15 @@ class Tuple
     @w = w
   end
 
+  # rubocop:disable Style/YodaCondition
+  # rubocop:disable Lint/Void
   def ==(other)
-    Util.==(x, other.x)
-    Util.==(y, other.y)
-    Util.==(z, other.z)
-    Util.==(w, other.w)
+    Util.==(@x, other.x)
+    Util.==(@y, other.y)
+    Util.==(@z, other.z)
+    Util.==(@w, other.w)
   end
+  # rubocop:enable Lint/Void
 
   def point?
     Util.==(@w, 1.0)
@@ -22,4 +25,5 @@ class Tuple
   def vector?
     Util.==(@w, 0.0)
   end
+  # rubocop:enable Style/YodaCondition
 end
