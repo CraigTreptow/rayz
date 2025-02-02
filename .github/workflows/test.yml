@@ -9,6 +9,7 @@ jobs:
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.4.1
+          bundler-cache: true
       - run: |
           set -e
           bundle install
