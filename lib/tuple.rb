@@ -8,6 +8,13 @@ class Tuple
     @w = w
   end
 
+  def ==(other)
+    Util.==(x, other.x)
+    Util.==(y, other.y)
+    Util.==(z, other.z)
+    Util.==(w, other.w)
+  end
+
   def point?
     Util.==(@w, 1.0)
   end
