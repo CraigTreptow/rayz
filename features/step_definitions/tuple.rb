@@ -49,3 +49,16 @@ end
 Then('v = tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
   @v == Tuple.new(x: float, y: float2, z: float3, w: float4)
 end
+
+Given('a1 ← tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
+  @a1 = Tuple.new(x: float, y: float2, z: float3, w: float4)
+end
+
+Given('a2 ← tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
+  @a2 = Tuple.new(x: float, y: float2, z: float3, w: float4)
+end
+
+Then('a1 + a2 = tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
+  expected = Tuple.new(x: float, y: float2, z: float3, w: float4)
+  assert_equal(@a1 + @a2, expected)
+end

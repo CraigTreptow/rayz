@@ -8,6 +8,10 @@ class Tuple
     @w = w
   end
 
+  def +(other)
+    Tuple.new(x: @x + other.x, y: @y + other.y, z: @z + other.z, w: @w + other.w)
+  end
+
   # rubocop:disable Style/YodaCondition
   # rubocop:disable Lint/Void
   def ==(other)

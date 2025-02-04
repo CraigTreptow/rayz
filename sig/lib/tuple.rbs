@@ -7,6 +7,7 @@ class Tuple
   def z: -> Float
   def w: -> Float
   def initialize: (x: Float, y: Float, z: Float, w: Float) -> void
+  def +: (Tuple) -> Tuple
   def ==: (Tuple) -> bool
   def point?: -> bool
   def vector?: -> bool
