@@ -2,5 +2,9 @@
 
 # lib/vector.rb
 class Vector # failed to identify its superclass
+  def x: -> Float
+  def y: -> Float
+  def z: -> Float
+  def w: -> Float
   def initialize: (x: Float, y: Float, z: Float) -> void
 end

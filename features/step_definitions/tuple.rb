@@ -62,3 +62,16 @@ Then('a1 + a2 = tuple\({float}, {float}, {float}, {float})') do |float, float2, 
   expected = Tuple.new(x: float, y: float2, z: float3, w: float4)
   assert_equal(@a1 + @a2, expected)
 end
+
+Given('p1 ← point\({float}, {float}, {float})') do |float, float2, float3|
+  @p1 = Point.new(x: float, y: float2, z: float3)
+end
+
+Given('p2 ← point\({float}, {float}, {float})') do |float, float2, float3|
+  @p2 = Point.new(x: float, y: float2, z: float3)
+end
+
+Then('p1 - p2 = vector\({float}, {float}, {float})') do |float, float2, float3|
+  expected = Vector.new(x: float, y: float2, z: float3)
+  assert_equal(@p1 - @p2, expected)
+end

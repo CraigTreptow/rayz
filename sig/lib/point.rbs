@@ -2,5 +2,10 @@
 
 # lib/point.rb
 class Point # failed to identify its superclass
+  def x: -> Float
+  def y: -> Float
+  def z: -> Float
+  def w: -> Float
   def initialize: (x: Float, y: Float, z: Float) -> void
+  def -: (Point) -> Vector
 end
