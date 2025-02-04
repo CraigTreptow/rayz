@@ -75,3 +75,21 @@ Then('p1 - p2 = vector\({float}, {float}, {float})') do |float, float2, float3|
   expected = Vector.new(x: float, y: float2, z: float3)
   assert_equal(@p1 - @p2, expected)
 end
+
+Then('p - v = point\({float}, {float}, {float})') do |float, float2, float3|
+  expected = Point.new(x: float, y: float2, z: float3)
+  assert_equal(@p - @v, expected)
+end
+
+Given('v1 ← vector\({float}, {float}, {float})') do |float, float2, float3|
+  @v1 = Vector.new(x: float, y: float2, z: float3)
+end
+
+Given('v2 ← vector\({float}, {float}, {float})') do |float, float2, float3|
+  @v2 = Vector.new(x: float, y: float2, z: float3)
+end
+
+Then('v1 - v2 = vector\({float}, {float}, {float})') do |float, float2, float3|
+  expected = Vector.new(x: float, y: float2, z: float3)
+  assert_equal(@v1 - @v2, expected)
+end
