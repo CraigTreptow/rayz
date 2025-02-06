@@ -46,15 +46,15 @@ Scenario: Subtracting two vectors
     And v2 ← vector(5, 6, 7)
   Then v1 - v2 = vector(-2, -4, -6)
 
-# Scenario: Subtracting a vector from the zero vector
-#   Given zero ← vector(0, 0, 0)
-#     And v ← vector(1, -2, 3)
-#   Then zero - v = vector(-1, 2, -3)
-# 
-# Scenario: Negating a tuple
-#   Given a ← tuple(1, -2, 3, -4)
-#   Then -a = tuple(-1, 2, -3, 4)
-# 
+Scenario: Subtracting a vector from the zero vector
+  Given zero ← vector(0, 0, 0)
+    And v ← vector(1, -2, 3)
+  Then zero - v = vector(-1, 2, -3)
+
+Scenario: Negating a tuple
+  Given a ← tuple(1, -2, 3, -4)
+  Then -a = tuple(-1, 2, -3, 4)
+
 # Scenario: Multiplying a tuple by a scalar
 #   Given a ← tuple(1, -2, 3, -4)
 #   Then a * 3.5 = tuple(3.5, -7, 10.5, -14)

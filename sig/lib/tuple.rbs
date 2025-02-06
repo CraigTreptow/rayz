@@ -9,6 +9,7 @@ class Tuple
   def initialize: (x: Float, y: Float, z: Float, w: Float) -> void
   def +: (Tuple) -> Tuple
   def -: (Tuple) -> Tuple
+  def negate: -> Tuple
   def ==: (Tuple) -> bool
   def point?: -> bool
   def vector?: -> bool

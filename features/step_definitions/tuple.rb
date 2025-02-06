@@ -93,3 +93,17 @@ Then('v1 - v2 = vector\({float}, {float}, {float})') do |float, float2, float3|
   expected = Vector.new(x: float, y: float2, z: float3)
   assert_equal(@v1 - @v2, expected)
 end
+
+Given('zero ← vector\({float}, {float}, {float})') do |float, float2, float3|
+  @zero = Vector.new(x: float, y: float2, z: float3)
+end
+
+Then('zero - v = vector\({float}, {float}, {float})') do |float, float2, float3|
+  expected = Vector.new(x: float, y: float2, z: float3)
+  assert_equal(@zero - @v, expected)
+end
+
+Then('-a = tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
+  expected = Tuple.new(x: float, y: float2, z: float3, w: float4)
+  assert_equal(@a.negate, expected)
+end

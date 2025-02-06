@@ -16,6 +16,10 @@ class Tuple
     Tuple.new(x: @x - other.x, y: @y - other.y, z: @z - other.z, w: @w - other.w)
   end
 
+  def negate
+    Tuple.new(x: -@x, y: -@y, z: -@z, w: -@w)
+  end
+
   # rubocop:disable Style/YodaCondition
   # rubocop:disable Lint/Void
   def ==(other)
