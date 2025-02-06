@@ -8,6 +8,14 @@ class Tuple
     @w = w
   end
 
+  def *(other)
+    Tuple.new(x: @x * other, y: @y * other, z: @z * other, w: @w * other)
+  end
+
+  def /(other)
+    Tuple.new(x: @x / other, y: @y / other, z: @z / other, w: @w / other)
+  end
+
   def +(other)
     Tuple.new(x: @x + other.x, y: @y + other.y, z: @z + other.z, w: @w + other.w)
   end

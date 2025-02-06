@@ -7,6 +7,8 @@ class Tuple
   def z: -> Float
   def w: -> Float
   def initialize: (x: Float, y: Float, z: Float, w: Float) -> void
+  def *: (Float) -> Tuple
+  def /: (Float) -> Tuple
   def +: (Tuple) -> Tuple
   def -: (Tuple) -> Tuple
   def negate: -> Tuple

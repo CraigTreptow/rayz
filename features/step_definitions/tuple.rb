@@ -107,3 +107,13 @@ Then('-a = tuple\({float}, {float}, {float}, {float})') do |float, float2, float
   expected = Tuple.new(x: float, y: float2, z: float3, w: float4)
   assert_equal(@a.negate, expected)
 end
+
+Then('a * {float} = tuple\({float}, {float}, {float}, {float})') do |float, float1, float2, float3, float4|
+  expected = Tuple.new(x: float1, y: float2, z: float3, w: float4)
+  assert_equal(@a * float, expected)
+end
+
+Then('a \/ {float} = tuple\({float}, {float}, {float}, {float})') do |float, float1, float2, float3, float4|
+  expected = Tuple.new(x: float1, y: float2, z: float3, w: float4)
+  assert_equal(@a / float, expected)
+end
