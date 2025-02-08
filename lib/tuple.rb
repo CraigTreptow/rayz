@@ -8,6 +8,10 @@ class Tuple
     @w = w
   end
 
+  def to_s
+    "Class: #{self.class.name} X: #{@x} Y: #{@y} Z: #{@z} W: #{@w}"
+  end
+
   def *(other)
     Tuple.new(x: @x * other, y: @y * other, z: @z * other, w: @w * other)
   end

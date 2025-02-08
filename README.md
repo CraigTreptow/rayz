@@ -13,7 +13,7 @@ See `devbox.json` for details on what is installed.
 
 ## Running
 
-`ruby -m rayz`
+`ruby rayz.rb`
 
 ## Testing
 

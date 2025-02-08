@@ -1,4 +1,7 @@
-Dir["#{File.dirname(__FILE__)}/lib/**/*.rb"].each { |f| load(f) }
+require_relative "lib/util"
+require_relative "lib/tuple"
+require_relative "lib/point"
 
-t = Tuple.new(x: 1.0, y: 2.0, z: 3.0, w: 4.0)
-puts "X: #{t.x}"
+Dir[File.join(__dir__, "{lib,rayz}", "**", "*.rb")].sort.each { |file| require_relative file }
+
+Chapter1.run

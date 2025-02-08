@@ -6,6 +6,8 @@ target :lib do
   signature "sig"
   ignore "features/*.rb"
   ignore "features/step_definitions/*.rb"
+  ignore "rayz.rb"
+  ignore "rayz/**/*.rb"
 
   #   ignore_signature "sig/test"
   #
