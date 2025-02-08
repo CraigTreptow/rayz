@@ -16,10 +16,9 @@ jobs:
         with:
           ruby-version: 3.4.1
           bundler-cache: true
-      - name: Run standardrb and Steep
+      - name: Run standardrb
         run: |
           set -e
-          bundle install
           bundle exec standardrb
 
   steep:
@@ -35,5 +34,4 @@ jobs:
       - name: Run Steep
         run: |
           set -e
-          bundle install
           bundle exec steep check
