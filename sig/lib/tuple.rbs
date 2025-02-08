@@ -11,6 +11,7 @@ class Tuple
   def /: (Float) -> Tuple
   def +: (Tuple) -> Tuple
   def -: (Tuple) -> Tuple
+  def dot: (Tuple) -> Float
   def negate: -> Tuple
   def magnitude: -> Float
   def ==: (Tuple) -> bool

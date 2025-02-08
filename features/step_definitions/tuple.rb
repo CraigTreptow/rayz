@@ -148,3 +148,12 @@ end
 Then('magnitude\(norm) = {float}') do |float|
   assert_equal(@norm.magnitude, float)
 end
+
+Then('dot\(v1, v2) = {float}') do |float|
+  assert_equal(@v1.dot(@v2), float)
+end
+
+Then('cross\(v1, v2) = vector\({float}, {float}, {float})') do |float, float1, float2|
+  expected = Vector.new(x: float, y: float1, z: float2)
+  assert_equal(@v1.cross(@v2), expected)
+end
