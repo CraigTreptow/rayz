@@ -117,3 +117,14 @@ Then('a \/ {float} = tuple\({float}, {float}, {float}, {float})') do |float, flo
   expected = Tuple.new(x: float1, y: float2, z: float3, w: float4)
   assert_equal(@a / float, expected)
 end
+
+Then('magnitude\(v) = {float}') do |float|
+  mag = @v.magnitude
+  assert_equal(mag, float)
+end
+
+Then('magnitude\(v) = √{float}') do |float|
+  expected = Math.sqrt(float)
+  mag = @v.magnitude
+  assert_equal(mag, expected)
+end
