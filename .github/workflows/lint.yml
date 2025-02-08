@@ -21,4 +21,19 @@ jobs:
           set -e
           bundle install
           bundle exec standardrb
+
+  steep:
+    name: Steep static type checking
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4.1
+          bundler-cache: true
+      - name: Run Steep
+        run: |
+          set -e
+          bundle install
           bundle exec steep check
