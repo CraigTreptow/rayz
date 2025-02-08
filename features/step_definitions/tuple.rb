@@ -128,3 +128,23 @@ Then('magnitude\(v) = √{float}') do |float|
   mag = @v.magnitude
   assert_equal(mag, expected)
 end
+
+Then('normalize\(v) = vector\({float}, {float}, {float})') do |float, float1, float2|
+  expected = Vector.new(x: float, y: float1, z: float2)
+  assert_equal(@v.normalize, expected)
+end
+
+Then('normalize\(v) = approximately vector\({float}, {float}, {float})') do |float, float1, float2|
+  # vector(1/√14,   2/√14,   3/√14)
+  # vector(0.26726, 0.53452, 0.80178)
+  expected = Vector.new(x: float, y: float1, z: float2)
+  assert_equal(@v.normalize, expected)
+end
+
+When('norm ← normalize\(v)') do
+  @norm = @v.normalize
+end
+
+Then('magnitude\(norm) = {float}') do |float|
+  assert_equal(@norm.magnitude, float)
+end

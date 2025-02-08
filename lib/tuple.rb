@@ -28,6 +28,15 @@ class Tuple
     Tuple.new(x: -@x, y: -@y, z: -@z, w: -@w)
   end
 
+  def magnitude
+    Math.sqrt(@x**2 + @y**2 + @z**2 + @w**2)
+  end
+
+  def normalize
+    mag = magnitude
+    Tuple.new(x: @x / mag, y: @y / mag, z: @z / mag, w: @w / mag)
+  end
+
   # rubocop:disable Style/YodaCondition
   # rubocop:disable Lint/Void
   def ==(other)

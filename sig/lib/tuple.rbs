@@ -12,6 +12,7 @@ class Tuple
   def +: (Tuple) -> Tuple
   def -: (Tuple) -> Tuple
   def negate: -> Tuple
+  def magnitude: -> Float
   def ==: (Tuple) -> bool
   def point?: -> bool
   def vector?: -> bool
