@@ -38,7 +38,7 @@ class Color
   end
 
   def to_s
-    "Class: #{self.class.name} Red: #{@red} Green: #{@green} Blue: #{@blue}"
+    "Red: #{@red} Green: #{@green} Blue: #{@blue}"
   end
 
   # rubocop:disable Style/YodaCondition

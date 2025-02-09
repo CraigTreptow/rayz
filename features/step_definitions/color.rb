@@ -14,6 +14,18 @@ Then("c.blue = {float}") do |float|
   assert_equal(@c.blue, float)
 end
 
+Given('color1 ← color\({float}, {float}, {float})') do |float, float2, float3|
+  @color1 = Color.new(red: float, green: float2, blue: float3)
+end
+
+Given('color2 ← color\({float}, {float}, {float})') do |float, float2, float3|
+  @color2 = Color.new(red: float, green: float2, blue: float3)
+end
+
+Given('color3 ← color\({float}, {float}, {float})') do |float, float2, float3|
+  @color3 = Color.new(red: float, green: float2, blue: float3)
+end
+
 Given('c1 ← color\({float}, {float}, {float})') do |float, float2, float3|
   @c1 = Color.new(red: float, green: float2, blue: float3)
 end
