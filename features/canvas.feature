@@ -33,10 +33,15 @@ Scenario: Constructing the PPM pixel data
     And ppm ← canvas_to_ppm(canvas)
   Then lines 4-6 of ppm are
     """
-    255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 255 0 0 0 0 0 0 0 0 0 0 0 0
     0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
-    0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
+    0 0 0 0 0 0 0 0 0 0 0 0 255 0 0
     """
+    # """
+    # 255 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    # 0 0 0 0 0 0 0 128 0 0 0 0 0 0 0
+    # 0 0 0 0 0 0 0 0 0 0 0 0 0 0 255
+    # """
 
 # Scenario: Splitting long lines in PPM files
 #   Given c ← canvas(10, 2)

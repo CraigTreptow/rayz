@@ -74,4 +74,10 @@ The path of the projectile is plotted on a canvas.
 
 Run example:
 
-`ruby rayz.rb && cp projectile.ppm /mnt/c/Users/craig`
+`ruby rayz.rb && cp chapter2.ppm /mnt/c/Users/craig`
+
+```
+Projectile hit the ground after 16 ticks.
+Shooting projectile...Projectile hit the ground after 197 ticks.
+Writing PPM to chapter2.ppm...Done
+```

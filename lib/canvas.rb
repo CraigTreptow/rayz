@@ -50,11 +50,11 @@ class Canvas
   end
 
   def ppm_body
-    output = [] #: Array[String]
+    output = [] # : Array[String]
     total_values = (MAX_COLORS + 1)
 
     (0..@height - 1).to_a.reverse_each do |r|
-      chunk = [] #: Array[String]
+      chunk = [] # : Array[String]
       (0..@width - 1).each do |c|
         scaled_red = (@pixels[r][c].red * total_values).round
         clamped_red = scaled_red.clamp(0, MAX_COLORS)
@@ -65,7 +65,7 @@ class Canvas
         scaled_blue = (@pixels[r][c].blue * total_values).round
         clamped_blue = scaled_blue.clamp(0, 255)
 
-        chunk << "#{clamped_blue} #{clamped_green} #{clamped_red} "
+        chunk << "#{clamped_red} #{clamped_green} #{clamped_blue} "
       end
       output << chunk.reverse.join.rstrip + "\n"
     end
