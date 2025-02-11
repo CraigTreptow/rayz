@@ -2,10 +2,10 @@ class Chapter1
   def self.run
     # projectile starts one unit above the origin.
     # velocity is normalized to 1 unit/tick.
-    projectile = Projectile.new(position: Point.new(x: 0.0, y: 1.0, z: 0.0), velocity: Vector.new(x: 1.0, y: 1.0, z: 0.0).normalize)
+    projectile = Projectile.new(position: Rayz::Lib::Point.new(x: 0.0, y: 1.0, z: 0.0), velocity: Rayz::Lib::Vector.new(x: 1.0, y: 1.0, z: 0.0).normalize)
 
     # gravity -0.1 unit/tick, and wind is -0.01 unit/tick
-    environment = Environment.new(gravity: Vector.new(x: 0.0, y: -0.1, z: 0.0), wind: Vector.new(x: -0.01, y: 0.0, z: 0.0))
+    environment = Environment.new(gravity: Rayz::Lib::Vector.new(x: 0.0, y: -0.1, z: 0.0), wind: Rayz::Lib::Vector.new(x: -0.01, y: 0.0, z: 0.0))
 
     puts "Shooting projectile..."
     tick_count = 0

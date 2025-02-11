@@ -1,5 +1,5 @@
 Given('canvas ← canvas\({int}, {int})') do |int, int2|
-  @canvas = Canvas.new(width: int, height: int2)
+  @canvas = Rayz::Lib::Canvas.new(width: int, height: int2)
 end
 
 Then("canvas.width = {int}") do |int|
@@ -11,7 +11,7 @@ Then("canvas.height = {int}") do |int|
 end
 
 Then('every pixel of canvas is color\({float}, {float}, {float})') do |float, float2, float3|
-  expected_color = Color.new(red: float, green: float2, blue: float3)
+  expected_color = Rayz::Lib::Color.new(red: float, green: float2, blue: float3)
 
   (0..@canvas.height - 1).to_a.reverse_each do |r|
     (0..@canvas.width - 1).each do |c|
@@ -21,7 +21,7 @@ Then('every pixel of canvas is color\({float}, {float}, {float})') do |float, fl
 end
 
 Given('red ← color\({float}, {float}, {float})') do |float, float2, float3|
-  @red = Color.new(red: float, green: float2, blue: float3)
+  @red = Rayz::Lib::Color.new(red: float, green: float2, blue: float3)
 end
 
 When('write_pixel\(canvas, {int}, {int}, red)') do |int, int2|
