@@ -27,7 +27,7 @@ Then("A * B") do
   refute_equal(@m_a, @m_b)
 end
 
-Then('A * B is the following {} matrix:') do |size, table|
+Then("A * B is the following {} matrix:") do |size, table|
   table_values = table.raw
   expected = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
   assert_equal(@m_a * @m_b, expected)
