@@ -2,6 +2,10 @@ Given('a ← tuple\({float}, {float}, {float}, {float})') do |float, float2, flo
   @a = Rayz::Lib::Tuple.new(x: float, y: float2, z: float3, w: float4)
 end
 
+Given('b ← tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
+  @b = Rayz::Lib::Tuple.new(x: float, y: float2, z: float3, w: float4)
+end
+
 Then("a.x = {float}") do |float|
   assert_equal(@a.x, float)
 end

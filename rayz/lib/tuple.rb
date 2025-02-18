@@ -61,6 +61,12 @@ module Rayz
         Util.==(@w, 0.0)
       end
       # rubocop:enable Style/YodaCondition
+
+      def to_matrix
+        vals = [@x, @y, @z, @w]
+        Matrix.build(4, 1) {|row, col| vals[row] }
+        # Matrix[[@x, @y, @z, @w]]
+      end
     end
   end
 end

@@ -33,7 +33,22 @@ Then("A * B is the following {} matrix:") do |size, table|
   assert_equal(@m_a * @m_b, expected)
 end
 
+Then('A * b = tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
+  expected = Rayz::Lib::Tuple.new(x: float, y: float2, z: float3, w: float4)
+  assert_equal(Rayz::Lib::Util.matrix_multiplied_by_tuple(@m_a, @b), expected)
+end
+
 Then("M[{int},{int}] = {}") do |int, int2, val|
   m_val = @m[int, int2]
   assert_equal(m_val, val.to_f)
+end
+
+Then('A * identity_matrix = A') do
+  identity = Matrix.identity(4)
+  assert_equal(@m_a * identity, @m_a)
+end
+
+Then('identity_matrix * a = a') do
+  identity = Matrix.identity(4)
+  assert_equal(Rayz::Lib::Util.matrix_multiplied_by_tuple(identity, @a), @a)
 end
