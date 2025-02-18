@@ -96,22 +96,22 @@ Scenario: Multiplying the identity matrix by a tuple
   Given a ← tuple(1, 2, 3, 4)
   Then identity_matrix * a = a
 
-# Scenario: Transposing a matrix
-#   Given the following matrix A:
-#     | 0 | 9 | 3 | 0 |
-#     | 9 | 8 | 0 | 8 |
-#     | 1 | 8 | 5 | 3 |
-#     | 0 | 0 | 5 | 8 |
-#   Then transpose(A) is the following matrix:
-#     | 0 | 9 | 1 | 0 |
-#     | 9 | 8 | 8 | 0 |
-#     | 3 | 0 | 5 | 5 |
-#     | 0 | 8 | 3 | 8 |
-# 
-# Scenario: Transposing the identity matrix
-#   Given A ← transpose(identity_matrix)
-#   Then A = identity_matrix
-# 
+Scenario: Transposing a matrix
+  Given the following matrix A:
+    | 0 | 9 | 3 | 0 |
+    | 9 | 8 | 0 | 8 |
+    | 1 | 8 | 5 | 3 |
+    | 0 | 0 | 5 | 8 |
+  Then transpose(A) is the following matrix:
+    | 0 | 9 | 1 | 0 |
+    | 9 | 8 | 8 | 0 |
+    | 3 | 0 | 5 | 5 |
+    | 0 | 8 | 3 | 8 |
+
+Scenario: Transposing the identity matrix
+  Given A ← transpose(identity_matrix)
+  Then A = identity_matrix
+
 # Scenario: Calculating the determinant of a 2x2 matrix
 #   Given the following 2x2 matrix A:
 #     |  1 | 5 |

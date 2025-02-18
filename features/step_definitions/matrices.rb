@@ -1,6 +1,7 @@
 require "matrix"
 
 Given("the following {} matrix M:") do |size, table|
+  # table is a Cucumber::MultilineArgument::DataTable
   table_values = table.raw
   @m = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
 end
@@ -43,12 +44,27 @@ Then("M[{int},{int}] = {}") do |int, int2, val|
   assert_equal(m_val, val.to_f)
 end
 
-Then('A * identity_matrix = A') do
+Then("A * identity_matrix = A") do
   identity = Matrix.identity(4)
   assert_equal(@m_a * identity, @m_a)
 end
 
-Then('identity_matrix * a = a') do
+Then("identity_matrix * a = a") do
   identity = Matrix.identity(4)
   assert_equal(Rayz::Lib::Util.matrix_multiplied_by_tuple(identity, @a), @a)
+end
+
+Then('transpose\(A) is the following matrix:') do |table|
+  table_values = table.raw
+  expected = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
+  assert_equal(@m_a.transpose, expected)
+end
+
+Given('A ← transpose\(identity_matrix)') do
+  @m_a = Matrix.identity(4).transpose
+end
+
+Then("A = identity_matrix") do
+  identity = Matrix.identity(4)
+  assert_equal(@m_a, identity)
 end
