@@ -2,7 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.13.7/.schema/devbox.schema.json",
   "packages": [
     "ruby@3.4.1",
-    "bundler@2.5.22"
+    "bundler@2.5.22",
+    "silver-searcher@latest"
   ],
   "shell": {
     "init_hook": [

@@ -46,26 +46,25 @@ module Rayz
       # rubocop:disable Style/YodaCondition
       # rubocop:disable Lint/Void
       def ==(other)
-        Util.==(@x, other.x)
-        Util.==(@y, other.y)
-        Util.==(@z, other.z)
-        Util.==(@w, other.w)
+        Rayz::Lib::Util.==(@x, other.x)
+        Rayz::Lib::Util.==(@y, other.y)
+        Rayz::Lib::Util.==(@z, other.z)
+        Rayz::Lib::Util.==(@w, other.w)
       end
       # rubocop:enable Lint/Void
 
       def point?
-        Util.==(@w, 1.0)
+        Rayz::Lib::Util.==(@w, 1.0)
       end
 
       def vector?
-        Util.==(@w, 0.0)
+        Rayz::Lib::Util.==(@w, 0.0)
       end
       # rubocop:enable Style/YodaCondition
 
       def to_matrix
         vals = [@x, @y, @z, @w]
         Matrix.build(4, 1) { |row, col| vals[row] }
-        # Matrix[[@x, @y, @z, @w]]
       end
     end
   end

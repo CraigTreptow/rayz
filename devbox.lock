@@ -49,6 +49,9 @@
         }
       }
     },
+    "github:NixOS/nixpkgs/nixpkgs-unstable": {
+      "resolved": "github:NixOS/nixpkgs/3a05eebede89661660945da1f151959900903b6a?lastModified=1740547748&narHash=sha256-Ly2fBL1LscV%2BKyCqPRufUBuiw%2BzmWrlJzpWOWbahplg%3D"
+    },
     "ruby@3.4.1": {
       "last_modified": "2025-01-19T08:16:51Z",
       "plugin_version": "0.0.2",
@@ -111,6 +114,54 @@
             }
           ],
           "store_path": "/nix/store/ws8aidiy6grbn60q7s59y4g7hj6isyv9-ruby-3.4.1"
+        }
+      }
+    },
+    "silver-searcher@latest": {
+      "last_modified": "2025-02-07T11:26:36Z",
+      "resolved": "github:NixOS/nixpkgs/d98abf5cf5914e5e4e9d57205e3af55ca90ffc1d#silver-searcher",
+      "source": "devbox-search",
+      "version": "2.2.0",
+      "systems": {
+        "aarch64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/j8qql9hq869iqx1x654ix51mx2c6zc8n-silver-searcher-2.2.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/j8qql9hq869iqx1x654ix51mx2c6zc8n-silver-searcher-2.2.0"
+        },
+        "aarch64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/c4m0yrcrahinwkgv2xaj7an4h5dfpnnn-silver-searcher-2.2.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/c4m0yrcrahinwkgv2xaj7an4h5dfpnnn-silver-searcher-2.2.0"
+        },
+        "x86_64-darwin": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/24bp9bjs4hihd8xwf9r9zazim0xr7jv1-silver-searcher-2.2.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/24bp9bjs4hihd8xwf9r9zazim0xr7jv1-silver-searcher-2.2.0"
+        },
+        "x86_64-linux": {
+          "outputs": [
+            {
+              "name": "out",
+              "path": "/nix/store/4p5s141f4b1hzblqrsdky7dmx2nfb3b2-silver-searcher-2.2.0",
+              "default": true
+            }
+          ],
+          "store_path": "/nix/store/4p5s141f4b1hzblqrsdky7dmx2nfb3b2-silver-searcher-2.2.0"
         }
       }
     }
