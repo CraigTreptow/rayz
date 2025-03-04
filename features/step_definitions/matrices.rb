@@ -50,8 +50,8 @@ Then("A * B is the following {} matrix:") do |size, table|
 end
 
 Then('A * b = tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
-  expected = Rayz::Lib::Tuple.new(x: float, y: float2, z: float3, w: float4)
-  assert_equal(Rayz::Lib::Util.matrix_multiplied_by_tuple(@m_a, @b), expected)
+  expected = Rayz::Tuple.new(x: float, y: float2, z: float3, w: float4)
+  assert_equal(Rayz::Util.matrix_multiplied_by_tuple(@m_a, @b), expected)
 end
 
 Then("M[{int},{int}] = {}") do |int, int2, val|
@@ -66,7 +66,7 @@ end
 
 Then("identity_matrix * a = a") do
   identity = Matrix.identity(4)
-  assert_equal(Rayz::Lib::Util.matrix_multiplied_by_tuple(identity, @a), @a)
+  assert_equal(Rayz::Util.matrix_multiplied_by_tuple(identity, @a), @a)
 end
 
 Then('transpose\(A) is the following matrix:') do |table|
@@ -109,6 +109,6 @@ Then('B ← submatrix\(A, {int}, {int})') do |int, int2|
 end
 
 Then('minor\(A, {int}, {int}) = {int}') do |int, int2, int3|
-  minor = Rayz::Lib::Util.matrix_minor(@m_33_a, int, int2)
+  minor = Rayz::Util.matrix_minor(@m_33_a, int, int2)
   assert_equal(minor, int3)
 end

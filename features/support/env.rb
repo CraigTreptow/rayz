@@ -1,6 +1,6 @@
 require "minitest/autorun"
 
-$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "..", "rayz", "lib"))
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "..", "lib", "rayz"))
 
 classes = %w[canvas color util tuple point vector]
 

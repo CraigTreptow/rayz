@@ -23,12 +23,6 @@ See `devbox.json` for details on what is installed.
 
 `standardrb`
 
-## Linting
-
-Generate signatures for new class: `typeprof lib/class_name.rb > sig/lib/class_name.rbs`
-
-Type check with `steep check`
-
 ## Grid
 
 The canvas is a grid of pixels.  The grid is defined by the number of rows and columns.  The rows are the Y axis and the columns are the X axis.
