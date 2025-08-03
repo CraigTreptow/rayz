@@ -2,26 +2,66 @@
 
 An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book in Ruby.
 
-## Set Up
+## Installation
 
-This uses [Jetlify's devbox](https://www.jetify.com/devbox), so you'll need to install that first.
+This project requires Ruby 3.4+ and several system dependencies for proper gem compilation.
 
-See `devbox.json` for details on what is installed.
+### Prerequisites
 
-1. `devbox shell`
-1. `bundle install`
+**Install required system libraries:**
+
+Using **apt-get** (Ubuntu/Debian):
+```bash
+sudo apt-get update
+sudo apt-get install -y zlib1g-dev libssl-dev libreadline-dev libyaml-dev libffi-dev build-essential
+```
+
+Using **brew** (macOS/Linux):
+```bash
+brew install zlib openssl readline libyaml libffi
+```
+
+### Ruby Version Management
+
+This project uses [mise-en-place](https://mise.jdx.dev/) to manage the Ruby version.
+
+**Install mise:**
+```bash
+# macOS/Linux with brew
+brew install mise
+
+# Or with curl
+curl https://mise.jdx.dev/install.sh | sh
+```
+
+**Install Ruby and dependencies:**
+```bash
+# Install the specified Ruby version
+mise install
+
+# Install Ruby gems
+bundle install
+```
+
+**Alternative: Manual Ruby Installation**
+
+If not using mise, ensure you have Ruby 3.4+ installed with the system libraries above, then run:
+```bash
+gem install bundler
+bundle install
+```
 
 ## Running
 
-`ruby rayz.rb`
+`ruby rayz`
 
 ## Testing
 
-`cucumber`
+`bundle exec cucumber`
 
 ## Formatting
 
-`standardrb`
+`bundle exec standardrb`
 
 ## Grid
 
