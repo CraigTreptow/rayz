@@ -4,7 +4,7 @@ require_relative "../rayz/vector"
 require_relative "../rayz/point"
 require_relative "../rayz/color"
 require_relative "../rayz/canvas"
-require 'async'
+require "async"
 
 module Rayz
   class Chapter2
@@ -58,7 +58,6 @@ module Rayz
       new_velocity = projectile.velocity + environment.gravity + environment.wind
       Rayz::Projectile.new(position: new_position, velocity: new_velocity)
     end
-
 
     def self.print_float(f)
       sprintf("%06.3f", f.round(3))

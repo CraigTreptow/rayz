@@ -1,4 +1,4 @@
-require 'async'
+require "async"
 
 module Rayz
   class Canvas
@@ -60,7 +60,7 @@ module Rayz
             chunk = []
             (0..@width - 1).each do |c|
               pixel = @mutex.synchronize { @pixels[r][c] }
-              
+
               scaled_red = (pixel.red * total_values).round
               clamped_red = scaled_red.clamp(0, MAX_COLORS)
 
