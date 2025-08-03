@@ -1,6 +1,10 @@
 require_relative "../rayz/environment"
 require_relative "../rayz/projectile"
 require_relative "../rayz/vector"
+require_relative "../rayz/point"
+require_relative "../rayz/color"
+require_relative "../rayz/canvas"
+require "async"
 
 module Rayz
   class Chapter2
@@ -15,20 +19,37 @@ module Rayz
       environment = Rayz::Environment.new(gravity: gravity, wind: wind)
 
       canvas = Rayz::Canvas.new(width: 900, height: 550)
-
       red = Rayz::Color.new(red: 1.0, green: 0.0, blue: 0.0)
-      print "Shooting projectile..."
+
+      print "Calculating projectile trajectory..."
       tick_count = 0
+      positions = []
+
       while projectile.position.y > 0
-        canvas.write_pixel(col: projectile.position.x.round, row: projectile.position.y.round, color: red)
+        positions << {x: projectile.position.x, y: projectile.position.y}
         projectile = tick(environment, projectile)
         tick_count += 1
       end
       puts "Projectile hit the ground after #{tick_count - 1} ticks."
 
+      print "Writing pixels in parallel..."
+      Async do |task|
+        positions.each do |pos|
+          task.async do
+            x_pos = pos[:x].round
+            y_pos = canvas.height - pos[:y].round - 1
+            canvas.write_pixel_async(row: y_pos, col: x_pos, color: red)
+          end
+        end
+      end.wait
+      puts "Pixels written."
+
       file_name = "chapter2.ppm"
       print "Writing PPM to #{file_name}..."
-      File.write(file_name, canvas.to_ppm)
+      Async do
+        ppm_content = canvas.to_ppm_async
+        File.write(file_name, ppm_content)
+      end.wait
       puts "Done"
     end
 
