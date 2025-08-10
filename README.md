@@ -63,6 +63,24 @@ bundle install
 
 `bundle exec standardrb`
 
+## Troubleshooting
+
+### zlib LoadError
+If you encounter `LoadError: cannot load such file -- zlib` when running bundle:
+
+1. Install zlib development package:
+   ```bash
+   sudo apt update && sudo apt install zlib1g-dev
+   ```
+
+2. Reinstall Ruby to pick up the zlib library:
+   ```bash
+   mise uninstall ruby 3.4.5
+   mise install ruby 3.4.5
+   ```
+
+3. Try `bundle` again.
+
 ## Grid
 
 The canvas is a grid of pixels.  The grid is defined by the number of rows and columns.  The rows are the Y axis and the columns are the X axis.
