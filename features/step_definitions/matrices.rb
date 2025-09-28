@@ -1,114 +1,139 @@
 require "matrix"
 
+# Helper methods for matrix step definitions
+module MatrixStepHelpers
+  # Converts Cucumber table data to Ruby Matrix object
+  # @param table [Cucumber::MultilineArgument::DataTable] Raw table data from feature file
+  # @return [Matrix] Ruby Matrix with float values
+  def table_to_matrix(table)
+    table_values = table.raw
+    Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
+  end
+end
+
+World(MatrixStepHelpers)
+
+# Generic matrix creation for any size (2x2, 3x3, 4x4)
 Given("the following {} matrix M:") do |size, table|
-  # table is a Cucumber::MultilineArgument::DataTable
-  table_values = table.raw
-  @m = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
+  @matrix_m = table_to_matrix(table)
 end
 
+# Generic matrix A creation (size inferred from table)
 Given("the following matrix A:") do |table|
-  table_values = table.raw
-  @m_a = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
+  @matrix_a = table_to_matrix(table)
 end
 
+# 3x3 matrix A creation for submatrix operations
 Given("the following 3x3 matrix A:") do |table|
-  table_values = table.raw
-  @m_33_a = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
+  @matrix_3x3_a = table_to_matrix(table)
 end
 
+# 4x4 matrix A creation for transformation operations
 Given("the following 4x4 matrix A:") do |table|
-  table_values = table.raw
-  @m_44_a = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
+  @matrix_4x4_a = table_to_matrix(table)
 end
 
+# Generic matrix B creation for comparison and multiplication operations
 Given("the following matrix B:") do |table|
-  table_values = table.raw
-  @m_b = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
+  @matrix_b = table_to_matrix(table)
 end
 
+# 2x2 matrix A creation for determinant calculations
 Given("the following 2x2 matrix A:") do |table|
-  table_values = table.raw
-  @m_22_a = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
+  @matrix_2x2_a = table_to_matrix(table)
 end
 
+# Matrix equality comparison
 Then("A = B") do
-  assert_equal(@m_a, @m_b)
+  assert_equal(@matrix_a, @matrix_b)
 end
 
+# Matrix inequality comparison
 Then("A != B") do
-  refute_equal(@m_a, @m_b)
+  refute_equal(@matrix_a, @matrix_b)
 end
 
+# Matrix multiplication step (appears to be incomplete - should assert result)
 Then("A * B") do
-  refute_equal(@m_a, @m_b)
+  refute_equal(@matrix_a, @matrix_b)
 end
 
+# Matrix multiplication with expected result verification
 Then("A * B is the following {} matrix:") do |size, table|
-  table_values = table.raw
-  expected = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
-  assert_equal(@m_a * @m_b, expected)
+  expected = table_to_matrix(table)
+  assert_equal(@matrix_a * @matrix_b, expected)
 end
 
+# Matrix-tuple multiplication using custom utility method
 Then('A * b = tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
   expected = Rayz::Tuple.new(x: float, y: float2, z: float3, w: float4)
-  assert_equal(Rayz::Util.matrix_multiplied_by_tuple(@m_a, @b), expected)
+  assert_equal(Rayz::Util.matrix_multiplied_by_tuple(@matrix_a, @tuple_b), expected)
 end
 
-Then("M[{int},{int}] = {}") do |int, int2, val|
-  m_val = @m[int, int2]
-  assert_equal(m_val, val.to_f)
+# Matrix element access verification
+Then("M[{int},{int}] = {}") do |row, col, val|
+  matrix_value = @matrix_m[row, col]
+  assert_equal(matrix_value, val.to_f)
 end
 
+# Matrix multiplication by identity matrix (should equal original)
 Then("A * identity_matrix = A") do
   identity = Matrix.identity(4)
-  assert_equal(@m_a * identity, @m_a)
+  assert_equal(@matrix_a * identity, @matrix_a)
 end
 
+# Identity matrix multiplication with tuple (should equal original tuple)
 Then("identity_matrix * a = a") do
   identity = Matrix.identity(4)
-  assert_equal(Rayz::Util.matrix_multiplied_by_tuple(identity, @a), @a)
+  assert_equal(Rayz::Util.matrix_multiplied_by_tuple(identity, @tuple_a), @tuple_a)
 end
 
+# Matrix transposition verification
 Then('transpose\(A) is the following matrix:') do |table|
-  table_values = table.raw
-  expected = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
-  assert_equal(@m_a.transpose, expected)
+  expected = table_to_matrix(table)
+  assert_equal(@matrix_a.transpose, expected)
 end
 
+# Create matrix A as transpose of identity matrix
 Given('A ← transpose\(identity_matrix)') do
-  @m_a = Matrix.identity(4).transpose
+  @matrix_a = Matrix.identity(4).transpose
 end
 
+# Verify matrix A equals identity matrix
 Then("A = identity_matrix") do
   identity = Matrix.identity(4)
-  assert_equal(@m_a, identity)
+  assert_equal(@matrix_a, identity)
 end
 
-Then('determinant\(A) = {int}') do |int|
-  assert_equal(@m_22_a.determinant, int)
+# 2x2 matrix determinant calculation
+Then('determinant\(A) = {int}') do |expected_determinant|
+  assert_equal(@matrix_2x2_a.determinant, expected_determinant)
 end
 
-Then('determinant\(B) = {int}') do |int|
-  assert_equal(@m_22_b.determinant, int)
+# 2x2 matrix B determinant calculation
+Then('determinant\(B) = {int}') do |expected_determinant|
+  assert_equal(@matrix_2x2_b.determinant, expected_determinant)
 end
 
-Then('submatrix\(A, {int}, {int}) is the following 2x2 matrix:') do |int, int2, table|
-  table_values = table.raw
-  expected = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
-  assert_equal(@m_33_a.first_minor(int, int2), expected)
+# 3x3 matrix submatrix extraction (removes specified row and column)
+Then('submatrix\(A, {int}, {int}) is the following 2x2 matrix:') do |row, col, table|
+  expected = table_to_matrix(table)
+  assert_equal(@matrix_3x3_a.first_minor(row, col), expected)
 end
 
-Then('submatrix\(A, {int}, {int}) is the following 3x3 matrix:') do |int, int2, table|
-  table_values = table.raw
-  expected = Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
-  assert_equal(@m_44_a.first_minor(int, int2), expected)
+# 4x4 matrix submatrix extraction (removes specified row and column)
+Then('submatrix\(A, {int}, {int}) is the following 3x3 matrix:') do |row, col, table|
+  expected = table_to_matrix(table)
+  assert_equal(@matrix_4x4_a.first_minor(row, col), expected)
 end
 
-Then('B ← submatrix\(A, {int}, {int})') do |int, int2|
-  @m_22_b = @m_33_a.first_minor(int, int2)
+# Extract submatrix from 3x3 matrix A and assign to 2x2 matrix B
+Then('B ← submatrix\(A, {int}, {int})') do |row, col|
+  @matrix_2x2_b = @matrix_3x3_a.first_minor(row, col)
 end
 
-Then('minor\(A, {int}, {int}) = {int}') do |int, int2, int3|
-  minor = Rayz::Util.matrix_minor(@m_33_a, int, int2)
-  assert_equal(minor, int3)
+# Matrix minor calculation (determinant of submatrix)
+Then('minor\(A, {int}, {int}) = {int}') do |row, col, expected_minor|
+  minor = Rayz::Util.matrix_minor(@matrix_3x3_a, row, col)
+  assert_equal(minor, expected_minor)
 end
