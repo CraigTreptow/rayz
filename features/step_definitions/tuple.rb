@@ -43,7 +43,8 @@ Given('p ← point\({float}, {float}, {float})') do |float, float2, float3|
 end
 
 Then('p = tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
-  @p == Rayz::Tuple.new(x: float, y: float2, z: float3, w: float4)
+  expected = Rayz::Tuple.new(x: float, y: float2, z: float3, w: float4)
+  assert_equal(@p, expected)
 end
 
 Given('v ← vector\({float}, {float}, {float})') do |float, float2, float3|
@@ -51,7 +52,8 @@ Given('v ← vector\({float}, {float}, {float})') do |float, float2, float3|
 end
 
 Then('v = tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
-  @v == Rayz::Tuple.new(x: float, y: float2, z: float3, w: float4)
+  expected = Rayz::Tuple.new(x: float, y: float2, z: float3, w: float4)
+  assert_equal(@v, expected)
 end
 
 Given('a1 ← tuple\({float}, {float}, {float}, {float})') do |float, float2, float3, float4|
