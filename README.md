@@ -53,11 +53,25 @@ bundle install
 
 ## Running
 
-`ruby rayz`
+Execute all chapter demonstrations:
+```bash
+ruby rayz
+```
+
+This will run demonstrations from all implemented chapters and generate output files.
 
 ## Testing
 
-`bundle exec cucumber`
+Run all tests:
+```bash
+bundle exec cucumber
+```
+
+Run specific feature tests:
+```bash
+bundle exec cucumber features/matrices.feature
+bundle exec cucumber features/tuples.feature
+```
 
 ## Formatting
 
@@ -119,17 +133,74 @@ Position at tick 015 -> X:  10.114  Y:   0.314  Z:   0.000
 Position at tick 016 -> X:  10.661  Y:  -0.579  Z:   0.000
 Projectile hit the ground after 16 ticks.
 ```
-## Chapter 2
+## Chapter 2 - Canvas and Projectile Visualization
 
-A projectile is shot and the position is reported until it hits the ground.
-The path of the projectile is plotted on a canvas.
+A projectile is shot and its trajectory is plotted on a canvas, demonstrating:
+- Canvas creation and pixel manipulation
+- Color operations
+- PPM file format export
+- Parallel pixel writing with async operations
 
-Run example:
+**Output:** `chapter2.ppm` - A 900×550 pixel image showing the projectile's arc
 
-`ruby rayz.rb && cp chapter2.ppm /mnt/c/Users/craig`
-
+**Example output:**
 ```
-Projectile hit the ground after 16 ticks.
-Shooting projectile...Projectile hit the ground after 197 ticks.
+Calculating projectile trajectory...Projectile hit the ground after 197 ticks.
+Writing pixels in parallel...Pixels written.
 Writing PPM to chapter2.ppm...Done
+```
+
+## Chapter 3 - Matrix Operations and Transformations
+
+Demonstrates matrix operations and transformations, including:
+- Matrix construction, transpose, and determinant
+- Matrix multiplication and inversion
+- Verification that A × inverse(A) = Identity
+- Visual demonstration: clock face using rotation matrices
+
+**Output:** `chapter3_clock.ppm` - A 400×400 pixel image showing 12 hour marks positioned using 3D rotation matrices
+
+**Example output:**
+```
+=== Chapter 3: Matrices ===
+Demonstrating matrix operations and transformations
+
+1. Basic Matrix Operations
+----------------------------------------
+Original Matrix M:
+  [ 1.00   2.00   3.00   4.00]
+  [ 5.00   6.00   7.00   8.00]
+  ...
+
+2. Matrix Inversion
+----------------------------------------
+Matrix A:
+  [ 3.00  -9.00   7.00   3.00]
+  ...
+Inverse of A:
+  [-0.07821  -0.04833   0.08875  -0.28910]
+  ...
+Verification: A * inverse(A) = Identity
+  [ 1.00000   0.00000   0.00000   0.00000]
+  ...
+
+3. Clock Face Visualization
+----------------------------------------
+Drawing a clock using rotation matrices...
+Writing clock face to chapter3_clock.ppm... Done!
+```
+
+## Viewing Output Files
+
+The generated `.ppm` files can be viewed with most image viewers or converted to other formats:
+
+```bash
+# View with ImageMagick
+display chapter3_clock.ppm
+
+# Convert to PNG
+convert chapter3_clock.ppm chapter3_clock.png
+
+# Copy to Windows (WSL users)
+cp chapter3_clock.ppm /mnt/c/Users/YourUsername/
 ```
