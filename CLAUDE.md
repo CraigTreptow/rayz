@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-2 with projectile physics and canvas visualization.
+Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-3 with projectile physics, canvas visualization, and matrix transformations.
 
 ## Development Commands
 
@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz         # Execute both Chapter 1 and Chapter 2
+ruby rayz         # Execute all implemented chapters (1, 2, and 3)
 ```
 
 ### Testing
@@ -46,6 +46,7 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 ### Graphics Components
 - `Canvas` - 2D pixel grid with PPM export, origin at bottom-left, Y-axis increases upward
 - `Color` - RGB color representation with arithmetic operations
+- `Matrix` - Matrix operations using Ruby's stdlib Matrix with custom utility methods for cofactor, minor, determinant, and inversion
 - Coordinate system follows mathematical convention (not screen coordinates)
 
 ### Physics Simulation
@@ -97,6 +98,24 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - `debug` - Debugging support
 
 ## Output Files
-- PPM image files generated for Chapter 2 visualization
+- PPM image files generated for visual demonstrations
 - Canvas coordinate system: origin bottom-left, Y increases upward
-- Generated files: `chapter2.ppm`
+- Generated files:
+  - `chapter2.ppm` - Projectile trajectory visualization
+  - `chapter3_clock.ppm` - Clock face using rotation matrices
+
+## Implementation Status
+
+### Completed Chapters
+- **Chapter 1**: Projectile physics simulation
+- **Chapter 2**: Canvas and PPM export with parallel pixel writing
+- **Chapter 3**: Matrix operations and transformations (construction, transpose, determinant, inverse, multiplication)
+
+### Test Coverage
+- 57 scenarios passing (188 steps)
+- 4 feature files in `/features/` directory:
+  - `tuples.feature` - Core mathematical operations
+  - `colors.feature` - Color arithmetic
+  - `canvas.feature` - Pixel operations and PPM export
+  - `matrices.feature` - Matrix transformations
+- Additional reference tests from the book in `/book_features/` for future implementation

@@ -58,19 +58,21 @@ Execute all chapter demonstrations:
 ruby rayz
 ```
 
-This will run demonstrations from all implemented chapters and generate output files.
+This runs demonstrations from Chapters 1-3 and generates PPM image files.
 
 ## Testing
 
-Run all tests:
+Run all tests (57 scenarios, 188 steps):
 ```bash
 bundle exec cucumber
 ```
 
-Run specific feature tests:
+Run specific feature:
 ```bash
 bundle exec cucumber features/matrices.feature
 bundle exec cucumber features/tuples.feature
+bundle exec cucumber features/canvas.feature
+bundle exec cucumber features/colors.feature
 ```
 
 ## Formatting
