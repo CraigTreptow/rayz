@@ -9,6 +9,14 @@ module MatrixStepHelpers
     table_values = table.raw
     Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
   end
+
+  # Check floating point equality with tolerance
+  # @param actual [Float] Actual value
+  # @param expected [Float] Expected value
+  # @return [Boolean] True if values are equal within tolerance
+  def float_equal?(actual, expected)
+    (actual - expected).abs < 0.00001
+  end
 end
 
 World(MatrixStepHelpers)
@@ -163,7 +171,7 @@ end
 # Check matrix element equals fraction
 Then('B[{int},{int}] = {int}\/{int}') do |row, col, numerator, denominator|
   expected = numerator.to_f / denominator.to_f
-  assert Rayz::Util.==(@matrix_b[row, col], expected)
+  assert float_equal?(@matrix_b[row, col], expected)
 end
 
 # Verify matrix B equals expected matrix
@@ -171,7 +179,7 @@ Then("B is the following 4x4 matrix:") do |table|
   expected = table_to_matrix(table)
   expected.row_vectors.each_with_index do |row, i|
     row.to_a.each_with_index do |val, j|
-      assert Rayz::Util.==(@matrix_b[i, j], val), "Mismatch at [#{i},#{j}]: expected #{val}, got #{@matrix_b[i, j]}"
+      assert float_equal?(@matrix_b[i, j], val), "Mismatch at [#{i},#{j}]: expected #{val}, got #{@matrix_b[i, j]}"
     end
   end
 end
@@ -182,7 +190,7 @@ Then('inverse\(A) is the following 4x4 matrix:') do |table|
   inverse = @matrix_4x4_a.inverse
   expected.row_vectors.each_with_index do |row, i|
     row.to_a.each_with_index do |val, j|
-      assert Rayz::Util.==(inverse[i, j], val), "Mismatch at [#{i},#{j}]: expected #{val}, got #{inverse[i, j]}"
+      assert float_equal?(inverse[i, j], val), "Mismatch at [#{i},#{j}]: expected #{val}, got #{inverse[i, j]}"
     end
   end
 end
@@ -202,7 +210,7 @@ Then('C * inverse\(B) = A') do
   result = @matrix_c * @matrix_4x4_b.inverse
   @matrix_4x4_a.row_vectors.each_with_index do |row, i|
     row.to_a.each_with_index do |val, j|
-      assert Rayz::Util.==(result[i, j], val), "Mismatch at [#{i},#{j}]: expected #{val}, got #{result[i, j]}"
+      assert float_equal?(result[i, j], val), "Mismatch at [#{i},#{j}]: expected #{val}, got #{result[i, j]}"
     end
   end
 end
