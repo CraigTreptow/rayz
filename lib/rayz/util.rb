@@ -13,5 +13,11 @@ module Rayz
     def self.matrix_minor(matrix, i, j)
       matrix.first_minor(i, j).determinant
     end
+
+    def self.matrix_cofactor(matrix, i, j)
+      minor = matrix_minor(matrix, i, j)
+      # Negate if row + column is odd
+      (i + j).odd? ? -minor : minor
+    end
   end
 end

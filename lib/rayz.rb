@@ -1,6 +1,7 @@
 require_relative "rayz/canvas"
 require_relative "rayz/chapter1"
 require_relative "rayz/chapter2"
+require_relative "rayz/chapter3"
 require_relative "rayz/color"
 require_relative "rayz/point"
 require_relative "rayz/runner"

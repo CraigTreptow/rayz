@@ -9,6 +9,14 @@ module MatrixStepHelpers
     table_values = table.raw
     Matrix[*table_values.map { |row| row.map { |x| x.to_f } }]
   end
+
+  # Check floating point equality with tolerance
+  # @param actual [Float] Actual value
+  # @param expected [Float] Expected value
+  # @return [Boolean] True if values are equal within tolerance
+  def float_equal?(actual, expected)
+    (actual - expected).abs < 0.00001
+  end
 end
 
 World(MatrixStepHelpers)
@@ -105,9 +113,10 @@ Then("A = identity_matrix") do
   assert_equal(@matrix_a, identity)
 end
 
-# 2x2 matrix determinant calculation
+# Matrix determinant calculation (works for any size)
 Then('determinant\(A) = {int}') do |expected_determinant|
-  assert_equal(@matrix_2x2_a.determinant, expected_determinant)
+  matrix = @matrix_4x4_a || @matrix_3x3_a || @matrix_2x2_a
+  assert_equal(matrix.determinant, expected_determinant)
 end
 
 # 2x2 matrix B determinant calculation
@@ -136,4 +145,72 @@ end
 Then('minor\(A, {int}, {int}) = {int}') do |row, col, expected_minor|
   minor = Rayz::Util.matrix_minor(@matrix_3x3_a, row, col)
   assert_equal(minor, expected_minor)
+end
+
+# Matrix cofactor calculation (minor with sign adjustment)
+Then('cofactor\(A, {int}, {int}) = {int}') do |row, col, expected_cofactor|
+  cofactor = Rayz::Util.matrix_cofactor(@matrix_4x4_a || @matrix_3x3_a, row, col)
+  assert_equal(cofactor, expected_cofactor)
+end
+
+# Matrix invertibility check - determinant != 0
+Then("A is invertible") do
+  refute_equal(@matrix_4x4_a.determinant, 0)
+end
+
+# Matrix non-invertibility check - determinant == 0
+Then("A is not invertible") do
+  assert_equal(@matrix_4x4_a.determinant, 0)
+end
+
+# Calculate inverse and assign to matrix B
+Given('B ← inverse\(A)') do
+  @matrix_b = @matrix_4x4_a.inverse
+end
+
+# Check matrix element equals fraction
+Then('B[{int},{int}] = {int}\/{int}') do |row, col, numerator, denominator|
+  expected = numerator.to_f / denominator.to_f
+  assert float_equal?(@matrix_b[row, col], expected)
+end
+
+# Verify matrix B equals expected matrix
+Then("B is the following 4x4 matrix:") do |table|
+  expected = table_to_matrix(table)
+  expected.row_vectors.each_with_index do |row, i|
+    row.to_a.each_with_index do |val, j|
+      assert float_equal?(@matrix_b[i, j], val), "Mismatch at [#{i},#{j}]: expected #{val}, got #{@matrix_b[i, j]}"
+    end
+  end
+end
+
+# Verify inverse(A) equals expected matrix
+Then('inverse\(A) is the following 4x4 matrix:') do |table|
+  expected = table_to_matrix(table)
+  inverse = @matrix_4x4_a.inverse
+  expected.row_vectors.each_with_index do |row, i|
+    row.to_a.each_with_index do |val, j|
+      assert float_equal?(inverse[i, j], val), "Mismatch at [#{i},#{j}]: expected #{val}, got #{inverse[i, j]}"
+    end
+  end
+end
+
+# Create 4x4 matrix B from table
+Given("the following 4x4 matrix B:") do |table|
+  @matrix_4x4_b = table_to_matrix(table)
+end
+
+# Matrix multiplication and assignment to C
+Given("C ← A * B") do
+  @matrix_c = @matrix_4x4_a * @matrix_4x4_b
+end
+
+# Verify C * inverse(B) = A
+Then('C * inverse\(B) = A') do
+  result = @matrix_c * @matrix_4x4_b.inverse
+  @matrix_4x4_a.row_vectors.each_with_index do |row, i|
+    row.to_a.each_with_index do |val, j|
+      assert float_equal?(result[i, j], val), "Mismatch at [#{i},#{j}]: expected #{val}, got #{result[i, j]}"
+    end
+  end
 end
