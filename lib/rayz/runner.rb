@@ -7,6 +7,7 @@ module Rayz
     def run
       Chapter1.run
       Chapter2.run
+      Chapter3.run
     end
   end
 end
