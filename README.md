@@ -60,6 +60,14 @@ ruby rayz
 
 This runs demonstrations from Chapters 1-4 and generates PPM image files.
 
+Run individual chapters:
+```bash
+ruby -r ./lib/rayz -e "Rayz::Chapter1.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter2.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter3.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter4.run"
+```
+
 ## Testing
 
 Run all tests (76 scenarios, 264 steps):
