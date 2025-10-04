@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-3 with projectile physics, canvas visualization, and matrix transformations.
+Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-4 with projectile physics, canvas visualization, matrix operations, and transformation matrices.
 
 ## Development Commands
 
@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz         # Execute all implemented chapters (1, 2, and 3)
+ruby rayz         # Execute all implemented chapters (1, 2, 3, and 4)
 ```
 
 ### Testing
@@ -47,6 +47,7 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Canvas` - 2D pixel grid with PPM export, origin at bottom-left, Y-axis increases upward
 - `Color` - RGB color representation with arithmetic operations
 - `Matrix` - Matrix operations using Ruby's stdlib Matrix with custom utility methods for cofactor, minor, determinant, and inversion
+- `Transformations` - Static methods for creating transformation matrices (translation, scaling, rotation, shearing, view transform)
 - Coordinate system follows mathematical convention (not screen coordinates)
 
 ### Physics Simulation
@@ -69,7 +70,8 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - `tuples.feature` - Core mathematical operations
 - `colors.feature` - Color arithmetic
 - `canvas.feature` - Pixel operations and PPM export
-- `matrices.feature` - Matrix transformations
+- `matrices.feature` - Matrix operations
+- `transformations.feature` - Transformation matrices (translation, scaling, rotation, shearing)
 
 ## Code Conventions
 
@@ -103,19 +105,22 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - Generated files:
   - `chapter2.ppm` - Projectile trajectory visualization
   - `chapter3_clock.ppm` - Clock face using rotation matrices
+  - `chapter4_clock.ppm` - Analog clock at 3:00 using transformation matrices
 
 ## Implementation Status
 
 ### Completed Chapters
 - **Chapter 1**: Projectile physics simulation
 - **Chapter 2**: Canvas and PPM export with parallel pixel writing
-- **Chapter 3**: Matrix operations and transformations (construction, transpose, determinant, inverse, multiplication)
+- **Chapter 3**: Matrix operations (construction, transpose, determinant, inverse, multiplication)
+- **Chapter 4**: Transformation matrices (translation, scaling, rotation, shearing, view transform, chaining)
 
 ### Test Coverage
-- 57 scenarios passing (188 steps)
-- 4 feature files in `/features/` directory:
+- 76 scenarios passing (264 steps)
+- 5 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
-  - `matrices.feature` - Matrix transformations
+  - `matrices.feature` - Matrix operations
+  - `transformations.feature` - Transformation matrices with π and √ notation support
 - Additional reference tests from the book in `/book_features/` for future implementation
