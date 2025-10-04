@@ -58,17 +58,18 @@ Execute all chapter demonstrations:
 ruby rayz
 ```
 
-This runs demonstrations from Chapters 1-3 and generates PPM image files.
+This runs demonstrations from Chapters 1-4 and generates PPM image files.
 
 ## Testing
 
-Run all tests (57 scenarios, 188 steps):
+Run all tests (76 scenarios, 264 steps):
 ```bash
 bundle exec cucumber
 ```
 
 Run specific feature:
 ```bash
+bundle exec cucumber features/transformations.feature
 bundle exec cucumber features/matrices.feature
 bundle exec cucumber features/tuples.feature
 bundle exec cucumber features/canvas.feature
@@ -192,17 +193,55 @@ Drawing a clock using rotation matrices...
 Writing clock face to chapter3_clock.ppm... Done!
 ```
 
+## Chapter 4 - Matrix Transformations
+
+Demonstrates transformation matrices for manipulating objects in 3D space:
+- Translation: moving points (vectors unaffected)
+- Scaling: resizing objects (negative values create reflections)
+- Rotation: around X, Y, and Z axes using radians
+- Shearing: skewing transformations in all directions
+- Transformation chaining: composing multiple transformations
+- Visual demonstration: analog clock at 3:00
+
+**Output:** `chapter4_clock.ppm` - A 500×500 pixel image showing an analog clock with colored hour markers and hands at 3:00
+
+**Example output:**
+```
+=== Chapter 4: Matrix Transformations ===
+Demonstrating translation, scaling, rotation, and shearing
+
+1. Translation
+----------------------------------------
+Point: Point(x: -3, y: 4, z: 5)
+Translation(5, -3, 2)
+Result: Point(x: 2, y: 1, z: 7)
+
+Vector: Vector(x: -3, y: 4, z: 5)
+Translation(5, -3, 2)
+Result: Vector(x: -3, y: 4, z: 5) (unchanged - vectors are not affected by translation)
+
+2. Scaling and Reflection
+----------------------------------------
+...
+
+6. Analog Clock Visualization
+----------------------------------------
+Creating an analog clock face using transformations...
+Writing analog clock to chapter4_clock.ppm... Done!
+An analog clock showing 3:00 has been created using transformations.
+```
+
 ## Viewing Output Files
 
 The generated `.ppm` files can be viewed with most image viewers or converted to other formats:
 
 ```bash
 # View with ImageMagick
-display chapter3_clock.ppm
+display chapter4_clock.ppm
 
 # Convert to PNG
-convert chapter3_clock.ppm chapter3_clock.png
+convert chapter4_clock.ppm chapter4_clock.png
 
 # Copy to Windows (WSL users)
-cp chapter3_clock.ppm /mnt/c/Users/YourUsername/
+cp chapter4_clock.ppm /mnt/c/Users/YourUsername/
 ```
