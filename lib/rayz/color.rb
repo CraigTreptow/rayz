@@ -42,14 +42,10 @@ module Rayz
       "Red: #{@red} Green: #{@green} Blue: #{@blue}"
     end
 
-    # rubocop:disable Style/YodaCondition
-    # rubocop:disable Lint/Void
     def ==(other)
-      Util.==(@red, other.red)
-      Util.==(@green, other.green)
-      Util.==(@blue, other.blue)
+      Util.==(@red, other.red) &&
+        Util.==(@green, other.green) &&
+        Util.==(@blue, other.blue)
     end
-    # rubocop:enable Lint/Void
-    # rubocop:enable Style/YodaCondition
   end
 end
