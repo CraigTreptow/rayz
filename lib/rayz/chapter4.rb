@@ -226,7 +226,7 @@ module Rayz
       puts " Done!"
       puts "An analog clock showing 3:00 has been created using transformations."
       puts "The clock demonstrates rotation and scaling transformations."
-      puts ""
+      puts "\n" + ("=" * 60) + "\n"
     end
 
     # Helper method to draw a line using Bresenham's algorithm

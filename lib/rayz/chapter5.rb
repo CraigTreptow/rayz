@@ -139,7 +139,7 @@ module Rayz
       puts " Done!"
       puts "A red sphere silhouette has been rendered using ray casting."
       puts "The sphere is scaled to be flattened (y = 0.5) to demonstrate transformations."
-      puts ""
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

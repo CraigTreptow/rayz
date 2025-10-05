@@ -136,7 +136,7 @@ module Rayz
       File.write(file_name, canvas.to_ppm)
       puts " Done!"
       puts "A clock face with 12 marks has been drawn using rotation matrices."
-      puts ""
+      puts "\n" + ("=" * 60) + "\n"
     end
 
     def self.print_matrix(matrix, precision: 2)

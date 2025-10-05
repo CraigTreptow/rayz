@@ -51,6 +51,7 @@ module Rayz
         File.write(file_name, ppm_content)
       end.wait
       puts "Done"
+      puts "\n" + ("=" * 60) + "\n"
     end
 
     def self.tick(environment, projectile)

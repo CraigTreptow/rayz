@@ -89,6 +89,7 @@ module Rayz
       # Write to file
       File.write("chapter7.ppm", canvas.to_ppm)
       puts "Scene rendered to chapter7.ppm"
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

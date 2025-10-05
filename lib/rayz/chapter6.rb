@@ -100,6 +100,7 @@ module Rayz
       puts "Writing to chapter6.ppm..."
       File.write("chapter6.ppm", canvas.to_ppm)
       puts "Complete! Open chapter6.ppm to see the shaded sphere."
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

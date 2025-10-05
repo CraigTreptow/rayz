@@ -20,6 +20,7 @@ module Rayz
         tick_count += 1
       end
       puts "Projectile hit the ground after #{tick_count - 1} ticks."
+      puts "\n" + ("=" * 60) + "\n"
     end
 
     def self.tick(environment, projectile)
