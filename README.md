@@ -58,7 +58,7 @@ Execute all chapter demonstrations:
 ruby rayz
 ```
 
-This runs demonstrations from Chapters 1-4 and generates PPM image files.
+This runs demonstrations from Chapters 1-5 and generates PPM image files.
 
 Run individual chapters:
 ```bash
@@ -66,13 +66,19 @@ ruby -r ./lib/rayz -e "Rayz::Chapter1.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter2.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter3.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter4.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter5.run"
 ```
 
 ## Testing
 
-Run all tests (76 scenarios, 264 steps):
+Run all tests (20 scenarios passing for Chapter 5):
 ```bash
 bundle exec cucumber
+```
+
+Run Chapter 5 tests only:
+```bash
+bundle exec cucumber features/rays.feature features/spheres.feature features/intersections.feature --tags 'not @skip'
 ```
 
 Run specific feature:
@@ -237,6 +243,61 @@ Result: Vector(x: -3, y: 4, z: 5) (unchanged - vectors are not affected by trans
 Creating an analog clock face using transformations...
 Writing analog clock to chapter4_clock.ppm... Done!
 An analog clock showing 3:00 has been created using transformations.
+```
+
+## Chapter 5 - Ray-Sphere Intersections
+
+Demonstrates the fundamentals of ray tracing:
+- Ray creation with origin and direction
+- Computing points along a ray
+- Ray transformations (translation and scaling)
+- Sphere-ray intersection calculations
+- Finding hit points (lowest non-negative intersection)
+- Visual demonstration: rendering a sphere silhouette using ray casting
+
+**Output:** `chapter5_sphere.ppm` - A 200×200 pixel image showing a red sphere silhouette rendered using ray casting
+
+**Key concepts:**
+- Rays are defined by an origin (point) and direction (vector)
+- `position(ray, t)` computes a point along the ray at distance t
+- Spheres can be transformed (scaled, rotated, translated)
+- Intersections return t values where the ray hits the sphere
+- The `hit` function finds the lowest non-negative intersection
+
+**Example output:**
+```
+=== Chapter 5: Ray-Sphere Intersections ===
+Demonstrating ray casting and sphere intersection
+
+1. Basic Ray-Sphere Intersection
+----------------------------------------
+Ray origin: (0, 0, -5)
+Ray direction: (0, 0, 1)
+Sphere: Unit sphere at origin
+Intersections: 2
+  [0] t = 4.0
+  [1] t = 6.0
+
+2. Ray Transformations
+----------------------------------------
+Original ray:
+  Origin: (1, 2, 3)
+  Direction: (0, 1, 0)
+
+After translation(3, 4, 5):
+  Origin: (4.0, 6.0, 8.0)
+  Direction: (0, 1, 0)
+
+After scaling(2, 3, 4):
+  Origin: (2.0, 6.0, 12.0)
+  Direction: (0, 3, 0)
+
+3. Sphere Silhouette Rendering
+----------------------------------------
+Rendering a sphere using ray casting...
+Writing sphere silhouette to chapter5_sphere.ppm... Done!
+A red sphere silhouette has been rendered using ray casting.
+The sphere is scaled to be flattened (y = 0.5) to demonstrate transformations.
 ```
 
 ## Viewing Output Files

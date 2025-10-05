@@ -9,6 +9,7 @@ module Rayz
       Chapter2.run
       Chapter3.run
       Chapter4.run
+      Chapter5.run
     end
   end
 end

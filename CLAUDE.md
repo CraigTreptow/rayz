@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-4 with projectile physics, canvas visualization, matrix operations, and transformation matrices.
+Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-5 with projectile physics, canvas visualization, matrix operations, transformation matrices, and ray-sphere intersections.
 
 ## Development Commands
 
@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz         # Execute all implemented chapters (1, 2, 3, and 4)
+ruby rayz         # Execute all implemented chapters (1, 2, 3, 4, and 5)
 ```
 
 ### Testing
@@ -48,6 +48,9 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Color` - RGB color representation with arithmetic operations
 - `Matrix` - Matrix operations using Ruby's stdlib Matrix with custom utility methods for cofactor, minor, determinant, and inversion
 - `Transformations` - Static methods for creating transformation matrices (translation, scaling, rotation, shearing, view transform)
+- `Ray` - Ray with origin (Point) and direction (Vector), supports position calculation and transformations
+- `Sphere` - 3D sphere with transformation support and ray intersection calculations
+- `Intersection` - Encapsulates intersection point (t value) and intersected object
 - Coordinate system follows mathematical convention (not screen coordinates)
 
 ### Physics Simulation
@@ -72,6 +75,9 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - `canvas.feature` - Pixel operations and PPM export
 - `matrices.feature` - Matrix operations
 - `transformations.feature` - Transformation matrices (translation, scaling, rotation, shearing)
+- `rays.feature` - Ray creation, position calculation, and transformations
+- `spheres.feature` - Sphere-ray intersection tests (basic scenarios)
+- `intersections.feature` - Intersection aggregation and hit detection
 
 ## Code Conventions
 
@@ -106,6 +112,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter2.ppm` - Projectile trajectory visualization
   - `chapter3_clock.ppm` - Clock face using rotation matrices
   - `chapter4_clock.ppm` - Analog clock at 3:00 using transformation matrices
+  - `chapter5_sphere.ppm` - Sphere silhouette rendered using ray casting
 
 ## Implementation Status
 
@@ -114,13 +121,17 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 2**: Canvas and PPM export with parallel pixel writing
 - **Chapter 3**: Matrix operations (construction, transpose, determinant, inverse, multiplication)
 - **Chapter 4**: Transformation matrices (translation, scaling, rotation, shearing, view transform, chaining)
+- **Chapter 5**: Ray-sphere intersections (ray casting, sphere transformations, hit detection, silhouette rendering)
 
 ### Test Coverage
-- 76 scenarios passing (264 steps)
-- 5 feature files in `/features/` directory:
+- 20 scenarios passing for Chapter 5 (basic ray-sphere intersections)
+- 8 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
   - `matrices.feature` - Matrix operations
   - `transformations.feature` - Transformation matrices with π and √ notation support
-- Additional reference tests from the book in `/book_features/` for future implementation
+  - `rays.feature` - Ray creation, position calculation, and transformations (4 scenarios)
+  - `spheres.feature` - Sphere-ray intersection tests (9 scenarios, normals/materials skipped)
+  - `intersections.feature` - Intersection aggregation and hit detection (7 scenarios)
+- Additional reference tests from the book in `/book_features/` for future implementation (normals, materials, lighting)
