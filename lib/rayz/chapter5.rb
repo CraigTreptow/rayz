@@ -106,6 +106,8 @@ module Rayz
       # Color
       red = Rayz::Color.new(red: 1.0, green: 0.0, blue: 0.0)
 
+      start_time = Time.now
+
       # For each pixel on the canvas
       canvas_pixels.times do |y|
         # Convert canvas y to world y
@@ -132,6 +134,13 @@ module Rayz
           end
         end
       end
+
+      end_time = Time.now
+      total_time = end_time - start_time
+      time_per_row = total_time / canvas_pixels
+
+      puts "Rendering took #{total_time.round(2)} seconds"
+      puts "Time per row: #{(time_per_row * 1000).round(2)} ms"
 
       file_name = "chapter5_sphere.ppm"
       print "Writing sphere silhouette to #{file_name}..."
