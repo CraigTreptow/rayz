@@ -110,7 +110,7 @@ Scenario: The cross product of two vectors
   Given v1 ← vector(1, 2, 3)
     And v2 ← vector(2, 3, 4)
   Then cross(v1, v2) = vector(-1, 2, -1)
-    And cross(v1, v2) = vector(1, -2, 1)
+    And cross(v2, v1) = vector(1, -2, 1)
 
 # Scenario: Reflecting a vector approaching at 45°
 #   Given v ← vector(1, -1, 0)

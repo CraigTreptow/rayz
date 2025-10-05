@@ -163,3 +163,8 @@ end
 When("i ← intersection\\({float}, s2)") do |t|
   @i = Rayz::Intersection.new(t, @s2)
 end
+
+Then("c = color\\({float}, {float}, {float})") do |r, g, b|
+  expected = Rayz::Color.new(red: r, green: g, blue: b)
+  assert_equal(@c, expected)
+end

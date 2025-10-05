@@ -213,3 +213,8 @@ Then('cross\(v1, v2) = vector\({float}, {float}, {float})') do |x, y, z|
   expected = create_vector(x, y, z)
   assert_equal(@vector_v1.cross(@vector_v2), expected)
 end
+
+Then('cross\(v2, v1) = vector\({float}, {float}, {float})') do |x, y, z|
+  expected = create_vector(x, y, z)
+  assert_equal(@vector_v2.cross(@vector_v1), expected)
+end
