@@ -73,7 +73,7 @@ module Rayz
           xs = sphere.intersect(r)
 
           # Check if we hit the sphere
-          hit = Rayz::Intersection.hit(xs)
+          hit = Rayz.hit(xs)
 
           if hit
             # Calculate the point where the ray hit the sphere
@@ -89,7 +89,7 @@ module Rayz
             color = Rayz.lighting(hit.object.material, light, point, eye, normal)
 
             # Write the pixel
-            canvas.write_pixel(x, y, color)
+            canvas.write_pixel(row: y, col: x, color: color)
           end
         end
       end
