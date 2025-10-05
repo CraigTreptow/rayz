@@ -1,7 +1,14 @@
 module Rayz
-  def self.lighting(material, light, point, eyev, normalv, in_shadow = false)
+  def self.lighting(material, light, point, eyev, normalv, in_shadow = false, object = nil)
+    # Determine the color at this point (either from pattern or material color)
+    color = if material.pattern && object
+      material.pattern.pattern_at_shape(object, point)
+    else
+      material.color
+    end
+
     # Combine the surface color with the light's color/intensity
-    effective_color = material.color * light.intensity
+    effective_color = color * light.intensity
 
     # Find the direction to the light source
     lightv = (light.position - point).normalize

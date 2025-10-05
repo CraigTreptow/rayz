@@ -41,7 +41,8 @@ module Rayz
         comps.point,
         comps.eyev,
         comps.normalv,
-        shadowed
+        shadowed,
+        comps.object
       )
     end
 
