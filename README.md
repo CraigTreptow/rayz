@@ -58,7 +58,7 @@ Execute all chapter demonstrations:
 ruby rayz
 ```
 
-This runs demonstrations from Chapters 1-6 and generates PPM image files.
+This runs demonstrations from Chapters 1-8 and generates PPM image files.
 
 Run individual chapters:
 ```bash
@@ -68,13 +68,25 @@ ruby -r ./lib/rayz -e "Rayz::Chapter3.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter4.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter5.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter6.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter7.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter8.run"
 ```
 
 ## Testing
 
-Run all tests (114 scenarios passing):
+Run all tests (132 scenarios passing):
 ```bash
 bundle exec cucumber
+```
+
+Run Chapter 8 tests only:
+```bash
+bundle exec cucumber features/patterns.feature features/planes.feature
+```
+
+Run Chapter 7 tests only:
+```bash
+bundle exec cucumber features/world.feature features/camera.feature
 ```
 
 Run Chapter 6 tests only:
@@ -342,6 +354,83 @@ Progress (each dot = 10 rows):
 Done!
 Writing to chapter6.ppm...
 Complete! Open chapter6.ppm to see the shaded sphere.
+```
+
+## Chapter 7 - Making a Scene (World and Camera)
+
+Demonstrates building complete 3D scenes with multiple objects and rendering:
+- World class for managing objects and light sources
+- Camera class with configurable field of view and viewport
+- View transformations for positioning the camera
+- Ray generation for each pixel based on camera position
+- Shadow detection using ray casting to light source
+- Intersection precomputation for efficient rendering
+- Visual demonstration: rendering a scene with multiple spheres, floor, and walls
+
+**Output:** `chapter7.ppm` - A 400×200 pixel image showing a complete 3D scene with three colored spheres, walls, and realistic shadows
+
+**Key concepts:**
+- World manages collections of objects and a light source
+- Camera generates rays through each pixel of the viewport
+- `view_transform(from, to, up)` positions and orients the camera
+- Shadow rays check if a point is in shadow before applying lighting
+- `prepare_computations` precomputes intersection data for efficiency
+- Scene rendering iterates through all pixels, casting rays and computing colors
+
+**Example output:**
+```
+Chapter 7: Making a Scene
+Rendering scene (400x200 pixels)...
+This may take a minute...
+Progress (each dot = 10 rows):
+....................
+Done!
+Rendering took 84.68 seconds
+Time per row: 423.4 ms
+Scene rendered to chapter7.ppm
+```
+
+## Chapter 8 - Patterns and Planes
+
+Demonstrates advanced shape abstraction and surface patterns:
+- Shape base class with template method pattern for all geometric primitives
+- Plane primitive (infinite flat surface)
+- Pattern system with transformations
+- Stripe pattern (alternating colors based on x coordinate)
+- Gradient pattern (linear color interpolation)
+- Ring pattern (concentric rings in XZ plane)
+- Checkers pattern (3D checkerboard)
+- Pattern transformations independent of object transformations
+- Visual demonstration: scene with patterned spheres and infinite floor/wall planes
+
+**Output:** `chapter8.ppm` - A 400×200 pixel image showing spheres with various patterns on an infinite checkerboard floor
+
+**Key concepts:**
+- Shape abstraction separates coordinate transformation from shape-specific logic
+- Shapes implement `local_intersect` and `local_normal_at` in object space
+- Base Shape class handles world-to-object-to-pattern coordinate transformations
+- Planes have constant normals (always pointing up) and handle parallel rays
+- Patterns have their own transform matrices for positioning/scaling/rotation
+- `pattern_at_shape(pattern, object, world_point)` applies both object and pattern transforms
+- Materials can use either solid colors or patterns
+
+**Example output:**
+```
+Chapter 8: Shadows (Patterns and Planes)
+Rendering scene with patterns and planes (400x200 pixels)...
+Features:
+  - Floor: Checkers pattern on an infinite plane
+  - Back wall: Gradient pattern
+  - Middle sphere: Ring pattern
+  - Right sphere: Stripe pattern (rotated)
+  - Left sphere: Gradient pattern
+This may take a minute...
+Progress (each dot = 10 rows):
+....................
+Done!
+Rendering took 85.23 seconds
+Time per row: 426.2 ms
+Scene rendered to chapter8.ppm
 ```
 
 ## Viewing Output Files
