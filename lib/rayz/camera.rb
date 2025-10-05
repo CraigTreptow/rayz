@@ -57,6 +57,7 @@ module Rayz
     def render(world)
       image = Canvas.new(width: @hsize, height: @vsize)
 
+      start_time = Time.now
       puts "Progress (each dot = 10 rows):"
       (0...@vsize).each do |y|
         print "." if y % 10 == 0
@@ -68,7 +69,14 @@ module Rayz
           image.write_pixel(row: @vsize - 1 - y, col: x, color: color)
         end
       end
+      end_time = Time.now
+
+      total_time = end_time - start_time
+      time_per_row = total_time / @vsize
+
       puts "\nDone!"
+      puts "Rendering took #{total_time.round(2)} seconds"
+      puts "Time per row: #{(time_per_row * 1000).round(2)} ms"
 
       image
     end
