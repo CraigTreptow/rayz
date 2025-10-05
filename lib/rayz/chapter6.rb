@@ -21,7 +21,7 @@ module Rayz
     def self.render_shaded_sphere
       # Set up canvas and sphere
       canvas_pixels = 400
-      canvas = Rayz::Canvas.new(canvas_pixels, canvas_pixels)
+      canvas = Rayz::Canvas.new(width: canvas_pixels, height: canvas_pixels)
 
       # Create a sphere with a material
       sphere = Rayz::Sphere.new
