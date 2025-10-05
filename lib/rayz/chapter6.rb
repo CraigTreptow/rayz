@@ -88,7 +88,7 @@ module Rayz
             eye = -r.direction
 
             # Calculate the color using Phong shading
-            color = Rayz.lighting(hit.object.material, light, point, eye, normal)
+            color = Rayz.lighting(hit.object.material, light, point, eye, normal, false, hit.object)
 
             # Write the pixel
             canvas.write_pixel(row: y, col: x, color: color)
