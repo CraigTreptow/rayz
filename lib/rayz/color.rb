@@ -43,9 +43,11 @@ module Rayz
     end
 
     def ==(other)
+      # rubocop:disable Style/YodaCondition
       Util.==(@red, other.red) &&
         Util.==(@green, other.green) &&
         Util.==(@blue, other.blue)
+      # rubocop:enable Style/YodaCondition
     end
   end
 end
