@@ -58,7 +58,7 @@ Execute all chapter demonstrations:
 ruby rayz
 ```
 
-This runs demonstrations from Chapters 1-5 and generates PPM image files.
+This runs demonstrations from Chapters 1-6 and generates PPM image files.
 
 Run individual chapters:
 ```bash
@@ -67,18 +67,24 @@ ruby -r ./lib/rayz -e "Rayz::Chapter2.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter3.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter4.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter5.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter6.run"
 ```
 
 ## Testing
 
-Run all tests (20 scenarios passing for Chapter 5):
+Run all tests (114 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
 
+Run Chapter 6 tests only:
+```bash
+bundle exec cucumber features/lights.feature features/materials.feature
+```
+
 Run Chapter 5 tests only:
 ```bash
-bundle exec cucumber features/rays.feature features/spheres.feature features/intersections.feature --tags 'not @skip'
+bundle exec cucumber features/rays.feature features/spheres.feature features/intersections.feature
 ```
 
 Run specific feature:
@@ -298,6 +304,44 @@ Rendering a sphere using ray casting...
 Writing sphere silhouette to chapter5_sphere.ppm... Done!
 A red sphere silhouette has been rendered using ray casting.
 The sphere is scaled to be flattened (y = 0.5) to demonstrate transformations.
+```
+
+## Chapter 6 - Light and Shading
+
+Demonstrates the Phong reflection model for realistic lighting:
+- Point light sources with position and intensity
+- Surface materials with ambient, diffuse, specular, and shininess properties
+- Surface normals calculation for spheres
+- Vector reflection for specular highlights
+- Phong shading model combining ambient, diffuse, and specular components
+- Shadow detection (in_shadow parameter)
+- Visual demonstration: rendering a shaded 3D sphere with realistic lighting
+
+**Output:** `chapter6.ppm` - A 400×400 pixel image showing a purple sphere with Phong shading
+
+**Key concepts:**
+- Materials define surface properties (color, ambient, diffuse, specular, shininess)
+- Point lights have position and intensity (color)
+- Surface normals are vectors perpendicular to the surface at a point
+- Phong model: `color = ambient + diffuse + specular`
+- Ambient: constant base illumination
+- Diffuse: matte reflection based on light angle
+- Specular: shiny highlights based on reflection angle
+
+**Example output:**
+```
+=== Chapter 6: Light and Shading ===
+Rendering a 3D sphere with Phong shading
+
+Rendering 3D sphere with Phong shading...
+Canvas size: 400x400
+Sphere material: purple-ish (R:1, G:0.2, B:1)
+Light position: Point(x: -10, y: 10, z: -10)
+Progress (each dot = 10 rows):
+........................................
+Done!
+Writing to chapter6.ppm...
+Complete! Open chapter6.ppm to see the shaded sphere.
 ```
 
 ## Viewing Output Files

@@ -33,6 +33,10 @@ module Rayz
       Tuple.new(x: -@x, y: -@y, z: -@z, w: -@w)
     end
 
+    def -@
+      negate
+    end
+
     def dot(other)
       @x * other.x +
         @y * other.y +
@@ -47,6 +51,10 @@ module Rayz
     def normalize
       mag = magnitude
       Tuple.new(x: @x / mag, y: @y / mag, z: @z / mag, w: @w / mag)
+    end
+
+    def reflect(normal)
+      self - normal * 2 * dot(normal)
     end
 
     # rubocop:disable Style/YodaCondition

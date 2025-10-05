@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-5 with projectile physics, canvas visualization, matrix operations, transformation matrices, and ray-sphere intersections.
+Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-6 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, and Phong shading.
 
 ## Development Commands
 
@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz         # Execute all implemented chapters (1, 2, 3, 4, and 5)
+ruby rayz         # Execute all implemented chapters (1, 2, 3, 4, 5, and 6)
 ```
 
 ### Testing
@@ -49,8 +49,11 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Matrix` - Matrix operations using Ruby's stdlib Matrix with custom utility methods for cofactor, minor, determinant, and inversion
 - `Transformations` - Static methods for creating transformation matrices (translation, scaling, rotation, shearing, view transform)
 - `Ray` - Ray with origin (Point) and direction (Vector), supports position calculation and transformations
-- `Sphere` - 3D sphere with transformation support and ray intersection calculations
+- `Sphere` - 3D sphere with transformation support, ray intersection calculations, material properties, and surface normal calculation
 - `Intersection` - Encapsulates intersection point (t value) and intersected object
+- `Material` - Surface properties for Phong shading (color, ambient, diffuse, specular, shininess, reflective, transparency, refractive_index)
+- `PointLight` - Point light source with position (Point) and intensity (Color)
+- `lighting` - Module function implementing Phong reflection model for realistic shading
 - Coordinate system follows mathematical convention (not screen coordinates)
 
 ### Physics Simulation
@@ -70,14 +73,16 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - Step definitions in `/features/step_definitions/`
 
 ### Test Structure
-- `tuples.feature` - Core mathematical operations
+- `tuples.feature` - Core mathematical operations including vector reflection
 - `colors.feature` - Color arithmetic
 - `canvas.feature` - Pixel operations and PPM export
 - `matrices.feature` - Matrix operations
 - `transformations.feature` - Transformation matrices (translation, scaling, rotation, shearing)
 - `rays.feature` - Ray creation, position calculation, and transformations
-- `spheres.feature` - Sphere-ray intersection tests (basic scenarios)
+- `spheres.feature` - Sphere-ray intersection, surface normals, and materials
 - `intersections.feature` - Intersection aggregation and hit detection
+- `lights.feature` - Point light source creation
+- `materials.feature` - Material properties and Phong lighting model
 
 ## Code Conventions
 
@@ -113,6 +118,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter3_clock.ppm` - Clock face using rotation matrices
   - `chapter4_clock.ppm` - Analog clock at 3:00 using transformation matrices
   - `chapter5_sphere.ppm` - Sphere silhouette rendered using ray casting
+  - `chapter6.ppm` - Shaded 3D sphere with Phong lighting
 
 ## Implementation Status
 
@@ -122,16 +128,19 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 3**: Matrix operations (construction, transpose, determinant, inverse, multiplication)
 - **Chapter 4**: Transformation matrices (translation, scaling, rotation, shearing, view transform, chaining)
 - **Chapter 5**: Ray-sphere intersections (ray casting, sphere transformations, hit detection, silhouette rendering)
+- **Chapter 6**: Light and Shading (Phong reflection model, point lights, materials, surface normals, realistic lighting)
 
 ### Test Coverage
-- 20 scenarios passing for Chapter 5 (basic ray-sphere intersections)
-- 8 feature files in `/features/` directory:
-  - `tuples.feature` - Core mathematical operations
+- 114 scenarios passing (128 total scenarios, 14 undefined for future chapters, 1 skipped for patterns)
+- 10 feature files in `/features/` directory:
+  - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
   - `matrices.feature` - Matrix operations
   - `transformations.feature` - Transformation matrices with π and √ notation support
-  - `rays.feature` - Ray creation, position calculation, and transformations (4 scenarios)
-  - `spheres.feature` - Sphere-ray intersection tests (9 scenarios, normals/materials skipped)
-  - `intersections.feature` - Intersection aggregation and hit detection (7 scenarios)
-- Additional reference tests from the book in `/book_features/` for future implementation (normals, materials, lighting)
+  - `rays.feature` - Ray creation, position calculation, and transformations
+  - `spheres.feature` - Sphere-ray intersection, surface normals, materials
+  - `intersections.feature` - Intersection aggregation and hit detection
+  - `lights.feature` - Point light sources
+  - `materials.feature` - Material properties and Phong lighting (1 pattern test skipped)
+- Additional reference tests from the book in `/book_features/` for future implementation

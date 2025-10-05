@@ -41,3 +41,60 @@ end
 When('set_transform\(s, translation\({float}, {float}, {float}))') do |x, y, z|
   @s.transform = Rayz::Transformations.translation(x, y, z)
 end
+
+When("n ← normal_at\\(s, point\\({float}, {float}, {float}))") do |x, y, z|
+  point = Rayz::Point.new(x: x, y: y, z: z)
+  @n = @s.normal_at(point)
+end
+
+When(/n ← normal_at\(s, point\(√(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?), √(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?), √(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)\)\)/) do |sqrt_num_x, sqrt_den_x, sqrt_num_y, sqrt_den_y, sqrt_num_z, sqrt_den_z|
+  point = Rayz::Point.new(
+    x: Math.sqrt(sqrt_num_x.to_f) / sqrt_den_x.to_f,
+    y: Math.sqrt(sqrt_num_y.to_f) / sqrt_den_y.to_f,
+    z: Math.sqrt(sqrt_num_z.to_f) / sqrt_den_z.to_f
+  )
+  @n = @s.normal_at(point)
+end
+
+Then("n = vector\\({float}, {float}, {float})") do |x, y, z|
+  expected = Rayz::Vector.new(x: x, y: y, z: z)
+  assert_equal(@n, expected)
+end
+
+Then(/n = vector\(√(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?), √(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?), √(\d+(?:\.\d+)?)\/(\d+(?:\.\d+)?)\)/) do |sqrt_num_x, sqrt_den_x, sqrt_num_y, sqrt_den_y, sqrt_num_z, sqrt_den_z|
+  expected = Rayz::Vector.new(
+    x: Math.sqrt(sqrt_num_x.to_f) / sqrt_den_x.to_f,
+    y: Math.sqrt(sqrt_num_y.to_f) / sqrt_den_y.to_f,
+    z: Math.sqrt(sqrt_num_z.to_f) / sqrt_den_z.to_f
+  )
+  assert_equal(@n, expected)
+end
+
+Then("n = normalize\\(n)") do
+  assert_equal(@n, @n.normalize)
+end
+
+Given(/m ← scaling\((\d+(?:\.\d+)?), (\d+(?:\.\d+)?), (\d+(?:\.\d+)?)\) \* rotation_z\(π\/(\d+(?:\.\d+)?)\)/) do |sx, sy, sz, pi_divisor|
+  @m = Rayz::Transformations.scaling(sx.to_f, sy.to_f, sz.to_f) * Rayz::Transformations.rotation_z(Math::PI / pi_divisor.to_f)
+end
+
+Given("set_transform\\(s, m)") do
+  @s.transform = @m
+end
+
+When("m ← s.material") do
+  @m = @s.material
+end
+
+Then("m = material\\()") do
+  expected = Rayz::Material.new
+  assert_equal(@m, expected)
+end
+
+When("s.material ← m") do
+  @s.material = @m
+end
+
+Then("s.material = m") do
+  assert_equal(@s.material, @m)
+end

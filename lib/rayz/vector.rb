@@ -21,5 +21,9 @@ module Rayz
         y: @z * other.x - @x * other.z,
         z: @x * other.y - @y * other.x)
     end
+
+    def reflect(normal)
+      self - normal * 2 * dot(normal)
+    end
   end
 end
