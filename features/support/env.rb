@@ -13,7 +13,7 @@ World(Minitest::Assertions)
 
 # Define custom parameter type for transformation names
 ParameterType(
-  name: 'transform',
+  name: "transform",
   regexp: /[a-z_]+/,
-  transformer: -> (s) { s }
+  transformer: ->(s) { s }
 )

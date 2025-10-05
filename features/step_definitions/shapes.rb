@@ -8,7 +8,6 @@ Given("shape ← sphere\\()") do
   @shape = Rayz::Sphere.new
 end
 
-
 Then("s.saved_ray.origin = point\\({float}, {float}, {float})") do |x, y, z|
   expected = Rayz::Point.new(x: x, y: y, z: z)
   assert_equal(expected, @s.saved_ray.origin)
