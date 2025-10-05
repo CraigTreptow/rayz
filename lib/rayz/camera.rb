@@ -57,13 +57,18 @@ module Rayz
     def render(world)
       image = Canvas.new(width: @hsize, height: @vsize)
 
+      puts "Progress (each dot = 10 rows):"
       (0...@vsize).each do |y|
+        print "." if y % 10 == 0
+
         (0...@hsize).each do |x|
           ray = ray_for_pixel(x, y)
           color = world.color_at(ray)
-          image.write_pixel(row: y, col: x, color: color)
+          # Canvas has origin at bottom-left, so invert y coordinate
+          image.write_pixel(row: @vsize - 1 - y, col: x, color: color)
         end
       end
+      puts "\nDone!"
 
       image
     end
