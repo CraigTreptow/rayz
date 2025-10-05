@@ -74,17 +74,17 @@ ruby -r ./lib/rayz -e "Rayz::Chapter6.run"
 
 Run all tests (114 scenarios passing):
 ```bash
-bundle exec cucumber --tags 'not @skip'
+bundle exec cucumber
 ```
 
 Run Chapter 6 tests only:
 ```bash
-bundle exec cucumber features/lights.feature features/materials.feature --tags 'not @skip'
+bundle exec cucumber features/lights.feature features/materials.feature
 ```
 
 Run Chapter 5 tests only:
 ```bash
-bundle exec cucumber features/rays.feature features/spheres.feature features/intersections.feature --tags 'not @skip'
+bundle exec cucumber features/rays.feature features/spheres.feature features/intersections.feature
 ```
 
 Run specific feature:
