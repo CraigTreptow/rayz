@@ -49,6 +49,8 @@ module Rayz
       puts "Light position: #{light_position}"
       puts "Progress (each dot = 10 rows):"
 
+      start_time = Time.now
+
       # For each row of pixels in the canvas
       (0...canvas_pixels).each do |y|
         # Compute the world y coordinate (top = +half, bottom = -half)
@@ -94,7 +96,13 @@ module Rayz
         end
       end
 
+      end_time = Time.now
+      total_time = end_time - start_time
+      time_per_row = total_time / canvas_pixels
+
       puts "\nDone!"
+      puts "Rendering took #{total_time.round(2)} seconds"
+      puts "Time per row: #{(time_per_row * 1000).round(2)} ms"
 
       # Save to PPM file
       puts "Writing to chapter6.ppm..."
