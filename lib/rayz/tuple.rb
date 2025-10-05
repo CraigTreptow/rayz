@@ -33,6 +33,13 @@ module Rayz
       Tuple.new(x: -@x, y: -@y, z: -@z, w: -@w)
     end
 
+    def dot(other)
+      @x * other.x +
+        @y * other.y +
+        @z * other.z +
+        @w * other.w
+    end
+
     def magnitude
       Math.sqrt(@x**2 + @y**2 + @z**2 + @w**2)
     end
