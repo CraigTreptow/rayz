@@ -86,8 +86,10 @@ module Rayz
     # to: point where the eye is looking
     # up: vector indicating which direction is up
     def self.view_transform(from, to, up)
-      forward = (to - from).normalize
-      upn = up.normalize
+      forward_tuple = (to - from).normalize
+      forward = Vector.new(x: forward_tuple.x, y: forward_tuple.y, z: forward_tuple.z)
+      upn_tuple = up.normalize
+      upn = Vector.new(x: upn_tuple.x, y: upn_tuple.y, z: upn_tuple.z)
       left = forward.cross(upn)
       true_up = left.cross(forward)
 

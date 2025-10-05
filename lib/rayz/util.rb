@@ -1,8 +1,9 @@
 module Rayz
   class Util
+    EPSILON = 0.00001
+
     def self.==(x, y)
-      tolerance = 0.00001
-      (x - y).abs < tolerance
+      (x - y).abs < EPSILON
     end
 
     def self.matrix_multiplied_by_tuple(m, t)

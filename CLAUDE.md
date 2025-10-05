@@ -97,11 +97,13 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - Method chaining supported for transformations
 
 ### Development Workflow
-1. Write Cucumber feature file first (BDD approach)
-2. Implement step definitions
-3. Create/modify Ruby classes
-4. Run tests with `bundle exec cucumber`
-5. Format code with `bundle exec standardrb --fix`
+1. **Always create a new branch** for any changes (never work directly on master)
+2. Write Cucumber feature file first (BDD approach)
+3. Implement step definitions
+4. Create/modify Ruby classes
+5. Run tests with `bundle exec cucumber`
+6. Format code with `bundle exec standardrb --fix`
+7. **Always open a pull request** when work is complete
 
 ## Key Dependencies
 - `async` - Parallel processing for pixel writes

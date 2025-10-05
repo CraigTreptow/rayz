@@ -66,6 +66,7 @@ end
 # Point creation from three coordinates
 Given('p ← point\({float}, {float}, {float})') do |x, y, z|
   @point_p = create_point(x, y, z)
+  @p = @point_p  # Alias for world tests
 end
 
 # Verify point equals tuple with w=1.0
@@ -211,4 +212,9 @@ end
 Then('cross\(v1, v2) = vector\({float}, {float}, {float})') do |x, y, z|
   expected = create_vector(x, y, z)
   assert_equal(@vector_v1.cross(@vector_v2), expected)
+end
+
+Then('cross\(v2, v1) = vector\({float}, {float}, {float})') do |x, y, z|
+  expected = create_vector(x, y, z)
+  assert_equal(@vector_v2.cross(@vector_v1), expected)
 end

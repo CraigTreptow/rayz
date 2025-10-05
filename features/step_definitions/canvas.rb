@@ -41,7 +41,7 @@ When('write_pixel\(canvas, {int}, {int}, color3)') do |int, int2|
 end
 
 Then('pixel_at\(canvas, {int}, {int}) = red') do |int, int2|
-  color = @canvas.pixel_at(row: int, col: int2)
+  color = @canvas.pixel_at(col: int, row: int2)
   assert_equal(color, @red)
 end
 

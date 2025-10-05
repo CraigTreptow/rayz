@@ -18,7 +18,7 @@ module Rayz
 
     def *(other)
       case other
-      in Float
+      in Numeric
         Color.new(red: @red * other, green: @green * other, blue: @blue * other)
       in Color
         Color.new(red: @red * other.red, green: @green * other.green, blue: @blue * other.blue)
@@ -42,14 +42,12 @@ module Rayz
       "Red: #{@red} Green: #{@green} Blue: #{@blue}"
     end
 
-    # rubocop:disable Style/YodaCondition
-    # rubocop:disable Lint/Void
     def ==(other)
-      Util.==(@red, other.red)
-      Util.==(@green, other.green)
-      Util.==(@blue, other.blue)
+      # rubocop:disable Style/YodaCondition
+      Util.==(@red, other.red) &&
+        Util.==(@green, other.green) &&
+        Util.==(@blue, other.blue)
+      # rubocop:enable Style/YodaCondition
     end
-    # rubocop:enable Lint/Void
-    # rubocop:enable Style/YodaCondition
   end
 end

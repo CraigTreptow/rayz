@@ -58,14 +58,12 @@ module Rayz
     end
 
     # rubocop:disable Style/YodaCondition
-    # rubocop:disable Lint/Void
     def ==(other)
-      Rayz::Util.==(@x, other.x)
-      Rayz::Util.==(@y, other.y)
-      Rayz::Util.==(@z, other.z)
-      Rayz::Util.==(@w, other.w)
+      Rayz::Util.==(@x, other.x) &&
+        Rayz::Util.==(@y, other.y) &&
+        Rayz::Util.==(@z, other.z) &&
+        Rayz::Util.==(@w, other.w)
     end
-    # rubocop:enable Lint/Void
 
     def point?
       Rayz::Util.==(@w, 1.0)

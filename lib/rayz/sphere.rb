@@ -53,5 +53,10 @@ module Rayz
       # Normalize the result
       world_normal_vector.normalize
     end
+
+    def ==(other)
+      return false unless other.is_a?(Sphere)
+      @transform == other.transform && @material == other.material
+    end
   end
 end
