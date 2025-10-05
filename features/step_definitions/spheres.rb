@@ -6,19 +6,19 @@ When('xs ← intersect\(s, r)') do
   @xs = @s.intersect(@r)
 end
 
-Then('xs.count = {int}') do |count|
+Then("xs.count = {int}") do |count|
   assert_equal(@xs.count, count)
 end
 
-Then('xs[{int}] = {float}') do |index, value|
+Then("xs[{int}] = {float}") do |index, value|
   assert_equal(@xs[index].t, value)
 end
 
-Then('xs[{int}].object = s') do |index|
+Then("xs[{int}].object = s") do |index|
   assert_equal(@xs[index].object, @s)
 end
 
-Then('s.transform = identity_matrix') do
+Then("s.transform = identity_matrix") do
   assert_equal(@s.transform, Matrix.identity(4))
 end
 
@@ -30,7 +30,7 @@ When('set_transform\(s, t)') do
   @s.transform = @t
 end
 
-Then('s.transform = t') do
+Then("s.transform = t") do
   assert_equal(@s.transform, @t)
 end
 

@@ -2,11 +2,11 @@ When('i ← intersection\({float}, s)') do |t|
   @i = Rayz::Intersection.new(t, @s)
 end
 
-Then('i.t = {float}') do |t|
+Then("i.t = {float}") do |t|
   assert_equal(@i.t, t)
 end
 
-Then('i.object = s') do
+Then("i.object = s") do
   assert_equal(@i.object, @s)
 end
 
@@ -22,7 +22,7 @@ When('xs ← intersections\(i1, i2)') do
   @xs = Rayz.intersections(@i1, @i2)
 end
 
-Then('xs[{int}].t = {int}') do |index, value|
+Then("xs[{int}].t = {int}") do |index, value|
   assert_equal(@xs[index].t, value)
 end
 
@@ -34,15 +34,15 @@ When('i ← hit\(xs)') do
   @i = Rayz.hit(@xs)
 end
 
-Then('i = i1') do
+Then("i = i1") do
   assert_equal(@i, @i1)
 end
 
-Then('i = i2') do
+Then("i = i2") do
   assert_equal(@i, @i2)
 end
 
-Then('i is nothing') do
+Then("i is nothing") do
   assert_equal(@i, nil)
 end
 
@@ -58,6 +58,6 @@ When('xs ← intersections\(i1, i2, i3, i4)') do
   @xs = Rayz.intersections(@i1, @i2, @i3, @i4)
 end
 
-Then('i = i4') do
+Then("i = i4") do
   assert_equal(@i, @i4)
 end

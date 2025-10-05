@@ -10,11 +10,11 @@ When('r ← ray\(origin, direction)') do
   @r = Rayz::Ray.new(@origin, @direction)
 end
 
-Then('r.origin = origin') do
+Then("r.origin = origin") do
   assert_equal(@r.origin, @origin)
 end
 
-Then('r.direction = direction') do
+Then("r.direction = direction") do
   assert_equal(@r.direction, @direction)
 end
 
