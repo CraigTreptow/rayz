@@ -66,6 +66,7 @@ end
 # Point creation from three coordinates
 Given('p ← point\({float}, {float}, {float})') do |x, y, z|
   @point_p = create_point(x, y, z)
+  @p = @point_p  # Alias for world tests
 end
 
 # Verify point equals tuple with w=1.0

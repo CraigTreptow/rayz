@@ -55,6 +55,8 @@ module Rayz
     end
 
     def is_shadowed?(point)
+      return false unless @light
+
       v = @light.position - point
       distance = v.magnitude
       direction = v.normalize
@@ -63,7 +65,7 @@ module Rayz
       intersections = intersect(r)
       h = Rayz.hit(intersections)
 
-      h && h.t < distance
+      !!(h && h.t < distance)
     end
   end
 end

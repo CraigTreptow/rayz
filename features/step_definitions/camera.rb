@@ -80,6 +80,6 @@ end
 
 Then("pixel_at\\(image, {int}, {int}) = color\\({float}, {float}, {float})") do |x, y, r, g, b|
   expected = Rayz::Color.new(red: r, green: g, blue: b)
-  actual = @image.pixel_at(x, y)
+  actual = @image.pixel_at(col: x, row: y)
   assert_equal(actual, expected)
 end

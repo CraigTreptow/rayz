@@ -18,7 +18,7 @@ module Rayz
 
     def *(other)
       case other
-      in Float
+      in Numeric
         Color.new(red: @red * other, green: @green * other, blue: @blue * other)
       in Color
         Color.new(red: @red * other.red, green: @green * other.green, blue: @blue * other.blue)
