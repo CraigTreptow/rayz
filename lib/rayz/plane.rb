@@ -12,7 +12,7 @@ module Rayz
 
       # Calculate where the ray intersects the plane (y=0)
       t = -local_ray.origin.y / local_ray.direction.y
-      [Intersection.new(t, self)]
+      [Intersection.new(t: t, object: self)]
     end
 
     def local_normal_at(local_point)

@@ -29,8 +29,8 @@ module Rayz
 
       # Ray from the origin pointing forward
       ray = Rayz::Ray.new(
-        Rayz::Point.new(x: 0, y: 0, z: -5),
-        Rayz::Vector.new(x: 0, y: 0, z: 1)
+        origin: Rayz::Point.new(x: 0, y: 0, z: -5),
+        direction: Rayz::Vector.new(x: 0, y: 0, z: 1)
       )
 
       # Unit sphere at the origin
@@ -54,12 +54,12 @@ module Rayz
       puts "-" * 40
 
       ray = Rayz::Ray.new(
-        Rayz::Point.new(x: 1, y: 2, z: 3),
-        Rayz::Vector.new(x: 0, y: 1, z: 0)
+        origin: Rayz::Point.new(x: 1, y: 2, z: 3),
+        direction: Rayz::Vector.new(x: 0, y: 1, z: 0)
       )
 
       # Translate the ray
-      translation = Rayz::Transformations.translation(3, 4, 5)
+      translation = Rayz::Transformations.translation(x: 3, y: 4, z: 5)
       ray2 = ray.transform(translation)
 
       puts "Original ray:"
@@ -70,7 +70,7 @@ module Rayz
       puts "  Direction: (#{ray2.direction.x}, #{ray2.direction.y}, #{ray2.direction.z})"
 
       # Scale the ray
-      scaling = Rayz::Transformations.scaling(2, 3, 4)
+      scaling = Rayz::Transformations.scaling(x: 2, y: 3, z: 4)
       ray3 = ray.transform(scaling)
 
       puts "\nAfter scaling(2, 3, 4):"
@@ -92,7 +92,7 @@ module Rayz
       sphere = Rayz::Sphere.new
 
       # Apply scaling to make it slightly elongated
-      sphere.transform = Rayz::Transformations.scaling(1, 0.5, 1)
+      sphere.transform = Rayz::Transformations.scaling(x: 1, y: 0.5, z: 1)
 
       # Ray origin - camera position
       ray_origin = Rayz::Point.new(x: 0, y: 0, z: -5)
@@ -122,7 +122,7 @@ module Rayz
 
           # Ray from camera to wall point
           direction = (position - ray_origin).normalize
-          ray = Rayz::Ray.new(ray_origin, direction)
+          ray = Rayz::Ray.new(origin: ray_origin, direction: direction)
 
           # Check for intersections
           xs = sphere.intersect(ray)

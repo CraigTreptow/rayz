@@ -30,7 +30,7 @@ module Rayz
       # Light source - positioned to the left, above, and behind the viewer
       light_position = Rayz::Point.new(x: -10, y: 10, z: -10)
       light_color = Rayz::Color.new(red: 1, green: 1, blue: 1)
-      light = Rayz::PointLight.new(light_position, light_color)
+      light = Rayz::PointLight.new(position: light_position, intensity: light_color)
 
       # Ray origin - the eye is at z = -5
       ray_origin = Rayz::Point.new(x: 0, y: 0, z: -5)
@@ -69,7 +69,7 @@ module Rayz
 
           # Create a ray from the eye to the point on the wall
           direction = (position - ray_origin).normalize
-          r = Rayz::Ray.new(ray_origin, direction)
+          r = Rayz::Ray.new(origin: ray_origin, direction: direction)
 
           # Find intersections
           xs = sphere.intersect(r)

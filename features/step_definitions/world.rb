@@ -34,9 +34,9 @@ Given("s1 ← sphere\\() with:") do |table|
     when "transform"
       # Handle transform parsing
       if value =~ /scaling\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
-        @s1.transform = Rayz::Transformations.scaling($1.to_f, $2.to_f, $3.to_f)
+        @s1.transform = Rayz::Transformations.scaling(x: $1.to_f, y: $2.to_f, z: $3.to_f)
       elsif value =~ /translation\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
-        @s1.transform = Rayz::Transformations.translation($1.to_f, $2.to_f, $3.to_f)
+        @s1.transform = Rayz::Transformations.translation(x: $1.to_f, y: $2.to_f, z: $3.to_f)
       end
     end
   end
@@ -62,9 +62,9 @@ Given("s2 ← sphere\\() with:") do |table|
       @s2.material.ambient = value.to_f
     when "transform"
       if value =~ /scaling\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
-        @s2.transform = Rayz::Transformations.scaling($1.to_f, $2.to_f, $3.to_f)
+        @s2.transform = Rayz::Transformations.scaling(x: $1.to_f, y: $2.to_f, z: $3.to_f)
       elsif value =~ /translation\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
-        @s2.transform = Rayz::Transformations.translation($1.to_f, $2.to_f, $3.to_f)
+        @s2.transform = Rayz::Transformations.translation(x: $1.to_f, y: $2.to_f, z: $3.to_f)
       end
     end
   end
@@ -99,7 +99,7 @@ Given("shape ← the second object in w") do
 end
 
 When("i ← intersection\\({float}, shape)") do |t|
-  @i = Rayz::Intersection.new(t, @shape)
+  @i = Rayz::Intersection.new(t: t, object: @shape)
 end
 
 When("comps ← prepare_computations\\(i, r)") do
@@ -113,7 +113,7 @@ end
 When("w.light ← point_light\\(point\\({float}, {float}, {float}), color\\({float}, {float}, {float}))") do |px, py, pz, cr, cg, cb|
   position = Rayz::Point.new(x: px, y: py, z: pz)
   intensity = Rayz::Color.new(red: cr, green: cg, blue: cb)
-  @w.light = Rayz::PointLight.new(position, intensity)
+  @w.light = Rayz::PointLight.new(position: position, intensity: intensity)
 end
 
 When("c ← color_at\\(w, r)") do
@@ -161,7 +161,7 @@ Given("s2 is added to w") do
 end
 
 When("i ← intersection\\({float}, s2)") do |t|
-  @i = Rayz::Intersection.new(t, @s2)
+  @i = Rayz::Intersection.new(t: t, object: @s2)
 end
 
 Then("c = color\\({float}, {float}, {float})") do |r, g, b|

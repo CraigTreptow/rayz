@@ -65,7 +65,7 @@ end
 Given("light ← point_light\\(point\\({float}, {float}, {float}), color\\({float}, {float}, {float}))") do |px, py, pz, cr, cg, cb|
   position = Rayz::Point.new(x: px, y: py, z: pz)
   intensity = Rayz::Color.new(red: cr, green: cg, blue: cb)
-  @light = Rayz::PointLight.new(position, intensity)
+  @light = Rayz::PointLight.new(position: position, intensity: intensity)
 end
 
 Given("in_shadow ← true") do

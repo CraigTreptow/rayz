@@ -2,7 +2,7 @@ module Rayz
   class Computations
     attr_accessor :t, :object, :point, :eyev, :normalv, :inside, :over_point
 
-    def initialize(t, object, point, eyev, normalv, inside, over_point)
+    def initialize(t:, object:, point:, eyev:, normalv:, inside:, over_point:)
       @t = t
       @object = object
       @point = point
@@ -16,7 +16,7 @@ module Rayz
   class Intersection
     attr_reader :t, :object
 
-    def initialize(t, object)
+    def initialize(t:, object:)
       @t = t
       @object = object
     end
@@ -38,7 +38,7 @@ module Rayz
 
       over_point = point + normalv * Util::EPSILON
 
-      Computations.new(@t, @object, point, eyev, normalv, inside, over_point)
+      Computations.new(t: @t, object: @object, point: point, eyev: eyev, normalv: normalv, inside: inside, over_point: over_point)
     end
   end
 
