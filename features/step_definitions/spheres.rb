@@ -23,7 +23,7 @@ Then("s.transform = identity_matrix") do
 end
 
 Given('t ← translation\({float}, {float}, {float})') do |x, y, z|
-  @t = Rayz::Transformations.translation(x, y, z)
+  @t = Rayz::Transformations.translation(x: x, y: y, z: z)
 end
 
 When('set_transform\(s, t)') do
@@ -35,11 +35,11 @@ Then("s.transform = t") do
 end
 
 When('set_transform\(s, scaling\({float}, {float}, {float}))') do |x, y, z|
-  @s.transform = Rayz::Transformations.scaling(x, y, z)
+  @s.transform = Rayz::Transformations.scaling(x: x, y: y, z: z)
 end
 
 When('set_transform\(s, translation\({float}, {float}, {float}))') do |x, y, z|
-  @s.transform = Rayz::Transformations.translation(x, y, z)
+  @s.transform = Rayz::Transformations.translation(x: x, y: y, z: z)
 end
 
 When("n ← normal_at\\(s, point\\({float}, {float}, {float}))") do |x, y, z|
@@ -75,7 +75,7 @@ Then("n = normalize\\(n)") do
 end
 
 Given(/m ← scaling\((\d+(?:\.\d+)?), (\d+(?:\.\d+)?), (\d+(?:\.\d+)?)\) \* rotation_z\(π\/(\d+(?:\.\d+)?)\)/) do |sx, sy, sz, pi_divisor|
-  @m = Rayz::Transformations.scaling(sx.to_f, sy.to_f, sz.to_f) * Rayz::Transformations.rotation_z(Math::PI / pi_divisor.to_f)
+  @m = Rayz::Transformations.scaling(x: sx.to_f, y: sy.to_f, z: sz.to_f) * Rayz::Transformations.rotation_z(radians: Math::PI / pi_divisor.to_f)
 end
 
 Given("set_transform\\(s, m)") do

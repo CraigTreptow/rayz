@@ -9,7 +9,7 @@ Given("position ← point\\({float}, {float}, {float})") do |x, y, z|
 end
 
 When("light ← point_light\\(position, intensity)") do
-  @light = Rayz::PointLight.new(@position, @intensity)
+  @light = Rayz::PointLight.new(position: @position, intensity: @intensity)
 end
 
 Then("light.position = position") do

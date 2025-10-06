@@ -4,7 +4,7 @@ module Rayz
   class Transformations
     # Create a translation matrix
     # Translation moves a point but does not affect vectors (w=0)
-    def self.translation(x, y, z)
+    def self.translation(x:, y:, z:)
       Matrix[
         [1, 0, 0, x],
         [0, 1, 0, y],
@@ -16,7 +16,7 @@ module Rayz
     # Create a scaling matrix
     # Scaling affects both points and vectors
     # Negative values create reflections
-    def self.scaling(x, y, z)
+    def self.scaling(x:, y:, z:)
       Matrix[
         [x, 0, 0, 0],
         [0, y, 0, 0],
@@ -27,7 +27,7 @@ module Rayz
 
     # Create a rotation matrix around the X axis
     # Angle in radians
-    def self.rotation_x(radians)
+    def self.rotation_x(radians:)
       cos_r = Math.cos(radians)
       sin_r = Math.sin(radians)
       Matrix[
@@ -40,7 +40,7 @@ module Rayz
 
     # Create a rotation matrix around the Y axis
     # Angle in radians
-    def self.rotation_y(radians)
+    def self.rotation_y(radians:)
       cos_r = Math.cos(radians)
       sin_r = Math.sin(radians)
       Matrix[
@@ -53,7 +53,7 @@ module Rayz
 
     # Create a rotation matrix around the Z axis
     # Angle in radians
-    def self.rotation_z(radians)
+    def self.rotation_z(radians:)
       cos_r = Math.cos(radians)
       sin_r = Math.sin(radians)
       Matrix[
@@ -72,7 +72,7 @@ module Rayz
     # yz: y moves in proportion to z
     # zx: z moves in proportion to x
     # zy: z moves in proportion to y
-    def self.shearing(xy, xz, yx, yz, zx, zy)
+    def self.shearing(xy:, xz:, yx:, yz:, zx:, zy:)
       Matrix[
         [1, xy, xz, 0],
         [yx, 1, yz, 0],
@@ -85,7 +85,7 @@ module Rayz
     # from: point where the eye is
     # to: point where the eye is looking
     # up: vector indicating which direction is up
-    def self.view_transform(from, to, up)
+    def self.view_transform(from:, to:, up:)
       forward_tuple = (to - from).normalize
       forward = Vector.new(x: forward_tuple.x, y: forward_tuple.y, z: forward_tuple.z)
       upn_tuple = up.normalize
@@ -100,7 +100,7 @@ module Rayz
         [0, 0, 0, 1]
       ]
 
-      orientation * translation(-from.x, -from.y, -from.z)
+      orientation * translation(x: -from.x, y: -from.y, z: -from.z)
     end
   end
 end

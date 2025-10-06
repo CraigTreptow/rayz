@@ -5,7 +5,7 @@ module Rayz
     attr_accessor :hsize, :vsize, :field_of_view, :transform
     attr_reader :pixel_size, :half_width, :half_height
 
-    def initialize(hsize, vsize, field_of_view)
+    def initialize(hsize:, vsize:, field_of_view:)
       @hsize = hsize
       @vsize = vsize
       @field_of_view = field_of_view
@@ -51,7 +51,7 @@ module Rayz
 
       direction = (pixel - origin).normalize
 
-      Ray.new(origin, direction)
+      Ray.new(origin: origin, direction: direction)
     end
 
     def render(world)

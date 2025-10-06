@@ -7,7 +7,7 @@ Given('direction ← vector\({float}, {float}, {float})') do |x, y, z|
 end
 
 When('r ← ray\(origin, direction)') do
-  @r = Rayz::Ray.new(@origin, @direction)
+  @r = Rayz::Ray.new(origin: @origin, direction: @direction)
 end
 
 Then("r.origin = origin") do
@@ -19,7 +19,7 @@ Then("r.direction = direction") do
 end
 
 Given('r ← ray\(point\({float}, {float}, {float}), vector\({float}, {float}, {float}))') do |x1, y1, z1, x2, y2, z2|
-  @r = Rayz::Ray.new(Rayz::Point.new(x: x1, y: y1, z: z1), Rayz::Vector.new(x: x2, y: y2, z: z2))
+  @r = Rayz::Ray.new(origin: Rayz::Point.new(x: x1, y: y1, z: z1), direction: Rayz::Vector.new(x: x2, y: y2, z: z2))
 end
 
 Then(/^position\(r, (.+)\) = point\((.+), (.+), (.+)\)$/) do |t, x, y, z|
@@ -27,7 +27,7 @@ Then(/^position\(r, (.+)\) = point\((.+), (.+), (.+)\)$/) do |t, x, y, z|
 end
 
 Given('m ← translation\({float}, {float}, {float})') do |x, y, z|
-  @m = Rayz::Transformations.translation(x, y, z)
+  @m = Rayz::Transformations.translation(x: x, y: y, z: z)
 end
 
 When('r2 ← transform\(r, m)') do
@@ -43,5 +43,5 @@ Then('r2.direction = vector\({float}, {float}, {float})') do |x, y, z|
 end
 
 Given('m ← scaling\({float}, {float}, {float})') do |x, y, z|
-  @m = Rayz::Transformations.scaling(x, y, z)
+  @m = Rayz::Transformations.scaling(x: x, y: y, z: z)
 end

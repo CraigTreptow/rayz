@@ -2,53 +2,53 @@ require_relative "../../lib/rayz/transformations"
 
 # Transformation matrix creation steps
 Given('transform ← translation\({int}, {int}, {int})') do |x, y, z|
-  @transform = Rayz::Transformations.translation(x, y, z)
+  @transform = Rayz::Transformations.translation(x: x, y: y, z: z)
 end
 
 Given('transform ← scaling\({int}, {int}, {int})') do |x, y, z|
-  @transform = Rayz::Transformations.scaling(x, y, z)
+  @transform = Rayz::Transformations.scaling(x: x, y: y, z: z)
 end
 
 Given('transform ← shearing\({int}, {int}, {int}, {int}, {int}, {int})') do |xy, xz, yx, yz, zx, zy|
-  @transform = Rayz::Transformations.shearing(xy, xz, yx, yz, zx, zy)
+  @transform = Rayz::Transformations.shearing(xy: xy, xz: xz, yx: yx, yz: yz, zx: zx, zy: zy)
 end
 
 # Rotation transformations with π support
 Given('half_quarter ← rotation_x\(π \/ {int})') do |divisor|
-  @half_quarter = Rayz::Transformations.rotation_x(Math::PI / divisor)
+  @half_quarter = Rayz::Transformations.rotation_x(radians: Math::PI / divisor)
 end
 
 Given('full_quarter ← rotation_x\(π \/ {int})') do |divisor|
-  @full_quarter = Rayz::Transformations.rotation_x(Math::PI / divisor)
+  @full_quarter = Rayz::Transformations.rotation_x(radians: Math::PI / divisor)
 end
 
 Given('half_quarter ← rotation_y\(π \/ {int})') do |divisor|
-  @half_quarter = Rayz::Transformations.rotation_y(Math::PI / divisor)
+  @half_quarter = Rayz::Transformations.rotation_y(radians: Math::PI / divisor)
 end
 
 Given('full_quarter ← rotation_y\(π \/ {int})') do |divisor|
-  @full_quarter = Rayz::Transformations.rotation_y(Math::PI / divisor)
+  @full_quarter = Rayz::Transformations.rotation_y(radians: Math::PI / divisor)
 end
 
 Given('half_quarter ← rotation_z\(π \/ {int})') do |divisor|
-  @half_quarter = Rayz::Transformations.rotation_z(Math::PI / divisor)
+  @half_quarter = Rayz::Transformations.rotation_z(radians: Math::PI / divisor)
 end
 
 Given('full_quarter ← rotation_z\(π \/ {int})') do |divisor|
-  @full_quarter = Rayz::Transformations.rotation_z(Math::PI / divisor)
+  @full_quarter = Rayz::Transformations.rotation_z(radians: Math::PI / divisor)
 end
 
 # Named transformation matrices for chaining
 Given('A ← rotation_x\(π \/ {int})') do |divisor|
-  @matrix_a = Rayz::Transformations.rotation_x(Math::PI / divisor)
+  @matrix_a = Rayz::Transformations.rotation_x(radians: Math::PI / divisor)
 end
 
 Given('B ← scaling\({int}, {int}, {int})') do |x, y, z|
-  @matrix_b = Rayz::Transformations.scaling(x, y, z)
+  @matrix_b = Rayz::Transformations.scaling(x: x, y: y, z: z)
 end
 
 Given('C ← translation\({int}, {int}, {int})') do |x, y, z|
-  @matrix_c = Rayz::Transformations.translation(x, y, z)
+  @matrix_c = Rayz::Transformations.translation(x: x, y: y, z: z)
 end
 
 # Inverse calculation

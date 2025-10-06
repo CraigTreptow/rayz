@@ -1,5 +1,5 @@
 When('i ← intersection\({float}, s)') do |t|
-  @i = Rayz::Intersection.new(t, @s)
+  @i = Rayz::Intersection.new(t: t, object: @s)
 end
 
 Then("i.t = {float}") do |t|
@@ -11,11 +11,11 @@ Then("i.object = s") do
 end
 
 Given(/^i1 ← intersection\((.+), s\)$/) do |t|
-  @i1 = Rayz::Intersection.new(t.to_f, @s)
+  @i1 = Rayz::Intersection.new(t: t.to_f, object: @s)
 end
 
 Given(/^i2 ← intersection\((.+), s\)$/) do |t|
-  @i2 = Rayz::Intersection.new(t.to_f, @s)
+  @i2 = Rayz::Intersection.new(t: t.to_f, object: @s)
 end
 
 When('xs ← intersections\(i1, i2)') do
@@ -47,11 +47,11 @@ Then("i is nothing") do
 end
 
 Given('i3 ← intersection\({int}, s)') do |t|
-  @i3 = Rayz::Intersection.new(t, @s)
+  @i3 = Rayz::Intersection.new(t: t, object: @s)
 end
 
 Given('i4 ← intersection\({int}, s)') do |t|
-  @i4 = Rayz::Intersection.new(t, @s)
+  @i4 = Rayz::Intersection.new(t: t, object: @s)
 end
 
 When('xs ← intersections\(i1, i2, i3, i4)') do

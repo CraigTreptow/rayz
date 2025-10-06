@@ -34,7 +34,7 @@ module Rayz
       puts "1. Translation"
       puts "-" * 40
 
-      transform = Rayz::Transformations.translation(5, -3, 2)
+      transform = Rayz::Transformations.translation(x: 5, y: -3, z: 2)
       p = Rayz::Point.new(x: -3, y: 4, z: 5)
 
       result = Rayz::Util.matrix_multiplied_by_tuple(transform, p)
@@ -56,7 +56,7 @@ module Rayz
       puts "-" * 40
 
       # Scaling
-      transform = Rayz::Transformations.scaling(2, 3, 4)
+      transform = Rayz::Transformations.scaling(x: 2, y: 3, z: 4)
       p = Rayz::Point.new(x: -4, y: 6, z: 8)
       result = Rayz::Util.matrix_multiplied_by_tuple(transform, p)
 
@@ -65,7 +65,7 @@ module Rayz
       puts "Result: #{result}"
 
       # Reflection (negative scaling)
-      reflect = Rayz::Transformations.scaling(-1, 1, 1)
+      reflect = Rayz::Transformations.scaling(x: -1, y: 1, z: 1)
       p2 = Rayz::Point.new(x: 2, y: 3, z: 4)
       result2 = Rayz::Util.matrix_multiplied_by_tuple(reflect, p2)
 
@@ -81,7 +81,7 @@ module Rayz
 
       # Rotation around X axis
       p = Rayz::Point.new(x: 0, y: 1, z: 0)
-      rotation = Rayz::Transformations.rotation_x(Math::PI / 4)
+      rotation = Rayz::Transformations.rotation_x(radians: Math::PI / 4)
       result = Rayz::Util.matrix_multiplied_by_tuple(rotation, p)
 
       puts "Point: #{p}"
@@ -89,7 +89,7 @@ module Rayz
       puts "Result: (#{result.x.round(5)}, #{result.y.round(5)}, #{result.z.round(5)})"
 
       # Full quarter rotation
-      rotation_90 = Rayz::Transformations.rotation_x(Math::PI / 2)
+      rotation_90 = Rayz::Transformations.rotation_x(radians: Math::PI / 2)
       result_90 = Rayz::Util.matrix_multiplied_by_tuple(rotation_90, p)
       puts "\nRotation around X axis (π/2 radians = 90 degrees)"
       puts "Result: (#{result_90.x.round(5)}, #{result_90.y.round(5)}, #{result_90.z.round(5)})"
@@ -103,7 +103,7 @@ module Rayz
       p = Rayz::Point.new(x: 2, y: 3, z: 4)
 
       # Shear x in proportion to y
-      transform = Rayz::Transformations.shearing(1, 0, 0, 0, 0, 0)
+      transform = Rayz::Transformations.shearing(xy: 1, xz: 0, yx: 0, yz: 0, zx: 0, zy: 0)
       result = Rayz::Util.matrix_multiplied_by_tuple(transform, p)
 
       puts "Point: #{p}"
@@ -111,7 +111,7 @@ module Rayz
       puts "Result: #{result} (x became #{p.x} + #{p.y} = #{result.x})"
 
       # Shear y in proportion to z
-      transform2 = Rayz::Transformations.shearing(0, 0, 0, 1, 0, 0)
+      transform2 = Rayz::Transformations.shearing(xy: 0, xz: 0, yx: 0, yz: 1, zx: 0, zy: 0)
       result2 = Rayz::Util.matrix_multiplied_by_tuple(transform2, p)
 
       puts "\nShearing(0, 0, 0, 1, 0, 0) - y moves in proportion to z"
@@ -127,15 +127,15 @@ module Rayz
       puts "Starting point: #{p}"
 
       # Apply transformations in sequence
-      rotation = Rayz::Transformations.rotation_x(Math::PI / 2)
+      rotation = Rayz::Transformations.rotation_x(radians: Math::PI / 2)
       p2 = Rayz::Util.matrix_multiplied_by_tuple(rotation, p)
       puts "After rotation X (π/2): (#{p2.x.round(5)}, #{p2.y.round(5)}, #{p2.z.round(5)})"
 
-      scaling = Rayz::Transformations.scaling(5, 5, 5)
+      scaling = Rayz::Transformations.scaling(x: 5, y: 5, z: 5)
       p3 = Rayz::Util.matrix_multiplied_by_tuple(scaling, p2)
       puts "After scaling(5, 5, 5): (#{p3.x.round(5)}, #{p3.y.round(5)}, #{p3.z.round(5)})"
 
-      translation = Rayz::Transformations.translation(10, 5, 7)
+      translation = Rayz::Transformations.translation(x: 10, y: 5, z: 7)
       p4 = Rayz::Util.matrix_multiplied_by_tuple(translation, p3)
       puts "After translation(10, 5, 7): (#{p4.x.round(5)}, #{p4.y.round(5)}, #{p4.z.round(5)})"
 
@@ -169,7 +169,7 @@ module Rayz
         # Rotate around Y axis to position this hour
         # Y-axis rotation moves points in the XZ plane
         angle = hour * (Math::PI / 6.0) # 30 degrees per hour
-        rotation = Rayz::Transformations.rotation_y(angle)
+        rotation = Rayz::Transformations.rotation_y(radians: angle)
 
         # Apply rotation
         position = Rayz::Util.matrix_multiplied_by_tuple(rotation, twelve)
@@ -206,7 +206,7 @@ module Rayz
       # Hour hand (pointing to 3 o'clock - 90 degrees)
       hour_hand_length = 100
       hour_hand = Rayz::Point.new(x: 0, y: 0, z: hour_hand_length)
-      hour_rotation = Rayz::Transformations.rotation_y(Math::PI / 2) # 90 degrees
+      hour_rotation = Rayz::Transformations.rotation_y(radians: Math::PI / 2) # 90 degrees
       hour_tip = Rayz::Util.matrix_multiplied_by_tuple(hour_rotation, hour_hand)
 
       # Draw hour hand as a line

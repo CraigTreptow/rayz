@@ -13,7 +13,7 @@ Given(/field_of_view ← π\/(\d+)/) do |divisor|
 end
 
 When("c ← camera\\(hsize, vsize, field_of_view)") do
-  @c = Rayz::Camera.new(@hsize, @vsize, @field_of_view)
+  @c = Rayz::Camera.new(hsize: @hsize, vsize: @vsize, field_of_view: @field_of_view)
 end
 
 Then("c.hsize = {int}") do |value|
@@ -34,7 +34,7 @@ Then("c.transform = identity_matrix") do
 end
 
 Given(/c ← camera\((\d+), (\d+), π\/(\d+)\)/) do |hsize, vsize, divisor|
-  @c = Rayz::Camera.new(hsize.to_i, vsize.to_i, Math::PI / divisor.to_f)
+  @c = Rayz::Camera.new(hsize: hsize.to_i, vsize: vsize.to_i, field_of_view: Math::PI / divisor.to_f)
 end
 
 Then("c.pixel_size = {float}") do |value|
@@ -46,7 +46,7 @@ When("r ← ray_for_pixel\\(c, {int}, {int})") do |x, y|
 end
 
 When(/c\.transform ← rotation_y\(π\/(\d+)\) \* translation\(([^,]+),\s*([^,]+),\s*([^)]+)\)/) do |pi_divisor, tx, ty, tz|
-  @c.transform = Rayz::Transformations.rotation_y(Math::PI / pi_divisor.to_f) * Rayz::Transformations.translation(tx.to_f, ty.to_f, tz.to_f)
+  @c.transform = Rayz::Transformations.rotation_y(radians: Math::PI / pi_divisor.to_f) * Rayz::Transformations.translation(x: tx.to_f, y: ty.to_f, z: tz.to_f)
 end
 
 Then(/r\.direction = vector\(√(\d+)\/(\d+), (\d+(?:\.\d+)?), -√(\d+)\/(\d+)\)/) do |sqrt_num_x, sqrt_den_x, y, sqrt_num_z, sqrt_den_z|
@@ -71,7 +71,7 @@ Given("up ← vector\\({float}, {float}, {float})") do |x, y, z|
 end
 
 Given("c.transform ← view_transform\\(from, to, up)") do
-  @c.transform = Rayz::Transformations.view_transform(@from, @to, @up)
+  @c.transform = Rayz::Transformations.view_transform(from: @from, to: @to, up: @up)
 end
 
 When("image ← render\\(c, w)") do

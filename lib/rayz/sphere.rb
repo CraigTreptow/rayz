@@ -18,7 +18,7 @@ module Rayz
       t1 = (-b - Math.sqrt(discriminant)) / (2 * a)
       t2 = (-b + Math.sqrt(discriminant)) / (2 * a)
 
-      [Intersection.new(t1, self), Intersection.new(t2, self)]
+      [Intersection.new(t: t1, object: self), Intersection.new(t: t2, object: self)]
     end
 
     def local_normal_at(local_point)

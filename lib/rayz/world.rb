@@ -9,7 +9,7 @@ module Rayz
 
     def self.default_world
       w = World.new
-      w.light = PointLight.new(Point.new(x: -10, y: 10, z: -10), Color.new(red: 1, green: 1, blue: 1))
+      w.light = PointLight.new(position: Point.new(x: -10, y: 10, z: -10), intensity: Color.new(red: 1, green: 1, blue: 1))
 
       s1 = Sphere.new
       s1.material.color = Color.new(red: 0.8, green: 1.0, blue: 0.6)
@@ -17,7 +17,7 @@ module Rayz
       s1.material.specular = 0.2
 
       s2 = Sphere.new
-      s2.transform = Transformations.scaling(0.5, 0.5, 0.5)
+      s2.transform = Transformations.scaling(x: 0.5, y: 0.5, z: 0.5)
 
       w.objects << s1
       w.objects << s2
@@ -62,7 +62,7 @@ module Rayz
       distance = v.magnitude
       direction = v.normalize
 
-      r = Ray.new(point, direction)
+      r = Ray.new(origin: point, direction: direction)
       intersections = intersect(r)
       h = Rayz.hit(intersections)
 
