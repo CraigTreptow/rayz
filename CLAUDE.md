@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz         # Execute all implemented chapters (1, 2, 3, 4, 5, and 6)
+ruby rayz         # Execute all implemented chapters (1-9)
 ```
 
 ### Testing
@@ -90,6 +90,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - Uses StandardRB for consistent formatting
 - Ruby 3.4.5 with Prism parser
 - Object-oriented design with clear inheritance hierarchies
+- **Named parameters**: All class constructors use named parameters for clarity (e.g., `Point.new(x: 0, y: 1, z: 2)`, `Camera.new(hsize: 400, vsize: 200, field_of_view: Math::PI / 3)`)
 
 ### Mathematical Precision
 - Custom equality comparison with floating-point tolerance (see `Util.==`)
@@ -121,6 +122,9 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter4_clock.ppm` - Analog clock at 3:00 using transformation matrices
   - `chapter5_sphere.ppm` - Sphere silhouette rendered using ray casting
   - `chapter6.ppm` - Shaded 3D sphere with Phong lighting
+  - `chapter7.ppm` - Scene with multiple spheres, walls, and shadows
+  - `chapter8.ppm` - Scene with patterns (stripes, gradients, rings, checkers)
+  - `chapter9.ppm` - Scene with infinite planes and spheres
 
 ## Implementation Status
 
@@ -131,10 +135,13 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 4**: Transformation matrices (translation, scaling, rotation, shearing, view transform, chaining)
 - **Chapter 5**: Ray-sphere intersections (ray casting, sphere transformations, hit detection, silhouette rendering)
 - **Chapter 6**: Light and Shading (Phong reflection model, point lights, materials, surface normals, realistic lighting)
+- **Chapter 7**: Making a Scene (world, camera, view transformations, shadows)
+- **Chapter 8**: Patterns (stripe, gradient, ring, checkers patterns with transformations)
+- **Chapter 9**: Planes (infinite flat surfaces, plane-ray intersections)
 
 ### Test Coverage
-- 114 scenarios passing (128 total scenarios, 14 undefined for future chapters, 1 skipped for patterns)
-- 10 feature files in `/features/` directory:
+- 135 scenarios passing (149 total scenarios, 14 undefined for future chapters)
+- 11 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -144,5 +151,8 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `spheres.feature` - Sphere-ray intersection, surface normals, materials
   - `intersections.feature` - Intersection aggregation and hit detection
   - `lights.feature` - Point light sources
-  - `materials.feature` - Material properties and Phong lighting (1 pattern test skipped)
+  - `materials.feature` - Material properties and Phong lighting
+  - `world.feature` - World and camera for scene rendering
+  - `patterns.feature` - Surface patterns (stripe, gradient, ring, checkers)
+  - `planes.feature` - Infinite plane intersections and normals
 - Additional reference tests from the book in `/book_features/` for future implementation

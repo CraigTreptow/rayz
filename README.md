@@ -74,7 +74,7 @@ ruby -r ./lib/rayz -e "Rayz::Chapter8.run"
 
 ## Testing
 
-Run all tests (132 scenarios passing):
+Run all tests (135 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
