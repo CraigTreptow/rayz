@@ -26,3 +26,22 @@ end
 Then("xs is empty") do
   assert_empty(@xs)
 end
+
+Then("xs[{int}].object = p") do |index|
+  assert_equal(@xs[index].object, @p)
+end
+
+Then("n1 = vector\\({float}, {float}, {float})") do |x, y, z|
+  expected = Rayz::Vector.new(x: x, y: y, z: z)
+  assert_equal(@n1, expected)
+end
+
+Then("n2 = vector\\({float}, {float}, {float})") do |x, y, z|
+  expected = Rayz::Vector.new(x: x, y: y, z: z)
+  assert_equal(@n2, expected)
+end
+
+Then("n3 = vector\\({float}, {float}, {float})") do |x, y, z|
+  expected = Rayz::Vector.new(x: x, y: y, z: z)
+  assert_equal(@n3, expected)
+end
