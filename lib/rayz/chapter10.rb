@@ -56,7 +56,7 @@ module Rayz
       world.objects << back_wall
 
       # Middle sphere - transparent glass
-      middle = glass_sphere
+      middle = Rayz.glass_sphere
       middle.transform = Transformations.translation(x: -0.5, y: 1, z: 0.5)
       middle.material.color = Color.new(red: 0.1, green: 0.1, blue: 0.1)
       middle.material.diffuse = 0.1
@@ -81,7 +81,7 @@ module Rayz
       world.objects << right
 
       # Left sphere - colored glass
-      left = glass_sphere
+      left = Rayz.glass_sphere
       left.transform = Transformations.translation(x: -1.5, y: 0.33, z: -0.75) *
         Transformations.scaling(x: 0.33, y: 0.33, z: 0.33)
       left.material.color = Color.new(red: 0.1, green: 0.2, blue: 0.1)
@@ -95,7 +95,7 @@ module Rayz
       world.objects << left
 
       # Small glass sphere inside the middle one
-      inner = glass_sphere
+      inner = Rayz.glass_sphere
       inner.transform = Transformations.translation(x: -0.5, y: 1, z: 0.5) *
         Transformations.scaling(x: 0.5, y: 0.5, z: 0.5)
       inner.material.refractive_index = 1.0000034 # Air
