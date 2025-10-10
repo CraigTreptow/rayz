@@ -33,9 +33,39 @@ module Rayz
       all_intersections.sort_by(&:t)
     end
 
-    def shade_hit(comps)
+    def reflected_color(comps, remaining = 5)
+      return Color.new(red: 0, green: 0, blue: 0) if remaining <= 0
+      return Color.new(red: 0, green: 0, blue: 0) if comps.object.material.reflective == 0
+
+      reflect_ray = Ray.new(origin: comps.over_point, direction: comps.reflectv)
+      color = color_at(reflect_ray, remaining - 1)
+
+      color * comps.object.material.reflective
+    end
+
+    def refracted_color(comps, remaining = 5)
+      return Color.new(red: 0, green: 0, blue: 0) if remaining <= 0
+      return Color.new(red: 0, green: 0, blue: 0) if comps.object.material.transparency == 0
+
+      # Check for total internal reflection
+      n_ratio = comps.n1 / comps.n2
+      cos_i = comps.eyev.dot(comps.normalv)
+      sin2_t = n_ratio * n_ratio * (1 - cos_i * cos_i)
+
+      return Color.new(red: 0, green: 0, blue: 0) if sin2_t > 1.0
+
+      # Compute refracted ray direction
+      cos_t = Math.sqrt(1.0 - sin2_t)
+      direction = comps.normalv * (n_ratio * cos_i - cos_t) - comps.eyev * n_ratio
+
+      # Create and trace refracted ray
+      refract_ray = Ray.new(origin: comps.under_point, direction: direction)
+      color_at(refract_ray, remaining - 1) * comps.object.material.transparency
+    end
+
+    def shade_hit(comps, remaining = 5)
       shadowed = is_shadowed?(comps.over_point)
-      Rayz.lighting(
+      surface = Rayz.lighting(
         comps.object.material,
         @light,
         comps.point,
@@ -44,15 +74,26 @@ module Rayz
         shadowed,
         comps.object
       )
+
+      reflected = reflected_color(comps, remaining)
+      refracted = refracted_color(comps, remaining)
+
+      material = comps.object.material
+      if material.reflective > 0 && material.transparency > 0
+        reflectance = Rayz.schlick(comps)
+        surface + reflected * reflectance + refracted * (1 - reflectance)
+      else
+        surface + reflected + refracted
+      end
     end
 
-    def color_at(ray)
+    def color_at(ray, remaining = 5)
       intersections = intersect(ray)
       hit = Rayz.hit(intersections)
       return Color.new(red: 0, green: 0, blue: 0) unless hit
 
-      comps = hit.prepare_computations(ray)
-      shade_hit(comps)
+      comps = hit.prepare_computations(ray, intersections)
+      shade_hit(comps, remaining)
     end
 
     def is_shadowed?(point)

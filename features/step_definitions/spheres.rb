@@ -98,3 +98,29 @@ end
 Then("s.material = m") do
   assert_equal(@s.material, @m)
 end
+
+Given("s ← glass_sphere\\()") do
+  @s = Rayz.glass_sphere
+end
+
+Given(/([A-Z]) ← glass_sphere\(\) with:/) do |var_name, table|
+  sphere = Rayz.glass_sphere
+  table.raw.each do |row|
+    property = row[0].strip
+    value = row[1].strip
+
+    case property
+    when "transform"
+      if value =~ /scaling\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
+        sphere.transform = Rayz::Transformations.scaling(x: $1.to_f, y: $2.to_f, z: $3.to_f)
+      elsif value =~ /translation\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
+        sphere.transform = Rayz::Transformations.translation(x: $1.to_f, y: $2.to_f, z: $3.to_f)
+      end
+    when "material.refractive_index"
+      sphere.material.refractive_index = value.to_f
+    when "material.transparency"
+      sphere.material.transparency = value.to_f
+    end
+  end
+  instance_variable_set("@#{var_name}", sphere)
+end

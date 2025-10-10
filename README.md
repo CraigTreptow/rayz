@@ -58,7 +58,7 @@ Execute all chapter demonstrations:
 ruby rayz
 ```
 
-This runs demonstrations from Chapters 1-8 and generates PPM image files.
+This runs demonstrations from Chapters 1-10 and generates PPM image files.
 
 Run individual chapters:
 ```bash
@@ -70,11 +70,13 @@ ruby -r ./lib/rayz -e "Rayz::Chapter5.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter6.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter7.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter8.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter9.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter10.run"
 ```
 
 ## Testing
 
-Run all tests (135 scenarios passing):
+Run all tests (152 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
@@ -431,6 +433,79 @@ Done!
 Rendering took 85.23 seconds
 Time per row: 426.2 ms
 Scene rendered to chapter8.ppm
+```
+
+## Chapter 9 - Planes
+
+Demonstrates infinite flat surfaces with the Plane primitive:
+- Plane class implementing Shape interface
+- Constant normals across infinite surface
+- Plane-ray intersection calculations
+- Handling of parallel rays
+- Visual demonstration: scene with floor and wall planes plus spheres
+
+**Output:** `chapter9.ppm` - A 400×200 pixel image showing spheres resting on an infinite floor plane with wall planes
+
+**Key concepts:**
+- Planes are infinite flat surfaces with constant normals
+- The normal at any point on a plane is always the same vector
+- Parallel rays to the plane never intersect
+- Transformations can position and orient planes in 3D space
+- Planes use the same material and pattern system as other shapes
+
+**Example output:**
+```
+Chapter 9: Planes
+Rendering scene with planes and spheres (400x200 pixels)...
+Features:
+  - Floor plane at y=0
+  - Left and right wall planes with transformations
+  - Three spheres with different materials
+Progress (each dot = 10 rows):
+....................
+Done!
+Rendering took 82.45 seconds
+Time per row: 412.3 ms
+Scene rendered to chapter9.ppm
+```
+
+## Chapter 10 - Reflection and Refraction
+
+Demonstrates realistic rendering with mirrors and transparent materials:
+- Reflective surfaces (mirrors, chrome, polished floors)
+- Transparent materials (glass, water) with refraction
+- Fresnel effect for realistic glass appearance
+- Recursive ray tracing with depth limiting
+- Schlick approximation for fast Fresnel calculations
+- Combined reflection and refraction for realistic glass
+- Visual demonstration: scene with mirrors and glass spheres
+
+**Output:** `chapter10.ppm` - An 800×400 pixel image showing reflective and refractive materials
+
+**Key concepts:**
+- Reflection spawns secondary rays that bounce off surfaces
+- Refraction bends light when passing between transparent media
+- Refractive index determines how much light bends (air=1.0, glass=1.5, diamond=2.4)
+- Total internal reflection occurs when light cannot exit a denser medium
+- Fresnel effect: viewing angle affects reflection vs refraction
+- Schlick approximation provides fast, accurate Fresnel calculations
+- Recursion depth limiting prevents infinite loops
+
+**Example output:**
+```
+Chapter 10: Reflection and Refraction
+Rendering scene with mirrors and glass (800x400 pixels)...
+Features:
+  - Floor: Reflective checkerboard pattern
+  - Back wall: Reflective surface
+  - Middle sphere: Transparent glass ball
+  - Right sphere: Reflective chrome sphere
+  - Left sphere: Glass with color
+This may take a few minutes...
+Done!
+Rendering took 187.32 seconds
+Time per row: 468.3 ms
+Scene rendered to chapter10.ppm
 ```
 
 ## Viewing Output Files

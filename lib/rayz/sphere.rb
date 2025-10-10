@@ -26,4 +26,11 @@ module Rayz
       local_point - Point.new(x: 0, y: 0, z: 0)
     end
   end
+
+  def self.glass_sphere
+    sphere = Sphere.new
+    sphere.material.transparency = 1.0
+    sphere.material.refractive_index = 1.5
+    sphere
+  end
 end

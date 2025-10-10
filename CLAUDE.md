@@ -54,6 +54,11 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Material` - Surface properties for Phong shading (color, ambient, diffuse, specular, shininess, reflective, transparency, refractive_index)
 - `PointLight` - Point light source with position (Point) and intensity (Color)
 - `lighting` - Module function implementing Phong reflection model for realistic shading
+- `Computations` - Encapsulates precomputed intersection data (point, eyev, normalv, reflectv, n1, n2, under_point, over_point)
+- `glass_sphere` - Helper function creating spheres with glass material (transparency=1.0, refractive_index=1.5)
+- `schlick` - Schlick approximation for Fresnel effect calculations
+- `reflected_color` - Computes color from reflective surfaces using recursive ray tracing
+- `refracted_color` - Computes color from transparent surfaces using Snell's law and refraction
 - Coordinate system follows mathematical convention (not screen coordinates)
 
 ### Physics Simulation
@@ -125,6 +130,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter7.ppm` - Scene with multiple spheres, walls, and shadows
   - `chapter8.ppm` - Scene with patterns (stripes, gradients, rings, checkers)
   - `chapter9.ppm` - Scene with infinite planes and spheres
+  - `chapter10.ppm` - Scene with reflective and refractive materials (mirrors and glass)
 
 ## Implementation Status
 
@@ -138,10 +144,11 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 7**: Making a Scene (world, camera, view transformations, shadows)
 - **Chapter 8**: Patterns (stripe, gradient, ring, checkers patterns with transformations)
 - **Chapter 9**: Planes (infinite flat surfaces, plane-ray intersections)
+- **Chapter 10**: Reflection and Refraction (mirrors, glass, Fresnel effect, recursive ray tracing)
 
 ### Test Coverage
-- 135 scenarios passing (149 total scenarios, 14 undefined for future chapters)
-- 11 feature files in `/features/` directory:
+- 152 scenarios passing (194 total scenarios, 42 undefined for future chapters)
+- 13 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -155,4 +162,5 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `world.feature` - World and camera for scene rendering
   - `patterns.feature` - Surface patterns (stripe, gradient, ring, checkers)
   - `planes.feature` - Infinite plane intersections and normals
+  - `reflections.feature` - Reflection, refraction, and Fresnel effects
 - Additional reference tests from the book in `/book_features/` for future implementation
