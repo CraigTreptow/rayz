@@ -166,5 +166,119 @@ end
 
 Then("c = color\\({float}, {float}, {float})") do |r, g, b|
   expected = Rayz::Color.new(red: r, green: g, blue: b)
-  assert_equal(@c, expected)
+  assert(@c == expected, "Expected #{expected.inspect} but got #{@c.inspect}")
+end
+
+When("color ← reflected_color\\(w, comps)") do
+  @color = @w.reflected_color(@comps)
+end
+
+When("color ← reflected_color\\(w, comps, {int})") do |remaining|
+  @color = @w.reflected_color(@comps, remaining)
+end
+
+When("color ← refracted_color\\(w, comps, {int})") do |remaining|
+  @c = @w.refracted_color(@comps, remaining)
+end
+
+When("c ← refracted_color\\(w, comps, {int})") do |remaining|
+  @c = @w.refracted_color(@comps, remaining)
+end
+
+When("color ← shade_hit\\(w, comps)") do
+  @color = @w.shade_hit(@comps)
+end
+
+When("color ← shade_hit\\(w, comps, {int})") do |remaining|
+  @color = @w.shade_hit(@comps, remaining)
+end
+
+Then("color = color\\({float}, {float}, {float})") do |r, g, b|
+  expected = Rayz::Color.new(red: r, green: g, blue: b)
+  assert(@color == expected, "Expected #{expected.inspect} but got #{@color.inspect}")
+end
+
+Given(/([a-z]+) ← (sphere|plane)\(\) with:/) do |var_name, shape_type, table|
+  shape = case shape_type
+  when "sphere"
+    Rayz::Sphere.new
+  when "plane"
+    Rayz::Plane.new
+  end
+
+  table.raw.each do |row|
+    property = row[0].strip
+    value = row[1].strip
+
+    case property
+    when "transform"
+      if value =~ /translation\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
+        shape.transform = Rayz::Transformations.translation(x: $1.to_f, y: $2.to_f, z: $3.to_f)
+      elsif value =~ /scaling\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
+        shape.transform = Rayz::Transformations.scaling(x: $1.to_f, y: $2.to_f, z: $3.to_f)
+      end
+    when "material.reflective"
+      shape.material.reflective = value.to_f
+    when "material.transparency"
+      shape.material.transparency = value.to_f
+    when "material.refractive_index"
+      shape.material.refractive_index = value.to_f
+    when "material.color"
+      match = value.match(/\(([^,]+),\s*([^,]+),\s*([^)]+)\)/)
+      if match
+        shape.material.color = Rayz::Color.new(red: match[1].to_f, green: match[2].to_f, blue: match[3].to_f)
+      end
+    when "material.ambient"
+      shape.material.ambient = value.to_f
+    when "material.diffuse"
+      shape.material.diffuse = value.to_f
+    when "material.specular"
+      shape.material.specular = value.to_f
+    end
+  end
+
+  instance_variable_set("@#{var_name}", shape)
+end
+
+Given(/([a-z]+) is added to w/) do |var_name|
+  obj = instance_variable_get("@#{var_name}")
+  @w.objects << obj
+end
+
+Given("shape.material.ambient ← {int}") do |value|
+  @shape.material.ambient = value
+end
+
+Given(/([A-Z]) ← the first object in w/) do |var_name|
+  instance_variable_set("@#{var_name}", @w.objects[0])
+end
+
+Given(/([A-Z]) ← the second object in w/) do |var_name|
+  instance_variable_set("@#{var_name}", @w.objects[1])
+end
+
+Given(/([A-Z])\.material\.ambient ← ([0-9.]+)/) do |var_name, value|
+  obj = instance_variable_get("@#{var_name}")
+  obj.material.ambient = value.to_f
+end
+
+Given(/([A-Z])\.material\.pattern ← test_pattern\(\)/) do |var_name|
+  obj = instance_variable_get("@#{var_name}")
+  obj.material.pattern = Rayz::TestPattern.new
+end
+
+Given(/([A-Z])\.material\.transparency ← ([0-9.]+)/) do |var_name, value|
+  obj = instance_variable_get("@#{var_name}")
+  obj.material.transparency = value.to_f
+end
+
+Given(/([A-Z])\.material\.refractive_index ← ([0-9.]+)/) do |var_name, value|
+  obj = instance_variable_get("@#{var_name}")
+  obj.material.refractive_index = value.to_f
+end
+
+Then("color_at\\(w, r) should terminate successfully") do
+  # Just call it and make sure it doesn't hang or error
+  @c = @w.color_at(@r)
+  assert(@c.is_a?(Rayz::Color))
 end
