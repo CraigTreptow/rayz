@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-6 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, and Phong shading.
+Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-13 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, and hierarchical scene composition.
 
 ## Development Commands
 
@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz         # Execute all implemented chapters (1-9)
+ruby rayz         # Execute all implemented chapters (1-13)
 ```
 
 ### Testing
@@ -53,6 +53,8 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Plane` - Infinite flat surface with constant normals
 - `Cube` - Axis-aligned bounding box (AABB) from -1 to +1 on all axes
 - `Cylinder` - Cylindrical primitive with radius 1, supports truncation (min/max) and end caps (closed)
+- `Group` - Abstract shape that contains child shapes, enabling hierarchical scene composition with parent-child relationships
+- `Shape` - Base class for all geometric primitives with `parent` attribute for hierarchy, `transform` and `material` attributes, template methods for `local_intersect` and `local_normal_at`
 - `Intersection` - Encapsulates intersection point (t value) and intersected object
 - `Material` - Surface properties for Phong shading (color, ambient, diffuse, specular, shininess, reflective, transparency, refractive_index)
 - `PointLight` - Point light source with position (Point) and intensity (Color)
@@ -91,6 +93,13 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - `intersections.feature` - Intersection aggregation and hit detection
 - `lights.feature` - Point light source creation
 - `materials.feature` - Material properties and Phong lighting model
+- `world.feature` - World and camera for scene rendering
+- `patterns.feature` - Surface patterns (stripe, gradient, ring, checkers)
+- `planes.feature` - Infinite plane intersections and normals
+- `reflections.feature` - Reflection, refraction, and Fresnel effects
+- `cubes.feature` - Cube primitive with ray-cube intersection and normals
+- `cylinders.feature` - Cylinder primitive with truncation, end caps, and normals
+- `groups.feature` - Group hierarchy, parent-child relationships, and intersection aggregation
 
 ## Code Conventions
 
@@ -136,6 +145,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter10.ppm` - Scene with reflective and refractive materials (mirrors and glass)
   - `chapter11.ppm` - Scene with cubes (room with table and boxes)
   - `chapter12.ppm` - Scene with cylinders (table with candles and various cylinder objects)
+  - `chapter13.ppm` - Scene with hierarchical groups (tree, snowman, hexagon)
 
 ## Implementation Status
 
@@ -152,10 +162,11 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 10**: Reflection and Refraction (mirrors, glass, Fresnel effect, recursive ray tracing)
 - **Chapter 11**: Cubes (axis-aligned bounding boxes, ray-cube intersection algorithm)
 - **Chapter 12**: Cylinders (cylindrical primitives with truncation and end caps)
+- **Chapter 13**: Groups (hierarchical scene composition, parent-child relationships, transform cascading)
 
 ### Test Coverage
-- 202 scenarios passing (244 total scenarios, 42 undefined for future chapters)
-- 15 feature files in `/features/` directory:
+- 207 scenarios passing (249 total scenarios, 42 undefined for future chapters)
+- 16 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -172,4 +183,5 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `reflections.feature` - Reflection, refraction, and Fresnel effects
   - `cubes.feature` - Cube primitive with ray-cube intersection and normals
   - `cylinders.feature` - Cylinder primitive with truncation, end caps, and normals
+  - `groups.feature` - Group hierarchy, parent-child relationships, and intersection aggregation
 - Additional reference tests from the book in `/book_features/` for future implementation

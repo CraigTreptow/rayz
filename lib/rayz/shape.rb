@@ -2,12 +2,13 @@ require "matrix"
 
 module Rayz
   class Shape
-    attr_accessor :transform, :material
+    attr_accessor :transform, :material, :parent
     attr_accessor :saved_ray # For test_shape debugging
 
     def initialize
       @transform = Matrix.identity(4)
       @material = Material.new
+      @parent = nil
     end
 
     def intersect(ray)
