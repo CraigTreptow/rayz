@@ -58,7 +58,7 @@ Execute all chapter demonstrations:
 ruby rayz
 ```
 
-This runs demonstrations from Chapters 1-10 and generates PPM image files.
+This runs demonstrations from Chapters 1-11 and generates PPM image files.
 
 Run individual chapters:
 ```bash
@@ -72,11 +72,12 @@ ruby -r ./lib/rayz -e "Rayz::Chapter7.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter8.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter9.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter10.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter11.run"
 ```
 
 ## Testing
 
-Run all tests (152 scenarios passing):
+Run all tests (173 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
@@ -506,6 +507,40 @@ Done!
 Rendering took 187.32 seconds
 Time per row: 468.3 ms
 Scene rendered to chapter10.ppm
+```
+
+## Chapter 11 - Cubes
+
+Demonstrates axis-aligned bounding boxes (cubes) as a new primitive shape:
+- Cube class extending Shape interface
+- Ray-cube intersection using check_axis algorithm
+- Normal calculation based on maximum component value
+- Cubes can be transformed like other shapes
+- Visual demonstration: scene with table made from cubes
+
+**Output:** `chapter11.ppm` - An 800×600 pixel image showing a room with a table and various cubes
+
+**Key concepts:**
+- Cubes are axis-aligned bounding boxes extending from -1 to +1 on all axes
+- Intersection algorithm checks ray against 6 planes (2 per axis)
+- For each axis, compute tmin and tmax, then take overall max(tmin) and min(tmax)
+- Normals determined by finding which component (x, y, or z) has largest absolute value
+- Cubes support full transformation matrices and materials
+- Can create complex objects by combining transformed cubes
+
+**Example output:**
+```
+Chapter 11: Cubes
+Rendering scene with cubes (800x600 pixels)...
+Features:
+  - Room made from a large cube
+  - Table with 4 legs and a surface
+  - Boxes on the table and floor
+This may take a few minutes...
+Done!
+Rendering took 312.45 seconds
+Time per row: 520.8 ms
+Scene rendered to chapter11.ppm
 ```
 
 ## Viewing Output Files
