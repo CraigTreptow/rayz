@@ -58,7 +58,7 @@ Execute all chapter demonstrations:
 ruby rayz
 ```
 
-This runs demonstrations from Chapters 1-12 and generates PPM image files.
+This runs demonstrations from Chapters 1-13 and generates PPM image files.
 
 Run individual chapters:
 ```bash
@@ -74,11 +74,12 @@ ruby -r ./lib/rayz -e "Rayz::Chapter9.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter10.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter11.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter12.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter13.run"
 ```
 
 ## Testing
 
-Run all tests (202 scenarios passing):
+Run all tests (207 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
@@ -578,6 +579,41 @@ Done!
 Rendering took 285.32 seconds
 Time per row: 475.5 ms
 Scene rendered to chapter12.ppm
+```
+
+## Chapter 13 - Groups
+
+Demonstrates hierarchical scene composition using groups:
+- Group class for organizing shapes into hierarchies
+- Parent-child relationships between shapes
+- Transform cascading from parent to child
+- Aggregating intersections from multiple child shapes
+- Visual demonstration: scene with grouped objects (tree, snowman, hexagon)
+
+**Output:** `chapter13.ppm` - An 800×600 pixel image showing hierarchical groups
+
+**Key concepts:**
+- Groups are abstract shapes that contain other shapes
+- Groups form tree structures: parents reference children, children reference parent
+- Transforming a group transforms all its children
+- Intersecting a group checks all child shapes and aggregates results
+- Groups have no surface themselves (no normal computation)
+- Enable building complex compound objects from simpler primitives
+
+**Example output:**
+```
+Chapter 13: Groups
+Rendering scene with hierarchical groups (800x600 pixels)...
+Features:
+  - Tree made from grouped trunk and foliage
+  - Snowman built from grouped spheres
+  - Hexagon pattern using grouped spheres
+  - Transformations cascading through group hierarchies
+This may take a few minutes...
+Done!
+Rendering took 298.45 seconds
+Time per row: 497.4 ms
+Scene rendered to chapter13.ppm
 ```
 
 ## Viewing Output Files
