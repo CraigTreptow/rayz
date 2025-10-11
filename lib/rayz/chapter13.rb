@@ -19,14 +19,14 @@ module Rayz
       # Create light source
       light = PointLight.new(
         position: Point.new(x: -5, y: 10, z: -10),
-        intensity: Color.new(r: 1, g: 1, b: 1)
+        intensity: Color.new(red: 1, green: 1, blue: 1)
       )
 
       # Create floor
       floor = Plane.new
       floor.material.pattern = CheckersPattern.new(
-        Color.new(r: 0.9, g: 0.9, b: 0.9),
-        Color.new(r: 0.1, g: 0.1, b: 0.1)
+        Color.new(red: 0.9, green: 0.9, blue: 0.9),
+        Color.new(red: 0.1, green: 0.1, blue: 0.1)
       )
       floor.material.reflective = 0.1
 
@@ -36,7 +36,7 @@ module Rayz
       trunk.minimum = 0
       trunk.maximum = 1.5
       trunk.closed = true
-      trunk.material.color = Color.new(r: 0.4, g: 0.2, b: 0.1)
+      trunk.material.color = Color.new(red: 0.4, green: 0.2, blue: 0.1)
       trunk.material.specular = 0.1
 
       # Foliage group (multiple spheres)
@@ -46,28 +46,28 @@ module Rayz
       foliage1 = Sphere.new
       foliage1.transform = Transformations.translation(x: 0, y: 2, z: 0) *
         Transformations.scaling(x: 0.8, y: 0.8, z: 0.8)
-      foliage1.material.color = Color.new(r: 0.1, g: 0.6, b: 0.1)
+      foliage1.material.color = Color.new(red: 0.1, green: 0.6, blue: 0.1)
       foliage1.material.specular = 0.3
 
       # Left foliage
       foliage2 = Sphere.new
       foliage2.transform = Transformations.translation(x: -0.5, y: 1.7, z: 0) *
         Transformations.scaling(x: 0.6, y: 0.6, z: 0.6)
-      foliage2.material.color = Color.new(r: 0.1, g: 0.7, b: 0.1)
+      foliage2.material.color = Color.new(red: 0.1, green: 0.7, blue: 0.1)
       foliage2.material.specular = 0.3
 
       # Right foliage
       foliage3 = Sphere.new
       foliage3.transform = Transformations.translation(x: 0.5, y: 1.7, z: 0.2) *
         Transformations.scaling(x: 0.6, y: 0.6, z: 0.6)
-      foliage3.material.color = Color.new(r: 0.1, g: 0.8, b: 0.1)
+      foliage3.material.color = Color.new(red: 0.1, green: 0.8, blue: 0.1)
       foliage3.material.specular = 0.3
 
       # Top foliage
       foliage4 = Sphere.new
       foliage4.transform = Transformations.translation(x: 0, y: 2.5, z: 0) *
         Transformations.scaling(x: 0.5, y: 0.5, z: 0.5)
-      foliage4.material.color = Color.new(r: 0.1, g: 0.5, b: 0.1)
+      foliage4.material.color = Color.new(red: 0.1, green: 0.5, blue: 0.1)
       foliage4.material.specular = 0.3
 
       foliage_group.add_child(foliage1)
@@ -86,7 +86,7 @@ module Rayz
       snowman_bottom = Sphere.new
       snowman_bottom.transform = Transformations.translation(x: 0, y: 0.6, z: 0) *
         Transformations.scaling(x: 0.6, y: 0.6, z: 0.6)
-      snowman_bottom.material.color = Color.new(r: 1, g: 1, b: 1)
+      snowman_bottom.material.color = Color.new(red: 1, green: 1, blue: 1)
       snowman_bottom.material.specular = 0.9
       snowman_bottom.material.shininess = 300
 
@@ -94,7 +94,7 @@ module Rayz
       snowman_middle = Sphere.new
       snowman_middle.transform = Transformations.translation(x: 0, y: 1.5, z: 0) *
         Transformations.scaling(x: 0.45, y: 0.45, z: 0.45)
-      snowman_middle.material.color = Color.new(r: 1, g: 1, b: 1)
+      snowman_middle.material.color = Color.new(red: 1, green: 1, blue: 1)
       snowman_middle.material.specular = 0.9
       snowman_middle.material.shininess = 300
 
@@ -102,7 +102,7 @@ module Rayz
       snowman_head = Sphere.new
       snowman_head.transform = Transformations.translation(x: 0, y: 2.2, z: 0) *
         Transformations.scaling(x: 0.3, y: 0.3, z: 0.3)
-      snowman_head.material.color = Color.new(r: 1, g: 1, b: 1)
+      snowman_head.material.color = Color.new(red: 1, green: 1, blue: 1)
       snowman_head.material.specular = 0.9
       snowman_head.material.shininess = 300
 
@@ -114,7 +114,7 @@ module Rayz
       nose.transform = Transformations.translation(x: 0, y: 2.2, z: 0.3) *
         Transformations.rotation_x(radians: Math::PI / 2) *
         Transformations.scaling(x: 0.08, y: 1, z: 0.08)
-      nose.material.color = Color.new(r: 1, g: 0.5, b: 0)
+      nose.material.color = Color.new(red: 1, green: 0.5, blue: 0)
       nose.material.specular = 0.1
 
       # Snowman group
@@ -136,9 +136,9 @@ module Rayz
         # Color based on position
         hue = i / 6.0
         sphere.material.color = Color.new(
-          r: (Math.sin(hue * Math::PI * 2) + 1) / 2,
-          g: (Math.sin((hue + 0.33) * Math::PI * 2) + 1) / 2,
-          b: (Math.sin((hue + 0.67) * Math::PI * 2) + 1) / 2
+          red: (Math.sin(hue * Math::PI * 2) + 1) / 2,
+          green: (Math.sin((hue + 0.33) * Math::PI * 2) + 1) / 2,
+          blue: (Math.sin((hue + 0.67) * Math::PI * 2) + 1) / 2
         )
         sphere.material.specular = 0.6
         sphere.material.reflective = 0.2
