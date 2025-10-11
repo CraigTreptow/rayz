@@ -52,6 +52,7 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Sphere` - 3D sphere with transformation support, ray intersection calculations, material properties, and surface normal calculation
 - `Plane` - Infinite flat surface with constant normals
 - `Cube` - Axis-aligned bounding box (AABB) from -1 to +1 on all axes
+- `Cylinder` - Cylindrical primitive with radius 1, supports truncation (min/max) and end caps (closed)
 - `Intersection` - Encapsulates intersection point (t value) and intersected object
 - `Material` - Surface properties for Phong shading (color, ambient, diffuse, specular, shininess, reflective, transparency, refractive_index)
 - `PointLight` - Point light source with position (Point) and intensity (Color)
@@ -134,6 +135,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter9.ppm` - Scene with infinite planes and spheres
   - `chapter10.ppm` - Scene with reflective and refractive materials (mirrors and glass)
   - `chapter11.ppm` - Scene with cubes (room with table and boxes)
+  - `chapter12.ppm` - Scene with cylinders (table with candles and various cylinder objects)
 
 ## Implementation Status
 
@@ -149,10 +151,11 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 9**: Planes (infinite flat surfaces, plane-ray intersections)
 - **Chapter 10**: Reflection and Refraction (mirrors, glass, Fresnel effect, recursive ray tracing)
 - **Chapter 11**: Cubes (axis-aligned bounding boxes, ray-cube intersection algorithm)
+- **Chapter 12**: Cylinders (cylindrical primitives with truncation and end caps)
 
 ### Test Coverage
-- 173 scenarios passing (215 total scenarios, 42 undefined for future chapters)
-- 14 feature files in `/features/` directory:
+- 202 scenarios passing (244 total scenarios, 42 undefined for future chapters)
+- 15 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -168,4 +171,5 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `planes.feature` - Infinite plane intersections and normals
   - `reflections.feature` - Reflection, refraction, and Fresnel effects
   - `cubes.feature` - Cube primitive with ray-cube intersection and normals
+  - `cylinders.feature` - Cylinder primitive with truncation, end caps, and normals
 - Additional reference tests from the book in `/book_features/` for future implementation
