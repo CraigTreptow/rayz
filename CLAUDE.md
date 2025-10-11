@@ -50,6 +50,8 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Transformations` - Static methods for creating transformation matrices (translation, scaling, rotation, shearing, view transform)
 - `Ray` - Ray with origin (Point) and direction (Vector), supports position calculation and transformations
 - `Sphere` - 3D sphere with transformation support, ray intersection calculations, material properties, and surface normal calculation
+- `Plane` - Infinite flat surface with constant normals
+- `Cube` - Axis-aligned bounding box (AABB) from -1 to +1 on all axes
 - `Intersection` - Encapsulates intersection point (t value) and intersected object
 - `Material` - Surface properties for Phong shading (color, ambient, diffuse, specular, shininess, reflective, transparency, refractive_index)
 - `PointLight` - Point light source with position (Point) and intensity (Color)
@@ -131,6 +133,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter8.ppm` - Scene with patterns (stripes, gradients, rings, checkers)
   - `chapter9.ppm` - Scene with infinite planes and spheres
   - `chapter10.ppm` - Scene with reflective and refractive materials (mirrors and glass)
+  - `chapter11.ppm` - Scene with cubes (room with table and boxes)
 
 ## Implementation Status
 
@@ -145,10 +148,11 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 8**: Patterns (stripe, gradient, ring, checkers patterns with transformations)
 - **Chapter 9**: Planes (infinite flat surfaces, plane-ray intersections)
 - **Chapter 10**: Reflection and Refraction (mirrors, glass, Fresnel effect, recursive ray tracing)
+- **Chapter 11**: Cubes (axis-aligned bounding boxes, ray-cube intersection algorithm)
 
 ### Test Coverage
-- 152 scenarios passing (194 total scenarios, 42 undefined for future chapters)
-- 13 feature files in `/features/` directory:
+- 173 scenarios passing (215 total scenarios, 42 undefined for future chapters)
+- 14 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -163,4 +167,5 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `patterns.feature` - Surface patterns (stripe, gradient, ring, checkers)
   - `planes.feature` - Infinite plane intersections and normals
   - `reflections.feature` - Reflection, refraction, and Fresnel effects
+  - `cubes.feature` - Cube primitive with ray-cube intersection and normals
 - Additional reference tests from the book in `/book_features/` for future implementation
