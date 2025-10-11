@@ -16,6 +16,7 @@ module Rayz
       Chapter9.run
       Chapter10.run
       Chapter11.run
+      Chapter12.run
     end
   end
 end

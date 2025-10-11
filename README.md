@@ -58,7 +58,7 @@ Execute all chapter demonstrations:
 ruby rayz
 ```
 
-This runs demonstrations from Chapters 1-11 and generates PPM image files.
+This runs demonstrations from Chapters 1-12 and generates PPM image files.
 
 Run individual chapters:
 ```bash
@@ -73,11 +73,12 @@ ruby -r ./lib/rayz -e "Rayz::Chapter8.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter9.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter10.run"
 ruby -r ./lib/rayz -e "Rayz::Chapter11.run"
+ruby -r ./lib/rayz -e "Rayz::Chapter12.run"
 ```
 
 ## Testing
 
-Run all tests (173 scenarios passing):
+Run all tests (202 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
@@ -541,6 +542,42 @@ Done!
 Rendering took 312.45 seconds
 Time per row: 520.8 ms
 Scene rendered to chapter11.ppm
+```
+
+## Chapter 12 - Cylinders
+
+Demonstrates cylinders as a new primitive shape with support for truncation and end caps:
+- Cylinder class extending Shape interface
+- Ray-cylinder intersection using discriminant algorithm
+- Support for infinite, truncated, and capped cylinders
+- Normal calculation for cylinder walls and end caps
+- Visual demonstration: scene with table, candles, and various cylinder objects
+
+**Output:** `chapter12.ppm` - An 800×600 pixel image showing cylinders with different configurations
+
+**Key concepts:**
+- Cylinders have radius 1 and extend infinitely along the y-axis by default
+- Intersection uses discriminant to find where ray intersects cylinder walls
+- Truncation: `minimum` and `maximum` y values constrain the cylinder
+- End caps: `closed` attribute adds circular caps at min/max extents
+- Normal on walls: vector(x, 0, z) - perpendicular to y-axis
+- Normal on caps: vector(0, ±1, 0) - along y-axis
+- Cylinders support full transformation matrices and materials
+
+**Example output:**
+```
+Chapter 12: Cylinders
+Rendering scene with cylinders (800x600 pixels)...
+Features:
+  - Infinite cylinders (table legs)
+  - Truncated cylinders (various heights)
+  - Closed cylinders with end caps
+  - Open cylinders (hollow)
+This may take a few minutes...
+Done!
+Rendering took 285.32 seconds
+Time per row: 475.5 ms
+Scene rendered to chapter12.ppm
 ```
 
 ## Viewing Output Files
