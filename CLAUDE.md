@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-13 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, and hierarchical scene composition.
+Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-15 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, and triangle primitives for complex 3D models.
 
 ## Development Commands
 
@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz         # Execute all implemented chapters (1-13)
+ruby rayz         # Execute all implemented chapters (1-15)
 ```
 
 ### Testing
@@ -53,6 +53,8 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Plane` - Infinite flat surface with constant normals
 - `Cube` - Axis-aligned bounding box (AABB) from -1 to +1 on all axes
 - `Cylinder` - Cylindrical primitive with radius 1, supports truncation (min/max) and end caps (closed)
+- `Cone` - Double-napped cone aligned with y-axis (equation: x² + z² = y²), supports truncation and end caps
+- `Triangle` - Triangle primitive defined by three vertices, uses Möller-Trumbore intersection algorithm, flat shading with constant normal
 - `Group` - Abstract shape that contains child shapes, enabling hierarchical scene composition with parent-child relationships
 - `Shape` - Base class for all geometric primitives with `parent` attribute for hierarchy, `transform` and `material` attributes, template methods for `local_intersect` and `local_normal_at`
 - `Intersection` - Encapsulates intersection point (t value) and intersected object
@@ -100,6 +102,8 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - `cubes.feature` - Cube primitive with ray-cube intersection and normals
 - `cylinders.feature` - Cylinder primitive with truncation, end caps, and normals
 - `groups.feature` - Group hierarchy, parent-child relationships, and intersection aggregation
+- `cones.feature` - Cone primitive with ray-cone intersection and normals
+- `triangles.feature` - Triangle primitive with Möller-Trumbore intersection algorithm
 
 ## Code Conventions
 
@@ -146,6 +150,8 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter11.ppm` - Scene with cubes (room with table and boxes)
   - `chapter12.ppm` - Scene with cylinders (table with candles and various cylinder objects)
   - `chapter13.ppm` - Scene with hierarchical groups (tree, snowman, hexagon)
+  - `chapter14.ppm` - Scene with cones (traffic cone, glass cone, metal cone, ice cream, hourglass)
+  - `chapter15.ppm` - Scene with triangles (pyramid, octahedron, tetrahedron)
 
 ## Implementation Status
 
@@ -163,10 +169,12 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 11**: Cubes (axis-aligned bounding boxes, ray-cube intersection algorithm)
 - **Chapter 12**: Cylinders (cylindrical primitives with truncation and end caps)
 - **Chapter 13**: Groups (hierarchical scene composition, parent-child relationships, transform cascading)
+- **Chapter 14**: Cones (double-napped cones with Möller-Trumbore-style intersection, truncation, and end caps)
+- **Chapter 15**: Triangles (triangle primitive with Möller-Trumbore intersection algorithm, flat shading)
 
 ### Test Coverage
-- 207 scenarios passing (249 total scenarios, 42 undefined for future chapters)
-- 16 feature files in `/features/` directory:
+- 224 scenarios passing (266 total scenarios, 42 undefined for future chapters)
+- 18 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -184,4 +192,6 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `cubes.feature` - Cube primitive with ray-cube intersection and normals
   - `cylinders.feature` - Cylinder primitive with truncation, end caps, and normals
   - `groups.feature` - Group hierarchy, parent-child relationships, and intersection aggregation
+  - `cones.feature` - Cone primitive with ray-cone intersection and normals
+  - `triangles.feature` - Triangle primitive with Möller-Trumbore intersection algorithm
 - Additional reference tests from the book in `/book_features/` for future implementation
