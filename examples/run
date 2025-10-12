@@ -68,7 +68,7 @@ module Rayz
     def self.parse_and_run(args)
       if args.empty? || args.first == "all"
         run_all
-      elsif args.first =~ /^\d+$/
+      elsif /^\d+$/.match?(args.first)
         chapter_num = args.first.to_i
         run_chapter(chapter_num)
       else
