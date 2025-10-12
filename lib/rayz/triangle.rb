@@ -25,7 +25,9 @@ module Rayz
 
     def local_intersect(local_ray)
       # Möller-Trumbore algorithm for ray-triangle intersection
-      dir_cross_e2 = local_ray.direction.cross(@e2)
+      # Convert direction to Vector for cross product
+      dir = Vector.new(x: local_ray.direction.x, y: local_ray.direction.y, z: local_ray.direction.z)
+      dir_cross_e2 = dir.cross(@e2)
       det = @e1.dot(dir_cross_e2)
 
       # If determinant is near zero, ray lies in plane of triangle
@@ -40,7 +42,7 @@ module Rayz
       return [] if u < 0 || u > 1
 
       origin_cross_e1 = p1_to_origin.cross(@e1)
-      v = f * local_ray.direction.dot(origin_cross_e1)
+      v = f * dir.dot(origin_cross_e1)
 
       # Test v parameter (second barycentric coordinate)
       return [] if v < 0 || (u + v) > 1
