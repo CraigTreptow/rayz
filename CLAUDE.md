@@ -17,7 +17,9 @@ bundle install    # Install gem dependencies
 ### Running the Application
 ```bash
 ruby rayz                    # Execute all implemented chapters (1-15)
-ruby examples/run_all.rb     # Alternative: run examples directly
+ruby rayz all                # Explicitly run all chapters
+ruby rayz 4                  # Run only chapter 4
+ruby examples/run.rb 7       # Alternative: run examples directly
 ```
 
 ### Testing

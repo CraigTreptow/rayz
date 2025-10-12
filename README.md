@@ -56,28 +56,17 @@ bundle install
 Execute all chapter demonstrations:
 ```bash
 ruby rayz                    # Run all chapters 1-15
-ruby examples/run_all.rb     # Alternative: run directly
+ruby rayz all                # Explicitly run all chapters
+ruby examples/run.rb all     # Alternative: run directly
 ```
 
 This runs demonstrations from Chapters 1-15 and generates PPM image files in the `examples/` directory.
 
 Run individual chapters:
 ```bash
-ruby -r ./examples/run_all -e "Rayz::Chapter1.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter2.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter3.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter4.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter5.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter6.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter7.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter8.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter9.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter10.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter11.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter12.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter13.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter14.run"
-ruby -r ./examples/run_all -e "Rayz::Chapter15.run"
+ruby rayz 4                  # Run only chapter 4
+ruby rayz 7                  # Run only chapter 7
+ruby examples/run.rb 10      # Alternative: run directly
 ```
 
 ## Testing

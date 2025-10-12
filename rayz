@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
 
-require_relative "examples/run_all"
+require_relative "examples/run"
 
-Rayz::ExamplesRunner.run
+Rayz::ExamplesRunner.parse_and_run(ARGV)
