@@ -44,7 +44,7 @@ module Rayz
       end.wait
       puts "Pixels written."
 
-      file_name = "chapter2.ppm"
+      file_name = "examples/chapter2.ppm"
       print "Writing PPM to #{file_name}..."
       Async do
         ppm_content = canvas.to_ppm_async

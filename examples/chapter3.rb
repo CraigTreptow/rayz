@@ -131,7 +131,7 @@ module Rayz
         end
       end
 
-      file_name = "chapter3_clock.ppm"
+      file_name = "examples/chapter3_clock.ppm"
       print "Writing clock face to #{file_name}..."
       File.write(file_name, canvas.to_ppm)
       puts " Done!"

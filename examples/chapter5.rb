@@ -142,7 +142,7 @@ module Rayz
       puts "Rendering took #{total_time.round(2)} seconds"
       puts "Time per row: #{(time_per_row * 1000).round(2)} ms"
 
-      file_name = "chapter5_sphere.ppm"
+      file_name = "examples/chapter5_sphere.ppm"
       print "Writing sphere silhouette to #{file_name}..."
       File.write(file_name, canvas.to_ppm)
       puts " Done!"
