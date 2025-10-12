@@ -57,7 +57,7 @@ Execute all chapter demonstrations:
 ```bash
 ruby rayz                    # Run all chapters 1-15
 ruby rayz all                # Explicitly run all chapters
-ruby examples/run.rb all     # Alternative: run directly
+ruby examples/run all        # Alternative: run directly
 ```
 
 This runs demonstrations from Chapters 1-15 and generates PPM image files in the `examples/` directory.
@@ -66,7 +66,7 @@ Run individual chapters:
 ```bash
 ruby rayz 4                  # Run only chapter 4
 ruby rayz 7                  # Run only chapter 7
-ruby examples/run.rb 10      # Alternative: run directly
+ruby examples/run 10         # Alternative: run directly
 ```
 
 ## Testing

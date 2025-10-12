@@ -55,12 +55,12 @@ module Rayz
     end
 
     def self.usage
-      puts "Usage: ruby examples/run.rb [all|<chapter_number>]"
+      puts "Usage: ruby examples/run [all|<chapter_number>]"
       puts ""
       puts "Examples:"
-      puts "  ruby examples/run.rb all    # Run all chapters (1-15)"
-      puts "  ruby examples/run.rb 4      # Run only chapter 4"
-      puts "  ruby examples/run.rb        # Run all chapters (default)"
+      puts "  ruby examples/run all    # Run all chapters (1-15)"
+      puts "  ruby examples/run 4      # Run only chapter 4"
+      puts "  ruby examples/run        # Run all chapters (default)"
       puts ""
       puts "Available chapters: 1-#{CHAPTERS.keys.max}"
     end
