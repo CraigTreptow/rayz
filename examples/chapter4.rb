@@ -1,8 +1,8 @@
-require_relative "../rayz/point"
-require_relative "../rayz/vector"
-require_relative "../rayz/color"
-require_relative "../rayz/canvas"
-require_relative "../rayz/transformations"
+require_relative "../lib/rayz/point"
+require_relative "../lib/rayz/vector"
+require_relative "../lib/rayz/color"
+require_relative "../lib/rayz/canvas"
+require_relative "../lib/rayz/transformations"
 require "matrix"
 
 module Rayz

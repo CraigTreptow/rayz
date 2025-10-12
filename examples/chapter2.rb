@@ -1,9 +1,9 @@
-require_relative "../rayz/environment"
-require_relative "../rayz/projectile"
-require_relative "../rayz/vector"
-require_relative "../rayz/point"
-require_relative "../rayz/color"
-require_relative "../rayz/canvas"
+require_relative "../lib/rayz/environment"
+require_relative "../lib/rayz/projectile"
+require_relative "../lib/rayz/vector"
+require_relative "../lib/rayz/point"
+require_relative "../lib/rayz/color"
+require_relative "../lib/rayz/canvas"
 require "async"
 
 module Rayz

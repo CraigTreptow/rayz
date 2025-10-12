@@ -55,31 +55,34 @@ bundle install
 
 Execute all chapter demonstrations:
 ```bash
-ruby rayz
+ruby rayz                    # Run all chapters 1-15
+ruby examples/run_all.rb     # Alternative: run directly
 ```
 
-This runs demonstrations from Chapters 1-13 and generates PPM image files.
+This runs demonstrations from Chapters 1-15 and generates PPM image files in the `examples/` directory.
 
 Run individual chapters:
 ```bash
-ruby -r ./lib/rayz -e "Rayz::Chapter1.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter2.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter3.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter4.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter5.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter6.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter7.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter8.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter9.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter10.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter11.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter12.run"
-ruby -r ./lib/rayz -e "Rayz::Chapter13.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter1.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter2.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter3.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter4.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter5.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter6.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter7.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter8.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter9.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter10.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter11.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter12.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter13.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter14.run"
+ruby -r ./examples/run_all -e "Rayz::Chapter15.run"
 ```
 
 ## Testing
 
-Run all tests (207 scenarios passing):
+Run all tests (224 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
@@ -181,7 +184,7 @@ A projectile is shot and its trajectory is plotted on a canvas, demonstrating:
 - PPM file format export
 - Parallel pixel writing with async operations
 
-**Output:** `chapter2.ppm` - A 900×550 pixel image showing the projectile's arc
+**Output:** `examples/chapter2.ppm` - A 900×550 pixel image showing the projectile's arc
 
 **Example output:**
 ```
@@ -198,7 +201,7 @@ Demonstrates matrix operations and transformations, including:
 - Verification that A × inverse(A) = Identity
 - Visual demonstration: clock face using rotation matrices
 
-**Output:** `chapter3_clock.ppm` - A 400×400 pixel image showing 12 hour marks positioned using 3D rotation matrices
+**Output:** `examples/chapter3_clock.ppm` - A 400×400 pixel image showing 12 hour marks positioned using 3D rotation matrices
 
 **Example output:**
 ```
@@ -240,7 +243,7 @@ Demonstrates transformation matrices for manipulating objects in 3D space:
 - Transformation chaining: composing multiple transformations
 - Visual demonstration: analog clock at 3:00
 
-**Output:** `chapter4_clock.ppm` - A 500×500 pixel image showing an analog clock with colored hour markers and hands at 3:00
+**Output:** `examples/chapter4_clock.ppm` - A 500×500 pixel image showing an analog clock with colored hour markers and hands at 3:00
 
 **Example output:**
 ```
@@ -278,7 +281,7 @@ Demonstrates the fundamentals of ray tracing:
 - Finding hit points (lowest non-negative intersection)
 - Visual demonstration: rendering a sphere silhouette using ray casting
 
-**Output:** `chapter5_sphere.ppm` - A 200×200 pixel image showing a red sphere silhouette rendered using ray casting
+**Output:** `examples/chapter5_sphere.ppm` - A 200×200 pixel image showing a red sphere silhouette rendered using ray casting
 
 **Key concepts:**
 - Rays are defined by an origin (point) and direction (vector)
@@ -334,7 +337,7 @@ Demonstrates the Phong reflection model for realistic lighting:
 - Shadow detection (in_shadow parameter)
 - Visual demonstration: rendering a shaded 3D sphere with realistic lighting
 
-**Output:** `chapter6.ppm` - A 400×400 pixel image showing a purple sphere with Phong shading
+**Output:** `examples/chapter6.ppm` - A 400×400 pixel image showing a purple sphere with Phong shading
 
 **Key concepts:**
 - Materials define surface properties (color, ambient, diffuse, specular, shininess)
@@ -372,7 +375,7 @@ Demonstrates building complete 3D scenes with multiple objects and rendering:
 - Intersection precomputation for efficient rendering
 - Visual demonstration: rendering a scene with multiple spheres, floor, and walls
 
-**Output:** `chapter7.ppm` - A 400×200 pixel image showing a complete 3D scene with three colored spheres, walls, and realistic shadows
+**Output:** `examples/chapter7.ppm` - A 400×200 pixel image showing a complete 3D scene with three colored spheres, walls, and realistic shadows
 
 **Key concepts:**
 - World manages collections of objects and a light source
@@ -408,7 +411,7 @@ Demonstrates advanced shape abstraction and surface patterns:
 - Pattern transformations independent of object transformations
 - Visual demonstration: scene with patterned spheres and infinite floor/wall planes
 
-**Output:** `chapter8.ppm` - A 400×200 pixel image showing spheres with various patterns on an infinite checkerboard floor
+**Output:** `examples/chapter8.ppm` - A 400×200 pixel image showing spheres with various patterns on an infinite checkerboard floor
 
 **Key concepts:**
 - Shape abstraction separates coordinate transformation from shape-specific logic
@@ -447,7 +450,7 @@ Demonstrates infinite flat surfaces with the Plane primitive:
 - Handling of parallel rays
 - Visual demonstration: scene with floor and wall planes plus spheres
 
-**Output:** `chapter9.ppm` - A 400×200 pixel image showing spheres resting on an infinite floor plane with wall planes
+**Output:** `examples/chapter9.ppm` - A 400×200 pixel image showing spheres resting on an infinite floor plane with wall planes
 
 **Key concepts:**
 - Planes are infinite flat surfaces with constant normals
@@ -483,7 +486,7 @@ Demonstrates realistic rendering with mirrors and transparent materials:
 - Combined reflection and refraction for realistic glass
 - Visual demonstration: scene with mirrors and glass spheres
 
-**Output:** `chapter10.ppm` - An 800×400 pixel image showing reflective and refractive materials
+**Output:** `examples/chapter10.ppm` - An 800×400 pixel image showing reflective and refractive materials
 
 **Key concepts:**
 - Reflection spawns secondary rays that bounce off surfaces
@@ -520,7 +523,7 @@ Demonstrates axis-aligned bounding boxes (cubes) as a new primitive shape:
 - Cubes can be transformed like other shapes
 - Visual demonstration: scene with table made from cubes
 
-**Output:** `chapter11.ppm` - An 800×600 pixel image showing a room with a table and various cubes
+**Output:** `examples/chapter11.ppm` - An 800×600 pixel image showing a room with a table and various cubes
 
 **Key concepts:**
 - Cubes are axis-aligned bounding boxes extending from -1 to +1 on all axes
@@ -554,7 +557,7 @@ Demonstrates cylinders as a new primitive shape with support for truncation and 
 - Normal calculation for cylinder walls and end caps
 - Visual demonstration: scene with table, candles, and various cylinder objects
 
-**Output:** `chapter12.ppm` - An 800×600 pixel image showing cylinders with different configurations
+**Output:** `examples/chapter12.ppm` - An 800×600 pixel image showing cylinders with different configurations
 
 **Key concepts:**
 - Cylinders have radius 1 and extend infinitely along the y-axis by default
@@ -590,7 +593,7 @@ Demonstrates hierarchical scene composition using groups:
 - Aggregating intersections from multiple child shapes
 - Visual demonstration: scene with grouped objects (tree, snowman, hexagon)
 
-**Output:** `chapter13.ppm` - An 800×600 pixel image showing hierarchical groups
+**Output:** `examples/chapter13.ppm` - An 800×600 pixel image showing hierarchical groups
 
 **Key concepts:**
 - Groups are abstract shapes that contain other shapes
@@ -616,17 +619,91 @@ Time per row: 497.4 ms
 Scene rendered to chapter13.ppm
 ```
 
+## Chapter 14 - Cones
+
+Demonstrates cones as a new primitive shape with support for truncation and end caps:
+- Cone class extending Shape interface
+- Ray-cone intersection using discriminant algorithm (equation: x² + z² = y²)
+- Support for infinite, truncated, and capped cones
+- Normal calculation for cone walls and end caps
+- Visual demonstration: scene with traffic cones, glass cones, and creative cone shapes
+
+**Output:** `examples/chapter14.ppm` - An 800×600 pixel image showing various cone types with different materials
+
+**Key concepts:**
+- Cones are double-napped surfaces aligned with y-axis (equation: x² + z² = y²)
+- Intersection uses discriminant algorithm similar to cylinders but with y-dependent radius
+- Truncation: `minimum` and `maximum` y values constrain the cone
+- End caps: `closed` attribute adds circular caps at min/max extents
+- Normal on walls: calculated from cone surface geometry
+- Normal on caps: vector(0, ±1, 0) - along y-axis
+- Cones support full transformation matrices and materials
+
+**Example output:**
+```
+Chapter 14: Cones
+Rendering scene with cones (800x600 pixels)...
+Features:
+  - Traffic cone (orange, truncated)
+  - Glass cone (transparent with refraction)
+  - Metal cone (reflective chrome)
+  - Ice cream cone (open cone with sphere on top)
+  - Party hat (tall thin cone)
+  - Hourglass (two cones meeting at a point)
+This may take a few minutes...
+Done!
+Rendering took 298.75 seconds
+Time per row: 497.9 ms
+Scene rendered to chapter14.ppm
+```
+
+## Chapter 15 - Triangles
+
+Demonstrates triangles as a new primitive shape using the Möller-Trumbore intersection algorithm:
+- Triangle class extending Shape interface
+- Efficient ray-triangle intersection with barycentric coordinates
+- Flat shading with constant normals across triangle surface
+- Foundation for loading complex 3D meshes from OBJ files
+- Visual demonstration: geometric shapes built entirely from triangles
+
+**Output:** `examples/chapter15.ppm` - An 800×600 pixel image showing geometric shapes constructed from triangles
+
+**Key concepts:**
+- Triangles are defined by three vertices (p1, p2, p3)
+- Möller-Trumbore algorithm: industry-standard efficient ray-triangle intersection
+- Uses barycentric coordinates (u, v) to test if intersection is inside triangle
+- Precomputes edge vectors (e1, e2) and normal for efficiency
+- Flat shading: normal is constant across entire triangle surface
+- Creates faceted appearance, perfect for geometric shapes
+- Foundation for triangle mesh loading in future chapters
+
+**Example output:**
+```
+Chapter 15: Triangles
+Rendering scene with triangles (800x600 pixels)...
+Features:
+  - Pyramid (4 triangular faces)
+  - Octahedron (8 triangles forming double pyramid)
+  - Tetrahedron (4 triangles forming triangular pyramid)
+  - Comparison sphere (showing flat vs smooth shading)
+This may take a few minutes...
+Done!
+Rendering took 305.12 seconds
+Time per row: 508.5 ms
+Scene rendered to chapter15.ppm
+```
+
 ## Viewing Output Files
 
-The generated `.ppm` files can be viewed with most image viewers or converted to other formats:
+The generated `.ppm` files are saved in the `examples/` directory and can be viewed with most image viewers or converted to other formats:
 
 ```bash
 # View with ImageMagick
-display chapter4_clock.ppm
+display examples/chapter4_clock.ppm
 
 # Convert to PNG
-convert chapter4_clock.ppm chapter4_clock.png
+convert examples/chapter4_clock.ppm examples/chapter4_clock.png
 
 # Copy to Windows (WSL users)
-cp chapter4_clock.ppm /mnt/c/Users/YourUsername/
+cp examples/chapter4_clock.ppm /mnt/c/Users/YourUsername/
 ```

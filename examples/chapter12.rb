@@ -1,10 +1,10 @@
 require "async"
-require_relative "world"
-require_relative "camera"
-require_relative "transformations"
-require_relative "point_light"
-require_relative "cylinder"
-require_relative "plane"
+require_relative "../lib/rayz/world"
+require_relative "../lib/rayz/camera"
+require_relative "../lib/rayz/transformations"
+require_relative "../lib/rayz/point_light"
+require_relative "../lib/rayz/cylinder"
+require_relative "../lib/rayz/plane"
 
 module Rayz
   module Chapter12
@@ -153,7 +153,7 @@ module Rayz
 
       # Save to file
       puts "Writing to chapter12.ppm..."
-      File.write("chapter12.ppm", image.to_ppm)
+      File.write("examples/chapter12.ppm", image.to_ppm)
       puts "Scene rendered to chapter12.ppm"
     end
   end

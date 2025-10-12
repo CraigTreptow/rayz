@@ -1,16 +1,16 @@
-require_relative "world"
-require_relative "camera"
-require_relative "point_light"
-require_relative "point"
-require_relative "color"
-require_relative "sphere"
-require_relative "plane"
-require_relative "transformations"
-require_relative "material"
-require_relative "stripe_pattern"
-require_relative "checkers_pattern"
-require_relative "gradient_pattern"
-require_relative "ring_pattern"
+require_relative "../lib/rayz/world"
+require_relative "../lib/rayz/camera"
+require_relative "../lib/rayz/point_light"
+require_relative "../lib/rayz/point"
+require_relative "../lib/rayz/color"
+require_relative "../lib/rayz/sphere"
+require_relative "../lib/rayz/plane"
+require_relative "../lib/rayz/transformations"
+require_relative "../lib/rayz/material"
+require_relative "../lib/rayz/stripe_pattern"
+require_relative "../lib/rayz/checkers_pattern"
+require_relative "../lib/rayz/gradient_pattern"
+require_relative "../lib/rayz/ring_pattern"
 
 module Rayz
   class Chapter8
@@ -109,7 +109,7 @@ module Rayz
       canvas = camera.render(world)
 
       # Write to file
-      File.write("chapter8.ppm", canvas.to_ppm)
+      File.write("examples/chapter8.ppm", canvas.to_ppm)
       puts "Scene rendered to chapter8.ppm"
       puts "\n" + ("=" * 60) + "\n"
     end
