@@ -1,10 +1,10 @@
-require_relative "../rayz/ray"
-require_relative "../rayz/sphere"
-require_relative "../rayz/point"
-require_relative "../rayz/vector"
-require_relative "../rayz/color"
-require_relative "../rayz/canvas"
-require_relative "../rayz/intersection"
+require_relative "../lib/rayz/ray"
+require_relative "../lib/rayz/sphere"
+require_relative "../lib/rayz/point"
+require_relative "../lib/rayz/vector"
+require_relative "../lib/rayz/color"
+require_relative "../lib/rayz/canvas"
+require_relative "../lib/rayz/intersection"
 require "matrix"
 
 module Rayz
@@ -142,7 +142,7 @@ module Rayz
       puts "Rendering took #{total_time.round(2)} seconds"
       puts "Time per row: #{(time_per_row * 1000).round(2)} ms"
 
-      file_name = "chapter5_sphere.ppm"
+      file_name = "examples/chapter5.ppm"
       print "Writing sphere silhouette to #{file_name}..."
       File.write(file_name, canvas.to_ppm)
       puts " Done!"

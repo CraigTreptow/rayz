@@ -1,8 +1,8 @@
-require_relative "../rayz/point"
-require_relative "../rayz/vector"
-require_relative "../rayz/color"
-require_relative "../rayz/canvas"
-require_relative "../rayz/util"
+require_relative "../lib/rayz/point"
+require_relative "../lib/rayz/vector"
+require_relative "../lib/rayz/color"
+require_relative "../lib/rayz/canvas"
+require_relative "../lib/rayz/util"
 require "matrix"
 
 module Rayz
@@ -131,7 +131,7 @@ module Rayz
         end
       end
 
-      file_name = "chapter3_clock.ppm"
+      file_name = "examples/chapter3.ppm"
       print "Writing clock face to #{file_name}..."
       File.write(file_name, canvas.to_ppm)
       puts " Done!"

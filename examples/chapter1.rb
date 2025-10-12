@@ -1,6 +1,6 @@
-require_relative "../rayz/environment"
-require_relative "../rayz/projectile"
-require_relative "../rayz/vector"
+require_relative "../lib/rayz/environment"
+require_relative "../lib/rayz/projectile"
+require_relative "../lib/rayz/vector"
 
 module Rayz
   class Chapter1

@@ -16,7 +16,10 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz         # Execute all implemented chapters (1-15)
+ruby rayz                    # Execute all implemented chapters (1-15)
+ruby rayz all                # Explicitly run all chapters
+ruby rayz 4                  # Run only chapter 4
+ruby examples/run 7          # Alternative: run examples directly
 ```
 
 ### Testing
@@ -71,7 +74,7 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 ### Physics Simulation
 - `Projectile` - Object with position (Point) and velocity (Vector)
 - `Environment` - Contains gravity and wind forces as Vectors
-- Chapter implementations demonstrate progressive complexity
+- Chapter demonstration scripts in `/examples/` showcase progressive complexity
 
 ### Parallelization
 Uses the `async` gem for concurrent pixel writing with mutex protection for thread-safe canvas operations.
@@ -134,14 +137,20 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - `standard` - Ruby code formatter/linter
 - `debug` - Debugging support
 
+## Project Structure
+- `/lib/rayz/` - Core ray tracer library (mathematical foundations, primitives, rendering engine)
+- `/examples/` - Chapter demonstration scripts and their output files
+- `/features/` - Cucumber BDD tests for implemented features
+- `/book_features/` - Reference tests from the book for future implementation
+
 ## Output Files
-- PPM image files generated for visual demonstrations
+- PPM image files generated in the `examples/` directory for visual demonstrations
 - Canvas coordinate system: origin bottom-left, Y increases upward
-- Generated files:
+- Generated files in `examples/`:
   - `chapter2.ppm` - Projectile trajectory visualization
-  - `chapter3_clock.ppm` - Clock face using rotation matrices
-  - `chapter4_clock.ppm` - Analog clock at 3:00 using transformation matrices
-  - `chapter5_sphere.ppm` - Sphere silhouette rendered using ray casting
+  - `chapter3.ppm` - Clock face using rotation matrices
+  - `chapter4.ppm` - Analog clock at 3:00 using transformation matrices
+  - `chapter5.ppm` - Sphere silhouette rendered using ray casting
   - `chapter6.ppm` - Shaded 3D sphere with Phong lighting
   - `chapter7.ppm` - Scene with multiple spheres, walls, and shadows
   - `chapter8.ppm` - Scene with patterns (stripes, gradients, rings, checkers)

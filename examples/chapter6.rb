@@ -1,13 +1,13 @@
-require_relative "../rayz/ray"
-require_relative "../rayz/sphere"
-require_relative "../rayz/point"
-require_relative "../rayz/vector"
-require_relative "../rayz/color"
-require_relative "../rayz/canvas"
-require_relative "../rayz/intersection"
-require_relative "../rayz/material"
-require_relative "../rayz/point_light"
-require_relative "../rayz/lighting"
+require_relative "../lib/rayz/ray"
+require_relative "../lib/rayz/sphere"
+require_relative "../lib/rayz/point"
+require_relative "../lib/rayz/vector"
+require_relative "../lib/rayz/color"
+require_relative "../lib/rayz/canvas"
+require_relative "../lib/rayz/intersection"
+require_relative "../lib/rayz/material"
+require_relative "../lib/rayz/point_light"
+require_relative "../lib/rayz/lighting"
 
 module Rayz
   class Chapter6
@@ -106,7 +106,7 @@ module Rayz
 
       # Save to PPM file
       puts "Writing to chapter6.ppm..."
-      File.write("chapter6.ppm", canvas.to_ppm)
+      File.write("examples/chapter6.ppm", canvas.to_ppm)
       puts "Complete! Open chapter6.ppm to see the shaded sphere."
       puts "\n" + ("=" * 60) + "\n"
     end

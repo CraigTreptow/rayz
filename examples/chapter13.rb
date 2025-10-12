@@ -165,7 +165,7 @@ module Rayz
       puts "Rendering completed in #{elapsed.round(2)} seconds"
       puts "Writing to chapter13.ppm..."
 
-      File.write("chapter13.ppm", canvas.to_ppm)
+      File.write("examples/chapter13.ppm", canvas.to_ppm)
       puts "Done! Output saved to chapter13.ppm"
       puts "Scene demonstrates:"
       puts "  - Hierarchical groups (tree with trunk and foliage groups)"

@@ -1,8 +1,8 @@
-require_relative "../rayz/point"
-require_relative "../rayz/vector"
-require_relative "../rayz/color"
-require_relative "../rayz/canvas"
-require_relative "../rayz/transformations"
+require_relative "../lib/rayz/point"
+require_relative "../lib/rayz/vector"
+require_relative "../lib/rayz/color"
+require_relative "../lib/rayz/canvas"
+require_relative "../lib/rayz/transformations"
 require "matrix"
 
 module Rayz
@@ -220,7 +220,7 @@ module Rayz
       # Draw minute hand as a line
       draw_line(canvas, 250, 250, 250 + minute_tip.x.round, 250 + minute_tip.z.round, white)
 
-      file_name = "chapter4_clock.ppm"
+      file_name = "examples/chapter4.ppm"
       print "Writing analog clock to #{file_name}..."
       File.write(file_name, canvas.to_ppm)
       puts " Done!"
