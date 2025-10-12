@@ -201,7 +201,7 @@ Demonstrates matrix operations and transformations, including:
 - Verification that A × inverse(A) = Identity
 - Visual demonstration: clock face using rotation matrices
 
-**Output:** `examples/chapter3_clock.ppm` - A 400×400 pixel image showing 12 hour marks positioned using 3D rotation matrices
+**Output:** `examples/chapter3.ppm` - A 400×400 pixel image showing 12 hour marks positioned using 3D rotation matrices
 
 **Example output:**
 ```
@@ -230,7 +230,7 @@ Verification: A * inverse(A) = Identity
 3. Clock Face Visualization
 ----------------------------------------
 Drawing a clock using rotation matrices...
-Writing clock face to chapter3_clock.ppm... Done!
+Writing clock face to chapter3.ppm... Done!
 ```
 
 ## Chapter 4 - Matrix Transformations
@@ -243,7 +243,7 @@ Demonstrates transformation matrices for manipulating objects in 3D space:
 - Transformation chaining: composing multiple transformations
 - Visual demonstration: analog clock at 3:00
 
-**Output:** `examples/chapter4_clock.ppm` - A 500×500 pixel image showing an analog clock with colored hour markers and hands at 3:00
+**Output:** `examples/chapter4.ppm` - A 500×500 pixel image showing an analog clock with colored hour markers and hands at 3:00
 
 **Example output:**
 ```
@@ -267,7 +267,7 @@ Result: Vector(x: -3, y: 4, z: 5) (unchanged - vectors are not affected by trans
 6. Analog Clock Visualization
 ----------------------------------------
 Creating an analog clock face using transformations...
-Writing analog clock to chapter4_clock.ppm... Done!
+Writing analog clock to chapter4.ppm... Done!
 An analog clock showing 3:00 has been created using transformations.
 ```
 
@@ -281,7 +281,7 @@ Demonstrates the fundamentals of ray tracing:
 - Finding hit points (lowest non-negative intersection)
 - Visual demonstration: rendering a sphere silhouette using ray casting
 
-**Output:** `examples/chapter5_sphere.ppm` - A 200×200 pixel image showing a red sphere silhouette rendered using ray casting
+**Output:** `examples/chapter5.ppm` - A 200×200 pixel image showing a red sphere silhouette rendered using ray casting
 
 **Key concepts:**
 - Rays are defined by an origin (point) and direction (vector)
@@ -321,7 +321,7 @@ After scaling(2, 3, 4):
 3. Sphere Silhouette Rendering
 ----------------------------------------
 Rendering a sphere using ray casting...
-Writing sphere silhouette to chapter5_sphere.ppm... Done!
+Writing sphere silhouette to chapter5.ppm... Done!
 A red sphere silhouette has been rendered using ray casting.
 The sphere is scaled to be flattened (y = 0.5) to demonstrate transformations.
 ```
@@ -699,11 +699,11 @@ The generated `.ppm` files are saved in the `examples/` directory and can be vie
 
 ```bash
 # View with ImageMagick
-display examples/chapter4_clock.ppm
+display examples/chapter4.ppm
 
 # Convert to PNG
-convert examples/chapter4_clock.ppm examples/chapter4_clock.png
+convert examples/chapter4.ppm examples/chapter4.png
 
 # Copy to Windows (WSL users)
-cp examples/chapter4_clock.ppm /mnt/c/Users/YourUsername/
+cp examples/chapter4.ppm /mnt/c/Users/YourUsername/
 ```

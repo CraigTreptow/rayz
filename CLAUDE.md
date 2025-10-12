@@ -146,9 +146,9 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - Canvas coordinate system: origin bottom-left, Y increases upward
 - Generated files in `examples/`:
   - `chapter2.ppm` - Projectile trajectory visualization
-  - `chapter3_clock.ppm` - Clock face using rotation matrices
-  - `chapter4_clock.ppm` - Analog clock at 3:00 using transformation matrices
-  - `chapter5_sphere.ppm` - Sphere silhouette rendered using ray casting
+  - `chapter3.ppm` - Clock face using rotation matrices
+  - `chapter4.ppm` - Analog clock at 3:00 using transformation matrices
+  - `chapter5.ppm` - Sphere silhouette rendered using ray casting
   - `chapter6.ppm` - Shaded 3D sphere with Phong lighting
   - `chapter7.ppm` - Scene with multiple spheres, walls, and shadows
   - `chapter8.ppm` - Scene with patterns (stripes, gradients, rings, checkers)

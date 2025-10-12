@@ -220,7 +220,7 @@ module Rayz
       # Draw minute hand as a line
       draw_line(canvas, 250, 250, 250 + minute_tip.x.round, 250 + minute_tip.z.round, white)
 
-      file_name = "examples/chapter4_clock.ppm"
+      file_name = "examples/chapter4.ppm"
       print "Writing analog clock to #{file_name}..."
       File.write(file_name, canvas.to_ppm)
       puts " Done!"
