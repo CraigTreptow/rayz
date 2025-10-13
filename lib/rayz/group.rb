@@ -37,5 +37,10 @@ module Rayz
       # Groups have no surface of their own, so this should never be called
       raise "Groups have no surface and cannot have normals computed"
     end
+
+    # Override includes? to recursively check children
+    def includes?(shape)
+      @children.any? { |child| child.includes?(shape) }
+    end
   end
 end
