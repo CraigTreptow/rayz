@@ -21,7 +21,7 @@ module Rayz
       [Intersection.new(t: t1, object: self), Intersection.new(t: t2, object: self)]
     end
 
-    def local_normal_at(local_point)
+    def local_normal_at(local_point, hit = nil)
       # For a unit sphere centered at origin, the normal is just the point vector
       local_point - Point.new(x: 0, y: 0, z: 0)
     end

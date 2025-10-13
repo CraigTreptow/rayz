@@ -37,8 +37,9 @@ Then(/^result = (true|false)$/) do |expected|
   assert_equal(expected == "true", @result)
 end
 
-Given(/^xs ← intersections\(([^)]+)\)$/) do |intersections_str|
+Given(/^xs ← intersections\(([^)]*:[^)]+)\)$/) do |intersections_str|
   # Parse the intersections string like "1:s1, 2:s2, 3:s1, 4:s2"
+  # Only matches if there's a colon in the string
   @xs = intersections_str.split(",").map do |pair|
     t, object_name = pair.strip.split(":")
     object = instance_variable_get("@#{object_name}")

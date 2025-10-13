@@ -55,12 +55,12 @@ bundle install
 
 Execute all chapter demonstrations:
 ```bash
-ruby rayz                    # Run all chapters 1-16
+ruby rayz                    # Run all chapters 1-17
 ruby rayz all                # Explicitly run all chapters
 ruby examples/run all        # Alternative: run directly
 ```
 
-This runs demonstrations from Chapters 1-16 and generates PPM image files in the `examples/` directory.
+This runs demonstrations from Chapters 1-17 and generates PPM image files in the `examples/` directory.
 
 Run individual chapters:
 ```bash
@@ -71,7 +71,7 @@ ruby examples/run 10         # Alternative: run directly
 
 ## Testing
 
-Run all tests (231 scenarios passing):
+Run all tests (235 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
@@ -722,6 +722,40 @@ Done!
 Rendering took 325.67 seconds
 Time per row: 542.8 ms
 Scene rendered to chapter16.ppm
+```
+
+## Chapter 17 - Smooth Triangles
+
+Demonstrates smooth shading for triangles using vertex normals and barycentric interpolation:
+- SmoothTriangle class extending Triangle with vertex normals (n1, n2, n3)
+- Barycentric interpolation of normals across triangle surface
+- Smooth gradients replacing flat shading
+- u/v coordinates stored in Intersection for normal interpolation
+- Visual demonstration: comparing flat shading vs smooth shading
+
+**Output:** `examples/chapter17.ppm` - An 800×400 pixel image showing flat-shaded and smooth-shaded pyramids side by side
+
+**Key concepts:**
+- Smooth triangles store a normal vector for each vertex
+- Intersection algorithm computes barycentric coordinates (u, v)
+- Normal at any point: n = n2*u + n3*v + n1*(1-u-v)
+- Creates smooth gradients instead of faceted appearance
+- Essential for realistic rendering of curved surfaces with triangle meshes
+- Intersection class extended to store u/v coordinates
+- Shape.normal_at updated to accept optional hit parameter
+
+**Example output:**
+```
+Chapter 17: Smooth Triangles - Smooth shading with normal interpolation
+================================================================================
+Rendering 800x400 scene...
+Left: Flat shaded pyramid (regular triangles)
+Right: Smooth shaded pyramid (smooth triangles)
+Notice the smooth gradient on the right pyramid vs sharp edges on the left
+
+Complete! Output written to: examples/chapter17.ppm
+Open the file in an image viewer to see the difference between
+flat shading (left) and smooth shading (right).
 ```
 
 ## Viewing Output Files

@@ -18,11 +18,13 @@ module Rayz
   end
 
   class Intersection
-    attr_reader :t, :object
+    attr_reader :t, :object, :u, :v
 
-    def initialize(t:, object:)
+    def initialize(t:, object:, u: nil, v: nil)
       @t = t
       @object = object
+      @u = u
+      @v = v
     end
 
     def <=>(other)
@@ -32,7 +34,7 @@ module Rayz
     def prepare_computations(ray, xs = nil)
       point = ray.position(@t)
       eyev = -ray.direction
-      normalv = @object.normal_at(point)
+      normalv = @object.normal_at(point, self)
 
       inside = false
       if normalv.dot(eyev) < 0

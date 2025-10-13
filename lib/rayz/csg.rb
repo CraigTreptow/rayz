@@ -26,7 +26,7 @@ module Rayz
       filter_intersections(xs)
     end
 
-    def local_normal_at(local_point)
+    def local_normal_at(local_point, hit = nil)
       # CSG objects have no surface of their own
       raise "CSG shapes have no surface and cannot have normals computed"
     end

@@ -18,12 +18,12 @@ module Rayz
       local_intersect(local_ray)
     end
 
-    def normal_at(world_point)
+    def normal_at(world_point, hit = nil)
       # Transform world point to object space
       local_point = world_to_object(world_point)
 
       # Get the local normal
-      local_normal = local_normal_at(local_point)
+      local_normal = local_normal_at(local_point, hit)
 
       # Transform normal to world space
       normal_to_world(local_normal)
@@ -53,7 +53,7 @@ module Rayz
       raise NotImplementedError, "Subclasses must implement local_intersect"
     end
 
-    def local_normal_at(local_point)
+    def local_normal_at(local_point, hit = nil)
       raise NotImplementedError, "Subclasses must implement local_normal_at"
     end
 

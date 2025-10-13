@@ -17,6 +17,7 @@ require_relative "chapter13"
 require_relative "chapter14"
 require_relative "chapter15"
 require_relative "chapter16"
+require_relative "chapter17"
 
 module Rayz
   class ExamplesRunner
@@ -36,7 +37,8 @@ module Rayz
       13 => Chapter13,
       14 => Chapter14,
       15 => Chapter15,
-      16 => Chapter16
+      16 => Chapter16,
+      17 => Chapter17
     }
 
     def self.run_all
@@ -60,7 +62,7 @@ module Rayz
       puts "Usage: ruby examples/run [all|<chapter_number>]"
       puts ""
       puts "Examples:"
-      puts "  ruby examples/run all    # Run all chapters (1-15)"
+      puts "  ruby examples/run all    # Run all chapters (1-17)"
       puts "  ruby examples/run 4      # Run only chapter 4"
       puts "  ruby examples/run        # Run all chapters (default)"
       puts ""

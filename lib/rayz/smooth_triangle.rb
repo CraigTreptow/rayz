@@ -1,26 +1,15 @@
-require_relative "shape"
+require_relative "triangle"
 require_relative "intersection"
-require_relative "vector"
-require_relative "util"
 
 module Rayz
-  class Triangle < Shape
-    attr_reader :p1, :p2, :p3, :e1, :e2, :normal
+  class SmoothTriangle < Triangle
+    attr_reader :n1, :n2, :n3
 
-    def initialize(p1:, p2:, p3:)
-      super()
-      @p1 = p1
-      @p2 = p2
-      @p3 = p3
-
-      # Precompute edge vectors (convert to Vector explicitly)
-      diff1 = p2 - p1
-      diff2 = p3 - p1
-      @e1 = Vector.new(x: diff1.x, y: diff1.y, z: diff1.z)
-      @e2 = Vector.new(x: diff2.x, y: diff2.y, z: diff2.z)
-
-      # Precompute normal (same everywhere on triangle)
-      @normal = @e2.cross(@e1).normalize
+    def initialize(p1:, p2:, p3:, n1:, n2:, n3:)
+      super(p1: p1, p2: p2, p3: p3)
+      @n1 = n1
+      @n2 = n2
+      @n3 = n3
     end
 
     def local_intersect(local_ray)
@@ -50,12 +39,19 @@ module Rayz
       # Compute t to find intersection point
       t = f * @e2.dot(origin_cross_e1)
 
-      [Intersection.new(t: t, object: self)]
+      # Store u and v in the intersection for normal interpolation
+      [Intersection.new(t: t, object: self, u: u, v: v)]
     end
 
     def local_normal_at(local_point, hit = nil)
-      # Triangle normal is constant across entire surface
-      @normal
+      # If we have a hit with u/v coordinates, interpolate the normal
+      if hit&.u && hit.v
+        # Barycentric interpolation: n = n2*u + n3*v + n1*(1-u-v)
+        @n2 * hit.u + @n3 * hit.v + @n1 * (1 - hit.u - hit.v)
+      else
+        # Fallback to the precomputed flat normal
+        @normal
+      end
     end
   end
 end

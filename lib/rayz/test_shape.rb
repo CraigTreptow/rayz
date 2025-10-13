@@ -9,7 +9,7 @@ module Rayz
       []
     end
 
-    def local_normal_at(local_point)
+    def local_normal_at(local_point, hit = nil)
       # Test shape returns the local point as a vector for testing
       Vector.new(x: local_point.x, y: local_point.y, z: local_point.z)
     end
