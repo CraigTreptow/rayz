@@ -19,7 +19,7 @@ module Rayz
       ]
     end
 
-    def local_normal_at(local_point)
+    def local_normal_at(local_point, hit = nil)
       maxc = [local_point.x.abs, local_point.y.abs, local_point.z.abs].max
 
       if maxc == local_point.x.abs

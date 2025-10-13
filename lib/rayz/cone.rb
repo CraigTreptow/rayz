@@ -59,7 +59,7 @@ module Rayz
       xs
     end
 
-    def local_normal_at(local_point)
+    def local_normal_at(local_point, hit = nil)
       # Compute the square of the distance from the y axis
       dist = local_point.x**2 + local_point.z**2
 

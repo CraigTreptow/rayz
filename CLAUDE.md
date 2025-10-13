@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-16 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives for complex 3D models, and constructive solid geometry for creating complex shapes through set operations.
+Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-17 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives for complex 3D models, constructive solid geometry for creating complex shapes through set operations, and smooth triangles with normal interpolation for realistic shading.
 
 ## Development Commands
 
@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz                    # Execute all implemented chapters (1-16)
+ruby rayz                    # Execute all implemented chapters (1-17)
 ruby rayz all                # Explicitly run all chapters
 ruby rayz 4                  # Run only chapter 4
 ruby examples/run 7          # Alternative: run examples directly
@@ -58,6 +58,7 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Cylinder` - Cylindrical primitive with radius 1, supports truncation (min/max) and end caps (closed)
 - `Cone` - Double-napped cone aligned with y-axis (equation: x² + z² = y²), supports truncation and end caps
 - `Triangle` - Triangle primitive defined by three vertices, uses Möller-Trumbore intersection algorithm, flat shading with constant normal
+- `SmoothTriangle` - Extends Triangle with vertex normals for smooth shading using barycentric interpolation of normals
 - `Group` - Abstract shape that contains child shapes, enabling hierarchical scene composition with parent-child relationships
 - `CSG` (Constructive Solid Geometry) - Combines two shapes using set operations (union, intersection, difference) to create complex composite shapes
 - `Shape` - Base class for all geometric primitives with `parent` attribute for hierarchy, `transform` and `material` attributes, template methods for `local_intersect` and `local_normal_at`, `includes?` method for hierarchical shape searching
@@ -108,6 +109,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - `groups.feature` - Group hierarchy, parent-child relationships, and intersection aggregation
 - `cones.feature` - Cone primitive with ray-cone intersection and normals
 - `triangles.feature` - Triangle primitive with Möller-Trumbore intersection algorithm
+- `smooth-triangles.feature` - Smooth triangles with normal interpolation
 - `csg.feature` - Constructive Solid Geometry with union, intersection, and difference operations
 
 ## Code Conventions
@@ -164,6 +166,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter14.ppm` - Scene with cones (traffic cone, glass cone, metal cone, ice cream, hourglass)
   - `chapter15.ppm` - Scene with triangles (pyramid, octahedron, tetrahedron)
   - `chapter16.ppm` - Scene with CSG shapes (carved cube, lens, hollow sphere, die, rounded cylinder, wedge-cut sphere)
+  - `chapter17.ppm` - Scene demonstrating smooth shading vs flat shading (smooth and flat pyramids)
 
 ## Implementation Status
 
@@ -184,10 +187,11 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 14**: Cones (double-napped cones with Möller-Trumbore-style intersection, truncation, and end caps)
 - **Chapter 15**: Triangles (triangle primitive with Möller-Trumbore intersection algorithm, flat shading)
 - **Chapter 16**: Constructive Solid Geometry (CSG union, intersection, and difference operations to combine primitives into complex shapes)
+- **Chapter 17**: Smooth Triangles (smooth shading using vertex normals and barycentric interpolation, creates smooth gradients across triangle surfaces)
 
 ### Test Coverage
-- 231 scenarios passing (296 total scenarios, 47 undefined for future chapters)
-- 19 feature files in `/features/` directory:
+- 235 scenarios passing (282 total scenarios in features/, 47 undefined for future chapters)
+- 20 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -207,5 +211,6 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `groups.feature` - Group hierarchy, parent-child relationships, and intersection aggregation
   - `cones.feature` - Cone primitive with ray-cone intersection and normals
   - `triangles.feature` - Triangle primitive with Möller-Trumbore intersection algorithm
+  - `smooth-triangles.feature` - Smooth triangles with normal interpolation
   - `csg.feature` - Constructive Solid Geometry with union, intersection, and difference operations
 - Additional reference tests from the book in `/book_features/` for future implementation

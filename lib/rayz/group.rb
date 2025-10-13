@@ -33,7 +33,7 @@ module Rayz
       intersections.sort_by(&:t)
     end
 
-    def local_normal_at(local_point)
+    def local_normal_at(local_point, hit = nil)
       # Groups have no surface of their own, so this should never be called
       raise "Groups have no surface and cannot have normals computed"
     end

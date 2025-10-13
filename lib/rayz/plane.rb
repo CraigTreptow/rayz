@@ -15,7 +15,7 @@ module Rayz
       [Intersection.new(t: t, object: self)]
     end
 
-    def local_normal_at(local_point)
+    def local_normal_at(local_point, hit = nil)
       # The normal of a plane is constant everywhere - always pointing up
       Vector.new(x: 0, y: 1, z: 0)
     end
