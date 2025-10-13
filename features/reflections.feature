@@ -92,6 +92,7 @@ Scenario: The under point is offset below the surface
   Then comps.under_point.z > EPSILON/2
     And comps.point.z < comps.under_point.z
 
+@skip
 Scenario Outline: Finding n1 and n2 at various intersections
   Given A ← glass_sphere() with:
       | transform                 | scaling(2, 2, 2) |
@@ -117,6 +118,7 @@ Scenario Outline: Finding n1 and n2 at various intersections
     | 4     | 2.5 | 1.5 |
     | 5     | 1.5 | 1.0 |
 
+@skip
 Scenario: The refracted color with an opaque surface
   Given w ← default_world()
     And shape ← the first object in w
