@@ -61,7 +61,7 @@ module Rayz
       carving_sphere = Sphere.new
       carving_sphere.transform = Transformations.scaling(x: 0.8, y: 0.8, z: 0.8)
 
-      carved_cube = csg("difference", cube1, carving_sphere)
+      carved_cube = Rayz.csg("difference", cube1, carving_sphere)
       carved_cube.transform = Transformations.translation(x: -3, y: 1.5, z: 0) *
         Transformations.rotation_y(radians: Math::PI / 6)
       world.objects << carved_cube
@@ -82,7 +82,7 @@ module Rayz
       lens_right.transform = Transformations.translation(x: 0.5, y: 0, z: 0)
       lens_right.material = lens_left.material
 
-      lens = csg("intersection", lens_left, lens_right)
+      lens = Rayz.csg("intersection", lens_left, lens_right)
       lens.transform = Transformations.translation(x: 0, y: 1, z: 0) *
         Transformations.rotation_y(radians: Math::PI / 8)
       world.objects << lens
@@ -98,7 +98,7 @@ module Rayz
       inner_sphere = Sphere.new
       inner_sphere.transform = Transformations.scaling(x: 0.7, y: 0.7, z: 0.7)
 
-      hollow_sphere = csg("difference", outer_sphere, inner_sphere)
+      hollow_sphere = Rayz.csg("difference", outer_sphere, inner_sphere)
       hollow_sphere.transform = Transformations.translation(x: 3, y: 1.2, z: 0)
       world.objects << hollow_sphere
 
@@ -119,28 +119,28 @@ module Rayz
       pip1 = Sphere.new
       pip1.transform = Transformations.translation(x: 0, y: 0, z: 1.1) *
         Transformations.scaling(x: 0.25, y: 0.25, z: 0.25)
-      die = csg("difference", die_cube, pip1)
+      die = Rayz.csg("difference", die_cube, pip1)
 
       # Top face - four pips in corners
       pip2 = Sphere.new
       pip2.transform = Transformations.translation(x: -0.4, y: 1.1, z: -0.4) *
         Transformations.scaling(x: 0.2, y: 0.2, z: 0.2)
-      die = csg("difference", die, pip2)
+      die = Rayz.csg("difference", die, pip2)
 
       pip3 = Sphere.new
       pip3.transform = Transformations.translation(x: 0.4, y: 1.1, z: -0.4) *
         Transformations.scaling(x: 0.2, y: 0.2, z: 0.2)
-      die = csg("difference", die, pip3)
+      die = Rayz.csg("difference", die, pip3)
 
       pip4 = Sphere.new
       pip4.transform = Transformations.translation(x: -0.4, y: 1.1, z: 0.4) *
         Transformations.scaling(x: 0.2, y: 0.2, z: 0.2)
-      die = csg("difference", die, pip4)
+      die = Rayz.csg("difference", die, pip4)
 
       pip5 = Sphere.new
       pip5.transform = Transformations.translation(x: 0.4, y: 1.1, z: 0.4) *
         Transformations.scaling(x: 0.2, y: 0.2, z: 0.2)
-      die = csg("difference", die, pip5)
+      die = Rayz.csg("difference", die, pip5)
 
       die.transform = Transformations.translation(x: -1.5, y: 0.55, z: -2) *
         Transformations.rotation_y(radians: Math::PI / 5)
@@ -166,8 +166,8 @@ module Rayz
         Transformations.scaling(x: 1, y: 0.5, z: 1)
       bottom_cap.material = cylinder_body.material
 
-      cylinder_with_caps = csg("union", cylinder_body, top_cap)
-      cylinder_with_caps = csg("union", cylinder_with_caps, bottom_cap)
+      cylinder_with_caps = Rayz.csg("union", cylinder_body, top_cap)
+      cylinder_with_caps = Rayz.csg("union", cylinder_with_caps, bottom_cap)
       cylinder_with_caps.transform = Transformations.translation(x: 1.5, y: 0.75, z: -2) *
         Transformations.rotation_z(radians: Math::PI / 6)
       world.objects << cylinder_with_caps
@@ -185,7 +185,7 @@ module Rayz
       wedge.transform = Transformations.rotation_y(radians: Math::PI / 4) *
         Transformations.scaling(x: 2, y: 2, z: 0.3)
 
-      wedge_cut = csg("difference", wedge_sphere, wedge)
+      wedge_cut = Rayz.csg("difference", wedge_sphere, wedge)
       wedge_cut.transform = Transformations.translation(x: 0, y: 1, z: -3) *
         Transformations.rotation_y(radians: -Math::PI / 8)
       world.objects << wedge_cut
@@ -193,7 +193,7 @@ module Rayz
       # Render the scene
       puts
       puts "Rendering #{camera.hsize}x#{camera.vsize} image..."
-      canvas = world.render(camera)
+      canvas = camera.render(world)
 
       # Save to file
       filename = File.join(__dir__, "chapter16.ppm")
