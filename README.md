@@ -55,12 +55,12 @@ bundle install
 
 Execute all chapter demonstrations:
 ```bash
-ruby rayz                    # Run all chapters 1-15
+ruby rayz                    # Run all chapters 1-16
 ruby rayz all                # Explicitly run all chapters
 ruby examples/run all        # Alternative: run directly
 ```
 
-This runs demonstrations from Chapters 1-15 and generates PPM image files in the `examples/` directory.
+This runs demonstrations from Chapters 1-16 and generates PPM image files in the `examples/` directory.
 
 Run individual chapters:
 ```bash
@@ -71,7 +71,7 @@ ruby examples/run 10         # Alternative: run directly
 
 ## Testing
 
-Run all tests (224 scenarios passing):
+Run all tests (231 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
@@ -680,6 +680,48 @@ Done!
 Rendering took 305.12 seconds
 Time per row: 508.5 ms
 Scene rendered to chapter15.ppm
+```
+
+## Chapter 16 - Constructive Solid Geometry (CSG)
+
+Demonstrates combining primitive shapes using set operations to create complex composite shapes:
+- CSG class extending Shape interface for combining two shapes
+- Union operation: combines shapes preserving all external surfaces
+- Intersection operation: preserves only overlapping volumes
+- Difference operation: subtracts one shape from another
+- Recursive filtering of intersections based on operation rules
+- Hierarchical CSG operations for arbitrarily complex shapes
+- Visual demonstration: carved cubes, lenses, hollow spheres, dice, and more
+
+**Output:** `examples/chapter16.ppm` - An 800×600 pixel image showing various CSG composite shapes
+
+**Key concepts:**
+- CSG treats operations as strictly binary (two shapes at a time)
+- CSG objects are themselves shapes, enabling hierarchical composition
+- Intersection filtering uses truth tables for each operation type
+- Union: keeps intersections where ray is outside the other shape
+- Intersection: keeps intersections where ray is inside the other shape
+- Difference: keeps left shape exterior minus right shape interior
+- `includes?` method recursively searches shape hierarchies
+- Intersection records always point to primitive shapes, not CSG parents
+- Enables complex shapes with far fewer primitives than triangle meshes
+
+**Example output:**
+```
+Chapter 16: Constructive Solid Geometry (CSG)
+Rendering scene with CSG shapes (800x600 pixels)...
+Features:
+  - Carved cube (cube with spherical cavity using difference)
+  - Glass lens (two spheres intersected)
+  - Hollow sphere (sphere with inner sphere removed)
+  - Die with pips (cube with multiple sphere differences)
+  - Rounded cylinder (cylinder with spherical end caps via union)
+  - Wedge-cut sphere (sphere with wedge removed)
+This may take a few minutes...
+Done!
+Rendering took 325.67 seconds
+Time per row: 542.8 ms
+Scene rendered to chapter16.ppm
 ```
 
 ## Viewing Output Files

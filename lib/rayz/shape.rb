@@ -61,5 +61,11 @@ module Rayz
       return false unless other.class == self.class
       @transform == other.transform && @material == other.material
     end
+
+    # Check if this shape includes another shape
+    # Base implementation: a shape includes another if they are the same object
+    def includes?(shape)
+      self == shape
+    end
   end
 end
