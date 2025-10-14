@@ -14,11 +14,9 @@ module Rayz
       model = Rayz.obj_to_group(parser)
 
       # Apply transformations and material to the model
-      model.set_transform(
-        Rayz::Transformations.translation(x: 0, y: 0, z: 0) *
+      model.transform = Rayz::Transformations.translation(x: 0, y: 0, z: 0) *
         Rayz::Transformations.rotation_y(radians: Math::PI / 6) *
         Rayz::Transformations.scaling(x: 1.5, y: 1.5, z: 1.5)
-      )
 
       # Create a colorful material for the model
       material = Rayz::Material.new
@@ -31,12 +29,11 @@ module Rayz
 
       # Create floor
       floor = Rayz::Plane.new
-      floor.set_transform(Rayz::Transformations.translation(x: 0, y: -2, z: 0))
-      floor_pattern = Rayz::CheckersPattern.new(
-        a: Rayz::Color.new(red: 0.15, green: 0.15, blue: 0.15),
-        b: Rayz::Color.new(red: 0.85, green: 0.85, blue: 0.85)
+      floor.transform = Rayz::Transformations.translation(x: 0, y: -2, z: 0)
+      floor.material.pattern = Rayz::CheckersPattern.new(
+        Rayz::Color.new(red: 0.15, green: 0.15, blue: 0.15),
+        Rayz::Color.new(red: 0.85, green: 0.85, blue: 0.85)
       )
-      floor.material.pattern = floor_pattern
       floor.material.ambient = 0.8
       floor.material.diffuse = 0.2
       floor.material.specular = 0
