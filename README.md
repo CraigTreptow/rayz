@@ -772,14 +772,71 @@ Demonstrates loading external 3D models from Wavefront OBJ files:
 
 **Output:** `examples/chapter18.ppm` - A 600×400 pixel image showing a 3D model loaded from a Wavefront OBJ file
 
+### About the Wavefront OBJ Format
+
+**Wavefront OBJ** is a plain text 3D geometry file format originally developed by Wavefront Technologies. It's one of the most widely supported 3D formats and can be exported from virtually all 3D modeling software (Blender, Maya, 3ds Max, etc.).
+
+**Format characteristics:**
+- Plain text, human-readable and editable
+- One command per line
+- Lines starting with `#` are comments
+- Coordinates use right-handed coordinate system
+
+**Supported commands:**
+
+```obj
+# Comment lines start with #
+
+# v x y z - Vertex position
+v 0.0 1.0 0.0
+v -0.866 -0.5 0.5
+
+# vn x y z - Vertex normal (for smooth shading)
+vn 0 1 0
+vn 0.707 0 -0.707
+
+# f v1 v2 v3 - Face (triangle)
+f 1 2 3
+
+# f v1 v2 v3 v4 - Face (polygon, will be triangulated)
+f 1 2 3 4
+
+# f v/vt/vn - Face with vertex/texture/normal indices
+f 1/1/1 2/2/2 3/3/3
+
+# f v//vn - Face with vertex and normal indices (no texture)
+f 1//1 2//2 3//3
+
+# g name - Named group (organizes geometry)
+g LeftWing
+f 1 2 3
+g RightWing
+f 4 5 6
+```
+
+**Example OBJ file** (tetrahedron):
+```obj
+# Tetrahedron - 4 vertices, 4 faces
+v 0 1 0
+v -0.866 -0.5 0.5
+v 0.866 -0.5 0.5
+v 0 -0.5 -1
+
+f 2 3 4  # Base
+f 1 3 2  # Side 1
+f 1 4 3  # Side 2
+f 1 2 4  # Side 3
+```
+
+**External resources:**
+- [Wikipedia: Wavefront .obj file](https://en.wikipedia.org/wiki/Wavefront_.obj_file)
+- [Paul Bourke's OBJ format description](http://paulbourke.net/dataformats/obj/)
+- [FileFormat.info OBJ specification](https://www.fileformat.info/format/wavefrontobj/egff.htm)
+
 **Key concepts:**
-- Wavefront OBJ is a plain text 3D model format
-- Vertices defined with `v x y z` (stored in 1-based array)
-- Vertex normals defined with `vn x y z` (for smooth shading)
-- Faces defined with `f v1 v2 v3` (triangle) or `f v1 v2 v3 v4 ...` (polygon)
-- Face formats: `f 1 2 3`, `f 1/2/3 4/5/6 7/8/9`, `f 1//3 2//4 3//5`
-- Named groups organize geometry: `g GroupName`
-- Fan triangulation converts polygons to triangles: anchor at v1, create (v1, vi, vi+1)
+- Vertices use 1-based indexing (first vertex is 1, not 0)
+- Face indices reference previously defined vertices
+- Polygons with >3 vertices are triangulated using fan triangulation
 - Parser creates SmoothTriangle when normals present, Triangle otherwise
 - Module functions: `parse_obj_file(content)` and `obj_to_group(parser)`
 
