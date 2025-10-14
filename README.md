@@ -55,12 +55,12 @@ bundle install
 
 Execute all chapter demonstrations:
 ```bash
-ruby rayz                    # Run all chapters 1-17
+ruby rayz                    # Run all chapters 1-18
 ruby rayz all                # Explicitly run all chapters
 ruby examples/run all        # Alternative: run directly
 ```
 
-This runs demonstrations from Chapters 1-17 and generates PPM image files in the `examples/` directory.
+This runs demonstrations from Chapters 1-18 and generates PPM image files in the `examples/` directory.
 
 Run individual chapters:
 ```bash
@@ -71,7 +71,7 @@ ruby examples/run 10         # Alternative: run directly
 
 ## Testing
 
-Run all tests (235 scenarios passing):
+Run all tests (243 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
@@ -756,6 +756,45 @@ Notice the smooth gradient on the right pyramid vs sharp edges on the left
 Complete! Output written to: examples/chapter17.ppm
 Open the file in an image viewer to see the difference between
 flat shading (left) and smooth shading (right).
+```
+
+## Chapter 18 - OBJ File Parsing
+
+Demonstrates loading external 3D models from Wavefront OBJ files:
+- OBJParser class for parsing OBJ file format
+- Vertex parsing (v command) with 1-based indexing
+- Vertex normal parsing (vn command) for smooth shading
+- Face parsing (f command) with multiple format support
+- Fan triangulation for convex polygons (n > 3 vertices)
+- Named groups (g command) for organizing model components
+- Automatic smooth/flat triangle selection based on normal data
+- Visual demonstration: rendering a tetrahedron loaded from OBJ file
+
+**Output:** `examples/chapter18.ppm` - A 600×400 pixel image showing a 3D model loaded from a Wavefront OBJ file
+
+**Key concepts:**
+- Wavefront OBJ is a plain text 3D model format
+- Vertices defined with `v x y z` (stored in 1-based array)
+- Vertex normals defined with `vn x y z` (for smooth shading)
+- Faces defined with `f v1 v2 v3` (triangle) or `f v1 v2 v3 v4 ...` (polygon)
+- Face formats: `f 1 2 3`, `f 1/2/3 4/5/6 7/8/9`, `f 1//3 2//4 3//5`
+- Named groups organize geometry: `g GroupName`
+- Fan triangulation converts polygons to triangles: anchor at v1, create (v1, vi, vi+1)
+- Parser creates SmoothTriangle when normals present, Triangle otherwise
+- Module functions: `parse_obj_file(content)` and `obj_to_group(parser)`
+
+**Example output:**
+```
+Chapter 18: OBJ File Parsing
+Loading and rendering 3D models from Wavefront OBJ files
+
+Rendering scene with OBJ model (4 vertices, 4 triangles)...
+Progress (each dot = 10 rows):
+........................................
+Done!
+Rendering took 45.23 seconds
+Time per row: 113.1 ms
+Scene saved to examples/chapter18.ppm
 ```
 
 ## Viewing Output Files
