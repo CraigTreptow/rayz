@@ -6,19 +6,19 @@ require_relative "../../lib/rayz/test_pattern"
 
 # Pattern creation steps
 Given("pattern ← stripe_pattern\\({word}, {word})") do |color1, color2|
-  @pattern = Rayz::StripePattern.new(instance_variable_get("@#{color1}"), instance_variable_get("@#{color2}"))
+  @pattern = Rayz::StripePattern.new(a: instance_variable_get("@#{color1}"), b: instance_variable_get("@#{color2}"))
 end
 
 Given("pattern ← gradient_pattern\\({word}, {word})") do |color1, color2|
-  @pattern = Rayz::GradientPattern.new(instance_variable_get("@#{color1}"), instance_variable_get("@#{color2}"))
+  @pattern = Rayz::GradientPattern.new(a: instance_variable_get("@#{color1}"), b: instance_variable_get("@#{color2}"))
 end
 
 Given("pattern ← ring_pattern\\({word}, {word})") do |color1, color2|
-  @pattern = Rayz::RingPattern.new(instance_variable_get("@#{color1}"), instance_variable_get("@#{color2}"))
+  @pattern = Rayz::RingPattern.new(a: instance_variable_get("@#{color1}"), b: instance_variable_get("@#{color2}"))
 end
 
 Given("pattern ← checkers_pattern\\({word}, {word})") do |color1, color2|
-  @pattern = Rayz::CheckersPattern.new(instance_variable_get("@#{color1}"), instance_variable_get("@#{color2}"))
+  @pattern = Rayz::CheckersPattern.new(a: instance_variable_get("@#{color1}"), b: instance_variable_get("@#{color2}"))
 end
 
 Given("pattern ← test_pattern\\()") do

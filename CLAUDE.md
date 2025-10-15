@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz                    # Execute all implemented chapters (1-18)
+ruby rayz                    # Execute all implemented chapters (1-19)
 ruby rayz all                # Explicitly run all chapters
 ruby rayz 4                  # Run only chapter 4
 ruby examples/run 7          # Alternative: run examples directly
@@ -170,6 +170,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter16.ppm` - Scene with CSG shapes (carved cube, lens, hollow sphere, die, rounded cylinder, wedge-cut sphere)
   - `chapter17.ppm` - Scene demonstrating smooth shading vs flat shading (smooth and flat pyramids)
   - `chapter18.ppm` - Scene with 3D model loaded from Wavefront OBJ file (tetrahedron)
+  - `chapter19.ppm` - Scene demonstrating hierarchical transformations (solar system with nested planetary orbits, space station with rotating arms)
 
 ## Implementation Status
 

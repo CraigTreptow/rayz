@@ -55,12 +55,12 @@ bundle install
 
 Execute all chapter demonstrations:
 ```bash
-ruby rayz                    # Run all chapters 1-18 (Chapter 19 has no visual demo)
+ruby rayz                    # Run all chapters 1-19
 ruby rayz all                # Explicitly run all chapters
 ruby examples/run all        # Alternative: run directly
 ```
 
-This runs demonstrations from Chapters 1-18 and generates PPM image files in the `examples/` directory.
+This runs demonstrations from Chapters 1-19 and generates PPM image files in the `examples/` directory.
 
 Run individual chapters:
 ```bash
@@ -852,6 +852,48 @@ Done!
 Rendering took 45.23 seconds
 Time per row: 113.1 ms
 Scene saved to examples/chapter18.ppm
+```
+
+## Chapter 19 - Hierarchical Transformations
+
+Demonstrates complex hierarchical transformations using deeply nested group structures:
+- Enhanced `world_to_object` method traversing parent hierarchy to convert world coordinates to object space
+- Enhanced `normal_to_world` method converting object-space normals to world space through inverse transpose
+- Deep nesting of groups (up to 6 levels) demonstrating transform cascading
+- Vector type preservation through normalize operations
+- Visual demonstration: solar system model with nested planetary orbits and space station
+
+**Output:** `examples/chapter19.ppm` - An 800×600 pixel image showing a solar system with hierarchical transformations
+
+**Key concepts:**
+- `world_to_object(point)` recursively applies inverse transformations up the parent chain
+- `normal_to_world(vector)` applies inverse transpose transformations and normalizes
+- Transform cascading: child transformations compound with all ancestor transformations
+- Deep hierarchies enable complex motion like planetary orbits with moons
+- Each level of nesting adds another transformation to the compound matrix
+- Essential for skeletal animation, robotic arms, planetary systems, etc.
+
+**Example output:**
+```
+Chapter 19: Hierarchical Transformations
+Demonstrating nested group transformations with world_to_object and normal_to_world
+================================================================================
+
+Rendering scene (800x600 pixels)...
+This scene demonstrates hierarchical transformations:
+  - Solar system with sun, earth, moon (6 levels deep)
+  - Mars system with satellite (5 levels deep)
+  - Space station with 4 rotating arms (3 levels deep)
+
+Each object's position and orientation is calculated through
+multiple levels of group transformations using world_to_object
+and normal_to_world methods.
+
+Scene rendered to examples/chapter19.ppm
+
+Note: The correct rendering of this complex hierarchy demonstrates
+that world_to_object and normal_to_world properly cascade through
+multiple levels of parent transformations.
 ```
 
 ## Viewing Output Files
