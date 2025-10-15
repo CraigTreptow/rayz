@@ -4,7 +4,7 @@ module Rayz
   class Pattern
     attr_accessor :transform, :a, :b
 
-    def initialize(a, b)
+    def initialize(a:, b:)
       @a = a
       @b = b
       @transform = Matrix.identity(4)

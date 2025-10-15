@@ -25,5 +25,10 @@ module Rayz
     def reflect(normal)
       self - normal * 2 * dot(normal)
     end
+
+    def normalize
+      mag = magnitude
+      Vector.new(x: @x / mag, y: @y / mag, z: @z / mag)
+    end
   end
 end

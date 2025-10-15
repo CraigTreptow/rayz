@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-18 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives for complex 3D models, constructive solid geometry for creating complex shapes through set operations, smooth triangles with normal interpolation for realistic shading, and Wavefront OBJ file parsing for loading external 3D models.
+Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-19 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives for complex 3D models, constructive solid geometry for creating complex shapes through set operations, smooth triangles with normal interpolation for realistic shading, Wavefront OBJ file parsing for loading external 3D models, and enhanced shape hierarchy support with world-to-object and normal-to-world coordinate transformations.
 
 ## Development Commands
 
@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz                    # Execute all implemented chapters (1-18)
+ruby rayz                    # Execute all implemented chapters (1-19)
 ruby rayz all                # Explicitly run all chapters
 ruby rayz 4                  # Run only chapter 4
 ruby examples/run 7          # Alternative: run examples directly
@@ -62,7 +62,7 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `Group` - Abstract shape that contains child shapes, enabling hierarchical scene composition with parent-child relationships
 - `CSG` (Constructive Solid Geometry) - Combines two shapes using set operations (union, intersection, difference) to create complex composite shapes
 - `OBJParser` - Parses Wavefront OBJ files to load 3D models, supports vertices (v), vertex normals (vn), faces (f), named groups (g), polygon triangulation, and smooth/flat shading
-- `Shape` - Base class for all geometric primitives with `parent` attribute for hierarchy, `transform` and `material` attributes, template methods for `local_intersect` and `local_normal_at`, `includes?` method for hierarchical shape searching
+- `Shape` - Base class for all geometric primitives with `parent` attribute for hierarchy, `transform` and `material` attributes, template methods for `local_intersect` and `local_normal_at`, `includes?` method for hierarchical shape searching, `world_to_object` and `normal_to_world` methods for coordinate space transformations through parent hierarchy
 - `Intersection` - Encapsulates intersection point (t value) and intersected object
 - `Material` - Surface properties for Phong shading (color, ambient, diffuse, specular, shininess, reflective, transparency, refractive_index)
 - `PointLight` - Point light source with position (Point) and intensity (Color)
@@ -170,6 +170,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter16.ppm` - Scene with CSG shapes (carved cube, lens, hollow sphere, die, rounded cylinder, wedge-cut sphere)
   - `chapter17.ppm` - Scene demonstrating smooth shading vs flat shading (smooth and flat pyramids)
   - `chapter18.ppm` - Scene with 3D model loaded from Wavefront OBJ file (tetrahedron)
+  - `chapter19.ppm` - Scene demonstrating hierarchical transformations (solar system with nested planetary orbits, space station with rotating arms)
 
 ## Implementation Status
 
@@ -192,10 +193,11 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 16**: Constructive Solid Geometry (CSG union, intersection, and difference operations to combine primitives into complex shapes)
 - **Chapter 17**: Smooth Triangles (smooth shading using vertex normals and barycentric interpolation, creates smooth gradients across triangle surfaces)
 - **Chapter 18**: OBJ Files (Wavefront OBJ file parser for loading 3D models, supports vertices, normals, faces, groups, fan triangulation, automatic smooth/flat shading)
+- **Chapter 19**: Shape Helper Methods (enhanced Shape class with world_to_object and normal_to_world methods that properly traverse parent hierarchy for hierarchical transformations)
 
 ### Test Coverage
-- 243 scenarios passing (290 total scenarios in features/, 47 undefined for future chapters)
-- 21 feature files in `/features/` directory:
+- 252 scenarios passing (302 total scenarios in features/, 50 undefined for future chapters)
+- 22 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -218,4 +220,5 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `smooth-triangles.feature` - Smooth triangles with normal interpolation
   - `csg.feature` - Constructive Solid Geometry with union, intersection, and difference operations
   - `obj_file.feature` - OBJ file parser with vertex, normal, face parsing, and group support
+  - `shapes.feature` - Abstract shape tests for world_to_object and normal_to_world transformations
 - Additional reference tests from the book in `/book_features/` for future implementation
