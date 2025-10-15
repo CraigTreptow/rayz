@@ -55,7 +55,7 @@ bundle install
 
 Execute all chapter demonstrations:
 ```bash
-ruby rayz                    # Run all chapters 1-18
+ruby rayz                    # Run all chapters 1-18 (Chapter 19 has no visual demo)
 ruby rayz all                # Explicitly run all chapters
 ruby examples/run all        # Alternative: run directly
 ```
@@ -71,7 +71,7 @@ ruby examples/run 10         # Alternative: run directly
 
 ## Testing
 
-Run all tests (243 scenarios passing):
+Run all tests (252 scenarios passing):
 ```bash
 bundle exec cucumber
 ```

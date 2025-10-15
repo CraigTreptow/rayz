@@ -30,6 +30,10 @@ module Rayz
     end
 
     def world_to_object(point)
+      # Convert point to object space by traversing parent hierarchy
+      point = @parent.world_to_object(point) if @parent
+
+      # Apply this object's inverse transformation
       object_point_matrix = @transform.inverse * point.to_matrix
       Point.new(
         x: object_point_matrix[0, 0],
@@ -39,13 +43,21 @@ module Rayz
     end
 
     def normal_to_world(normal)
+      # Apply this object's inverse transpose transformation
       world_normal_matrix = @transform.inverse.transpose * normal.to_matrix
       world_normal = Vector.new(
         x: world_normal_matrix[0, 0],
         y: world_normal_matrix[1, 0],
         z: world_normal_matrix[2, 0]
       )
-      world_normal.normalize
+
+      # Normalize the vector
+      world_normal = world_normal.normalize
+
+      # Continue transforming through parent hierarchy
+      world_normal = @parent.normal_to_world(world_normal) if @parent
+
+      world_normal
     end
 
     # Subclasses must implement these methods
