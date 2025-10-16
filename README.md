@@ -53,20 +53,17 @@ bundle install
 
 ## Running
 
-Execute all chapter demonstrations:
-```bash
-ruby rayz                    # Run all chapters 1-20
-ruby rayz all                # Explicitly run all chapters
-ruby examples/run all        # Alternative: run directly
-```
+Run chapter demonstrations (generates PPM image files in `examples/` directory):
 
-This runs demonstrations from Chapters 1-20 and generates PPM image files in the `examples/` directory.
-
-Run individual chapters:
 ```bash
-ruby rayz 4                  # Run only chapter 4
-ruby examples/run 10         # Alternative: run directly
-ruby examples/run 20         # Run chapter 20
+# Run all chapters (1-20)
+./rayz all
+ruby examples/run all        # Alternative
+
+# Run individual chapters
+./rayz 4
+ruby examples/run 10
+ruby examples/run 20
 ```
 
 ## Testing
