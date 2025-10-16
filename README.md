@@ -55,23 +55,23 @@ bundle install
 
 Execute all chapter demonstrations:
 ```bash
-ruby rayz                    # Run all chapters 1-19
+ruby rayz                    # Run all chapters 1-20
 ruby rayz all                # Explicitly run all chapters
 ruby examples/run all        # Alternative: run directly
 ```
 
-This runs demonstrations from Chapters 1-19 and generates PPM image files in the `examples/` directory.
+This runs demonstrations from Chapters 1-20 and generates PPM image files in the `examples/` directory.
 
 Run individual chapters:
 ```bash
 ruby rayz 4                  # Run only chapter 4
-ruby rayz 7                  # Run only chapter 7
 ruby examples/run 10         # Alternative: run directly
+ruby examples/run 20         # Run chapter 20
 ```
 
 ## Testing
 
-Run all tests (252 scenarios passing):
+Run all tests (287 scenarios passing):
 ```bash
 bundle exec cucumber
 ```
@@ -894,6 +894,44 @@ Scene rendered to examples/chapter19.ppm
 Note: The correct rendering of this complex hierarchy demonstrates
 that world_to_object and normal_to_world properly cascade through
 multiple levels of parent transformations.
+```
+
+## Chapter 20 - Bounding Boxes Optimization
+
+Demonstrates performance optimization using axis-aligned bounding boxes (AABBs) for ray tracing:
+- `Bounds` class for axis-aligned bounding boxes with min/max extents
+- Bounding box calculation for all shape primitives (Sphere, Plane, Cube, Cylinder, Cone, Triangle, CSG, Group)
+- Bounding box transformation: transforms all 8 corners and computes new axis-aligned bounds
+- Bounding box merging: combines multiple bounding boxes into a single containing box
+- Ray-box intersection testing using the same algorithm as cube intersection
+- Group optimization: test bounding box first, skip all children if ray misses
+- Visual demonstration: scene with 96 marbles in 16 groups showing dramatic performance improvement
+
+**Output:** `examples/chapter20.ppm` - A 600×400 pixel image showing many grouped objects with bounding box optimization
+
+**Key concepts:**
+- Bounding boxes provide fast ray-intersection tests before checking complex shapes
+- Groups precompute bounding boxes containing all their transformed children
+- Ray-box intersection uses axis-slab algorithm (same as cube)
+- Bounding box miss means ray cannot possibly hit any child shapes
+- Dramatically reduces intersection tests for scenes with many objects
+- Particularly effective for hierarchical groups and complex models
+- Transforms applied: transform all 8 corners, find new min/max
+- Merge operation: component-wise min/max of two bounding boxes
+
+**Example output:**
+```
+Chapter 20: Bounding Boxes Optimization
+Rendering a scene with many grouped objects...
+Bounding boxes dramatically reduce intersection tests.
+Rendering 600x400 image...
+With bounding boxes: groups are tested once, not every sphere individually
+Rendered in 45.67 seconds
+Saved to examples/chapter20.ppm
+
+This scene contains 96 spheres organized into 16 groups.
+Bounding boxes allow the ray tracer to skip entire groups when rays miss their bounds,
+dramatically reducing the number of intersection tests required.
 ```
 
 ## Viewing Output Files
