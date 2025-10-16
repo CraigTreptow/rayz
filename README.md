@@ -57,13 +57,10 @@ Run chapter demonstrations (generates PPM image files in `examples/` directory):
 
 ```bash
 # Run all chapters (1-20)
-./rayz all
-ruby examples/run all        # Alternative
+ruby examples/run all
 
-# Run individual chapters
-./rayz 4
-ruby examples/run 10
-ruby examples/run 20
+# Run individual chapter
+ruby examples/run 4
 ```
 
 ## Testing
