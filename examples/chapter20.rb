@@ -9,11 +9,11 @@ module Rayz
 
       # Create floor
       floor = Plane.new
-      floor.material.color = Color.new(r: 1, g: 0.9, b: 0.9)
+      floor.material.color = Color.new(red: 1, green: 0.9, blue: 0.9)
       floor.material.specular = 0
       floor.material.pattern = CheckersPattern.new(
-        Color.new(r: 0.8, g: 0.8, b: 0.8),
-        Color.new(r: 0.2, g: 0.2, b: 0.2)
+        a: Color.new(red: 0.8, green: 0.8, blue: 0.8),
+        b: Color.new(red: 0.2, green: 0.2, blue: 0.2)
       )
 
       # Create multiple groups of spheres
@@ -44,7 +44,7 @@ module Rayz
             case i % 3
             when 0
               # Glass marbles
-              sphere.material.color = Color.new(r: 0.1, g: 0.1, b: 0.1)
+              sphere.material.color = Color.new(red: 0.1, green: 0.1, blue: 0.1)
               sphere.material.diffuse = 0.1
               sphere.material.specular = 0.9
               sphere.material.shininess = 300
@@ -53,7 +53,7 @@ module Rayz
               sphere.material.refractive_index = 1.5
             when 1
               # Metallic marbles
-              sphere.material.color = Color.new(r: 0.7, g: 0.7, b: 0.8)
+              sphere.material.color = Color.new(red: 0.7, green: 0.7, blue: 0.8)
               sphere.material.diffuse = 0.3
               sphere.material.specular = 1.0
               sphere.material.shininess = 300
@@ -61,9 +61,9 @@ module Rayz
             else
               # Colored marbles
               sphere.material.color = Color.new(
-                r: 0.3 + (rand * 0.7),
-                g: 0.3 + (rand * 0.7),
-                b: 0.3 + (rand * 0.7)
+                red: 0.3 + (rand * 0.7),
+                green: 0.3 + (rand * 0.7),
+                blue: 0.3 + (rand * 0.7)
               )
               sphere.material.diffuse = 0.7
               sphere.material.specular = 0.3
@@ -80,7 +80,7 @@ module Rayz
       world = World.new
       world.light = PointLight.new(
         position: Point.new(x: -10, y: 10, z: -10),
-        intensity: Color.new(r: 1, g: 1, b: 1)
+        intensity: Color.new(red: 1, green: 1, blue: 1)
       )
 
       world.objects << floor

@@ -29,8 +29,8 @@ module Rayz
       # Create floor plane with checkers pattern
       floor = Plane.new
       floor.material.pattern = CheckersPattern.new(
-        Color.new(red: 1, green: 1, blue: 1),
-        Color.new(red: 0.2, green: 0.2, blue: 0.2)
+        a: Color.new(red: 1, green: 1, blue: 1),
+        b: Color.new(red: 0.2, green: 0.2, blue: 0.2)
       )
       floor.material.specular = 0
       world.objects << floor

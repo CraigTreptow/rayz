@@ -127,5 +127,7 @@ def eval_numeric(str)
   # Handle π expressions
   str = str.gsub("π", "Math::PI")
 
+  # rubocop:disable Security/Eval
   eval(str).to_f
+  # rubocop:enable Security/Eval
 end
