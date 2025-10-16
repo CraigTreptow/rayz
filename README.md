@@ -70,33 +70,9 @@ Run all tests (287 scenarios passing):
 bundle exec cucumber
 ```
 
-Run Chapter 8 tests only:
-```bash
-bundle exec cucumber features/patterns.feature features/planes.feature
-```
-
-Run Chapter 7 tests only:
-```bash
-bundle exec cucumber features/world.feature features/camera.feature
-```
-
-Run Chapter 6 tests only:
-```bash
-bundle exec cucumber features/lights.feature features/materials.feature
-```
-
-Run Chapter 5 tests only:
-```bash
-bundle exec cucumber features/rays.feature features/spheres.feature features/intersections.feature
-```
-
 Run specific feature:
 ```bash
-bundle exec cucumber features/transformations.feature
-bundle exec cucumber features/matrices.feature
-bundle exec cucumber features/tuples.feature
-bundle exec cucumber features/canvas.feature
-bundle exec cucumber features/colors.feature
+bundle exec cucumber features/bounding_boxes.feature
 ```
 
 ## Formatting
