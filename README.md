@@ -65,7 +65,7 @@ ruby examples/run 4
 
 ## Testing
 
-Run all tests (287 scenarios passing):
+Run all tests:
 ```bash
 bundle exec cucumber
 ```
