@@ -65,6 +65,15 @@ module Rayz
       end
     end
 
+    def bounds
+      # Cylinder has radius 1, so x and z go from -1 to 1
+      # Y goes from minimum to maximum
+      Bounds.new(
+        min: Point.new(x: -1, y: @minimum, z: -1),
+        max: Point.new(x: 1, y: @maximum, z: 1)
+      )
+    end
+
     private
 
     # Checks to see if the intersection at `t` is within a radius

@@ -31,6 +31,14 @@ module Rayz
       end
     end
 
+    def bounds
+      # Unit cube extends from -1 to 1 in all dimensions
+      Bounds.new(
+        min: Point.new(x: -1, y: -1, z: -1),
+        max: Point.new(x: 1, y: 1, z: 1)
+      )
+    end
+
     private
 
     def check_axis(origin, direction)

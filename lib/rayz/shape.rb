@@ -79,5 +79,11 @@ module Rayz
     def includes?(shape)
       self == shape
     end
+
+    # Return the bounding box for this shape in object space (untransformed)
+    # Subclasses must implement this method
+    def bounds
+      raise NotImplementedError, "Subclasses must implement bounds"
+    end
   end
 end

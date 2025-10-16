@@ -19,5 +19,13 @@ module Rayz
       # The normal of a plane is constant everywhere - always pointing up
       Vector.new(x: 0, y: 1, z: 0)
     end
+
+    def bounds
+      # Plane is infinite in x and z, but y is always 0
+      Bounds.new(
+        min: Point.new(x: -Float::INFINITY, y: 0, z: -Float::INFINITY),
+        max: Point.new(x: Float::INFINITY, y: 0, z: Float::INFINITY)
+      )
+    end
   end
 end

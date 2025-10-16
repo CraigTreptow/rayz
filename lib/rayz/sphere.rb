@@ -25,6 +25,14 @@ module Rayz
       # For a unit sphere centered at origin, the normal is just the point vector
       local_point - Point.new(x: 0, y: 0, z: 0)
     end
+
+    def bounds
+      # Unit sphere extends from -1 to 1 in all dimensions
+      Bounds.new(
+        min: Point.new(x: -1, y: -1, z: -1),
+        max: Point.new(x: 1, y: 1, z: 1)
+      )
+    end
   end
 
   def self.glass_sphere

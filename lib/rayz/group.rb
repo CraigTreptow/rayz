@@ -23,6 +23,9 @@ module Rayz
     end
 
     def local_intersect(local_ray)
+      # Optimization: check bounding box first
+      return [] unless bounds.intersects?(local_ray)
+
       # Collect intersections from all children
       intersections = []
       @children.each do |child|
@@ -41,6 +44,19 @@ module Rayz
     # Override includes? to recursively check children
     def includes?(shape)
       @children.any? { |child| child.includes?(shape) }
+    end
+
+    def bounds
+      # Start with an empty bounding box
+      result = Bounds.new
+
+      # Merge all children's bounds (transformed to group space)
+      @children.each do |child|
+        child_bounds = child.bounds.transform(child.transform)
+        result = result.merge(child_bounds)
+      end
+
+      result
     end
   end
 end
