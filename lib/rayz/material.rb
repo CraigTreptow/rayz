@@ -1,6 +1,6 @@
 module Rayz
   class Material
-    attr_accessor :color, :ambient, :diffuse, :specular, :shininess, :reflective, :transparency, :refractive_index, :pattern
+    attr_accessor :color, :ambient, :diffuse, :specular, :shininess, :reflective, :transparency, :refractive_index, :pattern, :normal_perturbation
 
     def initialize
       @color = Color.new(red: 1, green: 1, blue: 1)
@@ -12,6 +12,7 @@ module Rayz
       @transparency = 0.0
       @refractive_index = 1.0
       @pattern = nil
+      @normal_perturbation = nil  # Proc that takes (point) -> Vector to add to normal
     end
 
     def ==(other)

@@ -2,18 +2,26 @@ require "matrix"
 
 module Rayz
   class Shape
-    attr_accessor :transform, :material, :parent
+    attr_accessor :transform, :material, :parent, :motion_transform
     attr_accessor :saved_ray # For test_shape debugging
 
     def initialize
       @transform = Matrix.identity(4)
       @material = Material.new
       @parent = nil
+      @motion_transform = nil # Optional: proc that takes time and returns a transform
     end
 
-    def intersect(ray)
+    def intersect(ray, time = 0.0)
+      # Get the effective transform (base transform plus motion if applicable)
+      effective_transform = if @motion_transform
+        @motion_transform.call(time) * @transform
+      else
+        @transform
+      end
+
       # Transform the ray by the inverse of the shape's transformation
-      local_ray = ray.transform(@transform.inverse)
+      local_ray = ray.transform(effective_transform.inverse)
       @saved_ray = local_ray # For test_shape debugging
       local_intersect(local_ray)
     end
@@ -24,6 +32,12 @@ module Rayz
 
       # Get the local normal
       local_normal = local_normal_at(local_point, hit)
+
+      # Apply normal perturbation if defined
+      if @material.normal_perturbation
+        perturbation = @material.normal_perturbation.call(local_point)
+        local_normal = (local_normal + perturbation).normalize
+      end
 
       # Transform normal to world space
       normal_to_world(local_normal)
