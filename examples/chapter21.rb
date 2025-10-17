@@ -46,7 +46,7 @@ module Rayz
       # Torus primitive
       torus = Torus.new(major_radius: 0.6, minor_radius: 0.2)
       torus.transform = Transformations.translation(x: 0, y: 1.2, z: 0) *
-        Transformations.rotation_x(Math::PI / 2)
+        Transformations.rotation_x(radians: Math::PI / 2)
       torus.material.color = Color.new(red: 0.3, green: 1, blue: 0.3)
       torus.material.specular = 0.8
       torus.material.reflective = 0.4
