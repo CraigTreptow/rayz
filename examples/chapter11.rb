@@ -33,8 +33,8 @@ module Rayz
       room = Cube.new
       room.transform = Transformations.scaling(x: 15, y: 15, z: 15)
       room.material.pattern = CheckersPattern.new(
-        Color.new(red: 0.15, green: 0.15, blue: 0.15),
-        Color.new(red: 0.25, green: 0.25, blue: 0.25)
+        a: Color.new(red: 0.15, green: 0.15, blue: 0.15),
+        b: Color.new(red: 0.25, green: 0.25, blue: 0.25)
       )
       room.material.ambient = 0.3
       room.material.diffuse = 0.7

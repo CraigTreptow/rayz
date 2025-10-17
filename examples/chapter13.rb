@@ -25,8 +25,8 @@ module Rayz
       # Create floor
       floor = Plane.new
       floor.material.pattern = CheckersPattern.new(
-        Color.new(red: 0.9, green: 0.9, blue: 0.9),
-        Color.new(red: 0.1, green: 0.1, blue: 0.1)
+        a: Color.new(red: 0.9, green: 0.9, blue: 0.9),
+        b: Color.new(red: 0.1, green: 0.1, blue: 0.1)
       )
       floor.material.reflective = 0.1
 

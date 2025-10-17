@@ -74,6 +74,20 @@ module Rayz
       end
     end
 
+    def bounds
+      # For a cone, the equation is x² + z² = y²
+      # So the radius at any y value is |y|
+      # The bounding box needs to account for the maximum radius at the min/max y values
+      a = @minimum.abs
+      b = @maximum.abs
+      limit = [a, b].max
+
+      Bounds.new(
+        min: Point.new(x: -limit, y: @minimum, z: -limit),
+        max: Point.new(x: limit, y: @maximum, z: limit)
+      )
+    end
+
     private
 
     # Checks to see if the intersection at `t` is within a radius

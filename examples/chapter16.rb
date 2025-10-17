@@ -30,8 +30,8 @@ module Rayz
       # Floor - reflective checkered pattern
       floor = Plane.new
       floor.material.pattern = CheckersPattern.new(
-        Color.new(red: 0.8, green: 0.8, blue: 0.8),
-        Color.new(red: 0.2, green: 0.2, blue: 0.2)
+        a: Color.new(red: 0.8, green: 0.8, blue: 0.8),
+        b: Color.new(red: 0.2, green: 0.2, blue: 0.2)
       )
       floor.material.reflective = 0.2
       floor.material.specular = 0.0

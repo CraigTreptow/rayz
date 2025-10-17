@@ -35,6 +35,13 @@ module Rayz
       @left.includes?(shape) || @right.includes?(shape)
     end
 
+    def bounds
+      # CSG bounds are the union of left and right child bounds
+      left_bounds = @left.bounds.transform(@left.transform)
+      right_bounds = @right.bounds.transform(@right.transform)
+      left_bounds.merge(right_bounds)
+    end
+
     private
 
     def filter_intersections(xs)

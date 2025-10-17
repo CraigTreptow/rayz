@@ -1,3 +1,4 @@
+require_relative "rayz/bounds"
 require_relative "rayz/camera"
 require_relative "rayz/canvas"
 require_relative "rayz/checkers_pattern"

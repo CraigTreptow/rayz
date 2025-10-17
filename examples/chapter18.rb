@@ -31,8 +31,8 @@ module Rayz
       floor = Rayz::Plane.new
       floor.transform = Rayz::Transformations.translation(x: 0, y: -2, z: 0)
       floor.material.pattern = Rayz::CheckersPattern.new(
-        Rayz::Color.new(red: 0.15, green: 0.15, blue: 0.15),
-        Rayz::Color.new(red: 0.85, green: 0.85, blue: 0.85)
+        a: Rayz::Color.new(red: 0.15, green: 0.15, blue: 0.15),
+        b: Rayz::Color.new(red: 0.85, green: 0.85, blue: 0.85)
       )
       floor.material.ambient = 0.8
       floor.material.diffuse = 0.2

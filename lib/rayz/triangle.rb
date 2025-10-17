@@ -57,5 +57,21 @@ module Rayz
       # Triangle normal is constant across entire surface
       @normal
     end
+
+    def bounds
+      # Bounding box contains all three vertices
+      Bounds.new(
+        min: Point.new(
+          x: [@p1.x, @p2.x, @p3.x].min,
+          y: [@p1.y, @p2.y, @p3.y].min,
+          z: [@p1.z, @p2.z, @p3.z].min
+        ),
+        max: Point.new(
+          x: [@p1.x, @p2.x, @p3.x].max,
+          y: [@p1.y, @p2.y, @p3.y].max,
+          z: [@p1.z, @p2.z, @p3.z].max
+        )
+      )
+    end
   end
 end

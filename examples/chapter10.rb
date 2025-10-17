@@ -34,8 +34,8 @@ module Rayz
       # Floor with reflective checkerboard
       floor = Plane.new
       floor.material.pattern = CheckersPattern.new(
-        Color.new(red: 0.15, green: 0.15, blue: 0.15),
-        Color.new(red: 0.85, green: 0.85, blue: 0.85)
+        a: Color.new(red: 0.15, green: 0.15, blue: 0.15),
+        b: Color.new(red: 0.85, green: 0.85, blue: 0.85)
       )
       floor.material.ambient = 0.2
       floor.material.diffuse = 0.8
