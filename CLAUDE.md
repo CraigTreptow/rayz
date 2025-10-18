@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-21 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives for complex 3D models, constructive solid geometry for creating complex shapes through set operations, smooth triangles with normal interpolation for realistic shading, Wavefront OBJ file parsing for loading external 3D models, enhanced shape hierarchy support with world-to-object and normal-to-world coordinate transformations, bounding box optimization for dramatically improved rendering performance on complex scenes, and advanced features including torus primitives, area lights with soft shadows, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, and normal perturbation.
+Rayz is a Ruby implementation of a ray tracer based on ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book by Jamis Buck.
+
+**Book Implementation (Chapters 1-17):** Complete implementation of all chapters from the book, covering projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives, constructive solid geometry, and smooth triangles with normal interpolation.
+
+**Custom Extensions (Chapters 18-21):** Additional features beyond the book including Wavefront OBJ file parsing, enhanced shape hierarchy with world-to-object/normal-to-world transformations, bounding box optimization for performance, and advanced rendering features (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
 
 ## Development Commands
 
@@ -184,7 +188,9 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 
 ## Implementation Status
 
-### Completed Chapters
+### Book Chapters (1-17) - ✅ Complete
+All chapters from "The Ray Tracer Challenge" book are fully implemented:
+
 - **Chapter 1**: Projectile physics simulation
 - **Chapter 2**: Canvas and PPM export with parallel pixel writing
 - **Chapter 3**: Matrix operations (construction, transpose, determinant, inverse, multiplication)
@@ -202,13 +208,17 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 15**: Triangles (triangle primitive with Möller-Trumbore intersection algorithm, flat shading)
 - **Chapter 16**: Constructive Solid Geometry (CSG union, intersection, and difference operations to combine primitives into complex shapes)
 - **Chapter 17**: Smooth Triangles (smooth shading using vertex normals and barycentric interpolation, creates smooth gradients across triangle surfaces)
+
+### Custom Extensions (18-21) - Beyond the Book
+Additional features implemented beyond the book's scope:
+
 - **Chapter 18**: OBJ Files (Wavefront OBJ file parser for loading 3D models, supports vertices, normals, faces, groups, fan triangulation, automatic smooth/flat shading)
 - **Chapter 19**: Shape Helper Methods (enhanced Shape class with world_to_object and normal_to_world methods that properly traverse parent hierarchy for hierarchical transformations)
 - **Chapter 20**: Bounding Boxes (axis-aligned bounding box optimization for Groups, dramatically reduces intersection tests by skipping groups when rays miss their bounds, includes bounds transformation, merging, and hierarchical bounding box calculation)
-- **Chapter 21**: Next Steps - Advanced Features (torus primitive with quartic equation solving, area lights with soft shadows via grid sampling, spotlights with directional beams, anti-aliasing via supersampling, focal blur/depth of field, motion blur with time-based transformations, texture mapping with UV coordinates, normal perturbation for bump/displacement effects)
+- **Chapter 21**: Advanced Features (torus primitive with quartic equation solving, area lights with soft shadows via grid sampling, spotlights with directional beams, anti-aliasing via supersampling, focal blur/depth of field, motion blur with time-based transformations, texture mapping with UV coordinates, normal perturbation for bump/displacement effects)
 
 ### Test Coverage
-- 287 scenarios passing (346 total scenarios in features/, 59 undefined for future chapters)
+- 295 scenarios passing (346 total scenarios in features/, 51 undefined for additional edge cases)
 - 23 feature files in `/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic

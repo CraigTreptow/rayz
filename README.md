@@ -1,6 +1,12 @@
 # Rayz
 
-An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book in Ruby.
+An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book by Jamis Buck, written in Ruby.
+
+## Project Scope
+
+**Book Chapters (1-17):** ✅ Complete implementation of all chapters from "The Ray Tracer Challenge" book, covering the fundamentals of ray tracing from projectile physics through smooth triangle rendering.
+
+**Custom Extensions (18-21):** Additional features implemented beyond the book's scope, including OBJ file loading, advanced hierarchical transformations, bounding box optimization, and advanced rendering techniques (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
 
 ## Installation
 
@@ -110,6 +116,12 @@ R(y)
 2
 1
 0  1  2  3 ... C (x)
+
+---
+
+# Book Chapters (1-17)
+
+All chapters from "The Ray Tracer Challenge" book are fully implemented below.
 
 ## Chapter 1
 
@@ -728,7 +740,15 @@ Open the file in an image viewer to see the difference between
 flat shading (left) and smooth shading (right).
 ```
 
+---
+
+# Custom Extensions (18-21)
+
+The features below extend beyond the book's content with additional advanced ray tracing capabilities.
+
 ## Chapter 18 - OBJ File Parsing
+
+**Note:** This is a custom extension beyond the book.
 
 Demonstrates loading external 3D models from Wavefront OBJ files:
 - OBJParser class for parsing OBJ file format
@@ -826,6 +846,8 @@ Scene saved to examples/chapter18.ppm
 
 ## Chapter 19 - Hierarchical Transformations
 
+**Note:** This is a custom extension beyond the book.
+
 Demonstrates complex hierarchical transformations using deeply nested group structures:
 - Enhanced `world_to_object` method traversing parent hierarchy to convert world coordinates to object space
 - Enhanced `normal_to_world` method converting object-space normals to world space through inverse transpose
@@ -868,6 +890,8 @@ multiple levels of parent transformations.
 
 ## Chapter 20 - Bounding Boxes Optimization
 
+**Note:** This is a custom extension beyond the book.
+
 Demonstrates performance optimization using axis-aligned bounding boxes (AABBs) for ray tracing:
 - `Bounds` class for axis-aligned bounding boxes with min/max extents
 - Bounding box calculation for all shape primitives (Sphere, Plane, Cube, Cylinder, Cone, Triangle, CSG, Group)
@@ -904,9 +928,11 @@ Bounding boxes allow the ray tracer to skip entire groups when rays miss their b
 dramatically reducing the number of intersection tests required.
 ```
 
-## Chapter 21 - Next Steps: Advanced Features
+## Chapter 21 - Advanced Features
 
-Demonstrates 8 advanced ray tracing features from the book's bonus chapter:
+**Note:** This is a custom extension beyond the book.
+
+Demonstrates 8 advanced ray tracing techniques:
 - **Torus primitive**: Donut-shaped objects using quartic equation solving (Durand-Kerner method)
 - **Area lights**: Rectangular light sources with soft shadows via grid sampling
 - **Spotlights**: Directional cone-shaped beams with configurable angles and soft edges
