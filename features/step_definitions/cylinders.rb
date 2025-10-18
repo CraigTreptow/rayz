@@ -2,6 +2,10 @@ Given("cyl ← cylinder\\()") do
   @cyl = Rayz::Cylinder.new
 end
 
+Given("c ← cylinder\\()") do
+  @c = Rayz::Cylinder.new
+end
+
 Given("direction ← normalize\\({vector})") do |direction|
   @direction = direction.normalize
 end
@@ -16,6 +20,14 @@ end
 
 Given("cyl.maximum ← {float}") do |value|
   @cyl.maximum = value
+end
+
+Given("c.minimum ← {float}") do |value|
+  @c.minimum = value
+end
+
+Given("c.maximum ← {float}") do |value|
+  @c.maximum = value
 end
 
 Given("cyl.closed ← true") do

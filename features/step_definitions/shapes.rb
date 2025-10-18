@@ -8,6 +8,33 @@ Given("shape ← sphere\\()") do
   @shape = Rayz::Sphere.new
 end
 
+Given("shape ← plane\\()") do
+  @shape = Rayz::Plane.new
+end
+
+Given("shape ← cube\\()") do
+  @shape = Rayz::Cube.new
+end
+
+Given("shape ← cylinder\\()") do
+  @shape = Rayz::Cylinder.new
+end
+
+Given(/^shape ← triangle\(p1: point\(([^,]+),\s*([^,]+),\s*([^)]+)\), p2: point\(([^,]+),\s*([^,]+),\s*([^)]+)\), p3: point\(([^,]+),\s*([^,]+),\s*([^)]+)\)\)$/) do |p1x, p1y, p1z, p2x, p2y, p2z, p3x, p3y, p3z|
+  p1 = Rayz::Point.new(x: p1x.to_f, y: p1y.to_f, z: p1z.to_f)
+  p2 = Rayz::Point.new(x: p2x.to_f, y: p2y.to_f, z: p2z.to_f)
+  p3 = Rayz::Point.new(x: p3x.to_f, y: p3y.to_f, z: p3z.to_f)
+  @shape = Rayz::Triangle.new(p1: p1, p2: p2, p3: p3)
+end
+
+Given("shape ← group\\()") do
+  @shape = Rayz::Group.new
+end
+
+Given("child ← test_shape\\()") do
+  @child = Rayz::TestShape.new
+end
+
 Then("s.saved_ray.origin = point\\({float}, {float}, {float})") do |x, y, z|
   expected = Rayz::Point.new(x: x, y: y, z: z)
   assert_equal(expected, @s.saved_ray.origin)
