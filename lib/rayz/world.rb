@@ -28,7 +28,7 @@ module Rayz
     def intersect(ray)
       all_intersections = []
       @objects.each do |obj|
-        all_intersections.concat(obj.intersect(ray))
+        all_intersections.concat(obj.intersect(ray, ray.time))
       end
       all_intersections.sort_by(&:t)
     end
@@ -64,14 +64,24 @@ module Rayz
     end
 
     def shade_hit(comps, remaining = 5)
-      shadowed = is_shadowed?(comps.over_point)
+      # Calculate shadow intensity (0.0 = fully lit, 1.0 = fully shadowed for point lights)
+      # For area lights, intensity is between 0.0 and 1.0
+      if @light.is_a?(PointLight)
+        shadowed = is_shadowed?(comps.over_point)
+        intensity = shadowed ? 0.0 : 1.0
+      elsif @light.respond_to?(:intensity_at)
+        intensity = @light.intensity_at(comps.over_point, self)
+      else
+        intensity = 1.0
+      end
+
       surface = Rayz.lighting(
         comps.object.material,
         @light,
         comps.point,
         comps.eyev,
         comps.normalv,
-        shadowed,
+        intensity,
         comps.object
       )
 
@@ -99,7 +109,22 @@ module Rayz
     def is_shadowed?(point)
       return false unless @light
 
-      v = @light.position - point
+      # For point lights, use the single position
+      if @light.is_a?(PointLight)
+        return is_shadowed_from?(point, @light.position)
+      end
+
+      # For area lights, use intensity calculation
+      if @light.respond_to?(:intensity_at)
+        intensity = @light.intensity_at(point, self)
+        return intensity < 1.0
+      end
+
+      false
+    end
+
+    def is_shadowed_from?(point, light_position)
+      v = light_position - point
       distance = v.magnitude
       direction = v.normalize
 

@@ -77,7 +77,9 @@ When("result ← lighting\\(m, light, position, eyev, normalv)") do
 end
 
 When("result ← lighting\\(m, light, position, eyev, normalv, in_shadow)") do
-  @result = Rayz.lighting(@m, @light, @position, @eyev, @normalv, @in_shadow)
+  # Convert boolean to intensity (true = 0.0 fully shadowed, false = 1.0 fully lit)
+  intensity = @in_shadow ? 0.0 : 1.0
+  @result = Rayz.lighting(@m, @light, @position, @eyev, @normalv, intensity)
 end
 
 Then("result = color\\({float}, {float}, {float})") do |r, g, b|
