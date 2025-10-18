@@ -56,7 +56,7 @@ bundle install
 Run chapter demonstrations (generates PPM image files in `examples/` directory):
 
 ```bash
-# Run all chapters (1-20)
+# Run all chapters (1-21)
 ruby examples/run all
 
 # Run individual chapter
@@ -902,6 +902,102 @@ Saved to examples/chapter20.ppm
 This scene contains 96 spheres organized into 16 groups.
 Bounding boxes allow the ray tracer to skip entire groups when rays miss their bounds,
 dramatically reducing the number of intersection tests required.
+```
+
+## Chapter 21 - Next Steps: Advanced Features
+
+Demonstrates 8 advanced ray tracing features from the book's bonus chapter:
+- **Torus primitive**: Donut-shaped objects using quartic equation solving (Durand-Kerner method)
+- **Area lights**: Rectangular light sources with soft shadows via grid sampling
+- **Spotlights**: Directional cone-shaped beams with configurable angles and soft edges
+- **Anti-aliasing**: Supersampling with multiple rays per pixel for smoother edges
+- **Focal blur (depth of field)**: Camera aperture simulation with focal distance
+- **Motion blur**: Time-based ray sampling for objects in motion
+- **Texture mapping**: Image-based patterns with planar/cylindrical/spherical UV mapping
+- **Normal perturbation**: Bump/displacement effects (sine waves, quilted patterns, noise, ripples)
+
+**Output:** `examples/chapter21.ppm` - A 400×200 pixel image showcasing advanced features with a torus, normal-perturbed spheres, and reflective materials
+
+**Key concepts:**
+- **Torus**: Quartic intersection equation (4th degree polynomial) solved numerically
+- **Area lights**: Multiple shadow rays sample grid positions for soft shadow penumbras
+- **Spotlights**: Dot product angle calculations with cone and fade angles
+- **Anti-aliasing**: Random sub-pixel offsets averaged across samples_per_pixel
+- **Focal blur**: Random aperture sampling with rays converging at focal distance
+- **Motion blur**: Ray time attribute (0-1) passed to shape motion_transform callbacks
+- **Texture maps**: PPM image loading with UV coordinate mapping functions
+- **Normal perturbation**: Procedural displacement via material.normal_perturbation proc
+
+**Performance notes:**
+- Area lights: ~16× slower than point lights (4×4 grid = 16 shadow rays per intersection)
+- Anti-aliasing: N× slower (N = samples_per_pixel, typically 4-16 for good quality)
+- Focal blur: N× slower (N = samples_per_pixel, shares anti-aliasing implementation)
+- Motion blur: Only affects moving objects (minimal overhead for static scenes)
+- Torus: Quartic solver adds computational cost but converges quickly
+
+**Example features (commented out in demo for performance):**
+```ruby
+# Area light with soft shadows
+light = AreaLight.new(
+  corner: Point.new(x: -2, y: 5, z: -2),
+  uvec: Vector.new(x: 4, y: 0, z: 0),
+  vvec: Vector.new(x: 0, y: 0, z: 4),
+  usteps: 4, vsteps: 4
+)
+
+# Spotlight with cone beam
+spotlight = Spotlight.new(
+  position: Point.new(x: 0, y: 10, z: 0),
+  direction: Vector.new(x: 0, y: -1, z: 0),
+  intensity: Color.new(red: 1, green: 1, blue: 1),
+  cone_angle: Math::PI / 6,
+  fade_angle: Math::PI / 12
+)
+
+# Anti-aliasing with 4 samples per pixel
+camera = Camera.new(
+  hsize: 400, vsize: 200,
+  field_of_view: Math::PI / 3,
+  samples_per_pixel: 4
+)
+
+# Focal blur (depth of field)
+camera.aperture_size = 0.1
+camera.focal_distance = 8.0
+
+# Motion blur
+world.motion_blur = true
+sphere.motion_transform = ->(time) {
+  Transformations.translation(x: time * 2, y: 0, z: 0)
+}
+
+# Normal perturbation
+sphere.material.normal_perturbation = NormalPerturbations.sine_wave(
+  frequency: 10,
+  amplitude: 0.15
+)
+```
+
+**Example output:**
+```
+Chapter 21: Next Steps (Advanced Features)
+Rendering showcase scene with advanced features...
+Features demonstrated:
+  - Torus primitive (green donut)
+  - Normal perturbation (wavy red sphere, quilted blue sphere)
+  - Reflective materials
+  - Checkerboard floor pattern
+
+Additional features available (not shown to keep render times reasonable):
+  - Area lights and soft shadows (AreaLight class)
+  - Spotlights with directional beams (Spotlight class)
+  - Anti-aliasing via supersampling (samples_per_pixel > 1)
+  - Focal blur/depth of field (aperture_size > 0, focal_distance)
+  - Motion blur (motion_blur: true, shape.motion_transform)
+  - Texture mapping (TextureMap with planar/cylindrical/spherical UV mapping)
+
+Rendering took 52.34 seconds
+Saved to examples/chapter21.ppm
 ```
 
 ## Viewing Output Files

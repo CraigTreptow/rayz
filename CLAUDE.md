@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-20 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives for complex 3D models, constructive solid geometry for creating complex shapes through set operations, smooth triangles with normal interpolation for realistic shading, Wavefront OBJ file parsing for loading external 3D models, enhanced shape hierarchy support with world-to-object and normal-to-world coordinate transformations, and bounding box optimization for dramatically improved rendering performance on complex scenes.
+Rayz is a Ruby implementation of a ray tracer based on "The Ray Tracer Challenge" book. It demonstrates 3D graphics concepts through progressive chapters, currently implementing Chapters 1-21 with projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives for complex 3D models, constructive solid geometry for creating complex shapes through set operations, smooth triangles with normal interpolation for realistic shading, Wavefront OBJ file parsing for loading external 3D models, enhanced shape hierarchy support with world-to-object and normal-to-world coordinate transformations, bounding box optimization for dramatically improved rendering performance on complex scenes, and advanced features including torus primitives, area lights with soft shadows, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, and normal perturbation.
 
 ## Development Commands
 
@@ -16,7 +16,7 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz                    # Execute all implemented chapters (1-20)
+ruby rayz                    # Execute all implemented chapters (1-21)
 ruby rayz all                # Explicitly run all chapters
 ruby rayz 4                  # Run only chapter 4
 ruby examples/run 7          # Alternative: run examples directly
@@ -63,10 +63,16 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 - `CSG` (Constructive Solid Geometry) - Combines two shapes using set operations (union, intersection, difference) to create complex composite shapes
 - `OBJParser` - Parses Wavefront OBJ files to load 3D models, supports vertices (v), vertex normals (vn), faces (f), named groups (g), polygon triangulation, and smooth/flat shading
 - `Bounds` - Axis-aligned bounding box (AABB) with min/max extents for optimization, supports merging, transformation, ray intersection testing, and point/bounds containment checks
-- `Shape` - Base class for all geometric primitives with `parent` attribute for hierarchy, `transform` and `material` attributes, `bounds()` method for bounding box calculation, template methods for `local_intersect` and `local_normal_at`, `includes?` method for hierarchical shape searching, `world_to_object` and `normal_to_world` methods for coordinate space transformations through parent hierarchy
-- `Intersection` - Encapsulates intersection point (t value) and intersected object
-- `Material` - Surface properties for Phong shading (color, ambient, diffuse, specular, shininess, reflective, transparency, refractive_index)
+- `Torus` - Donut-shaped primitive with configurable major_radius and minor_radius, uses quartic equation solving via Durand-Kerner method for ray-torus intersection
+- `Shape` - Base class for all geometric primitives with `parent` attribute for hierarchy, `transform` and `material` attributes, `bounds()` method for bounding box calculation, template methods for `local_intersect` and `local_normal_at`, `includes?` method for hierarchical shape searching, `world_to_object` and `normal_to_world` methods for coordinate space transformations through parent hierarchy, optional `motion_transform` callback for motion blur
+- `Intersection` - Encapsulates intersection point (t value) and intersected object, with optional u/v barycentric coordinates for smooth triangles
+- `Material` - Surface properties for Phong shading (color, ambient, diffuse, specular, shininess, reflective, transparency, refractive_index, normal_perturbation)
 - `PointLight` - Point light source with position (Point) and intensity (Color)
+- `AreaLight` - Rectangular area light source with configurable grid sampling for soft shadows, backward compatible with PointLight
+- `Spotlight` - Directional light with cone-shaped beam, configurable cone angle and fade angle for soft edges
+- `TextureMap` - Image-based surface pattern with UV mapping (planar, cylindrical, spherical), integrates with pattern system
+- `NormalPerturbations` - Module providing preset normal perturbation effects (sine_wave, quilted, noise, ripples) for bump/displacement mapping
+- `Camera` - Camera with view transformation, supports anti-aliasing (samples_per_pixel), focal blur (aperture_size, focal_distance), and motion blur (motion_blur flag)
 - `lighting` - Module function implementing Phong reflection model for realistic shading
 - `Computations` - Encapsulates precomputed intersection data (point, eyev, normalv, reflectv, n1, n2, under_point, over_point)
 - `glass_sphere` - Helper function creating spheres with glass material (transparency=1.0, refractive_index=1.5)
@@ -85,7 +91,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 
 ## Testing Strategy
 
-### Behavior-Driven Development with Cucumber
+### Behavior-Driven Development with Cucumbe
 - Primary testing uses Cucumber with Gherkin syntax
 - Working tests in `/features/` directory
 - Reference tests from the book in `/book_features/` (future implementations)
@@ -149,6 +155,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - `/examples/` - Chapter demonstration scripts and their output files
 - `/features/` - Cucumber BDD tests for implemented features
 - `/book_features/` - Reference tests from the book for future implementation
+- `/book/` - Reference book in epub format
 
 ## Output Files
 - PPM image files generated in the `examples/` directory for visual demonstrations
@@ -173,6 +180,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter18.ppm` - Scene with 3D model loaded from Wavefront OBJ file (tetrahedron)
   - `chapter19.ppm` - Scene demonstrating hierarchical transformations (solar system with nested planetary orbits, space station with rotating arms)
   - `chapter20.ppm` - Scene with many grouped marbles demonstrating bounding box optimization for performance improvement
+  - `chapter21.ppm` - Scene showcasing advanced features (torus primitive, normal perturbation with wavy and quilted spheres, reflective materials)
 
 ## Implementation Status
 
@@ -197,6 +205,7 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
 - **Chapter 18**: OBJ Files (Wavefront OBJ file parser for loading 3D models, supports vertices, normals, faces, groups, fan triangulation, automatic smooth/flat shading)
 - **Chapter 19**: Shape Helper Methods (enhanced Shape class with world_to_object and normal_to_world methods that properly traverse parent hierarchy for hierarchical transformations)
 - **Chapter 20**: Bounding Boxes (axis-aligned bounding box optimization for Groups, dramatically reduces intersection tests by skipping groups when rays miss their bounds, includes bounds transformation, merging, and hierarchical bounding box calculation)
+- **Chapter 21**: Next Steps - Advanced Features (torus primitive with quartic equation solving, area lights with soft shadows via grid sampling, spotlights with directional beams, anti-aliasing via supersampling, focal blur/depth of field, motion blur with time-based transformations, texture mapping with UV coordinates, normal perturbation for bump/displacement effects)
 
 ### Test Coverage
 - 287 scenarios passing (346 total scenarios in features/, 59 undefined for future chapters)
