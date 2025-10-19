@@ -166,19 +166,19 @@
         <div class="stats-grid">
 <div class="stat-card">
     <h3>Best Medium Scene Time</h3>
-    <div class="stat-value">12.399s</div>
-    <div class="stat-label">reduced-recursion</div>
+    <div class="stat-value">11.286s</div>
+    <div class="stat-label">aa-optimization</div>
 </div>
 
 <div class="stat-card">
     <h3>Best Throughput</h3>
-    <div class="stat-value">2,420</div>
+    <div class="stat-value">2,658</div>
     <div class="stat-label">pixels/second</div>
 </div>
 
 <div class="stat-card">
     <h3>Maximum Speedup</h3>
-    <div class="stat-value">7.0x</div>
+    <div class="stat-value">7.69x</div>
     <div class="stat-label">vs baseline</div>
 </div>
 </div>
@@ -365,13 +365,37 @@
     <td>2,420 px/s</td>
     <td class="speedup-positive">7.0x</td>
 </tr>
+<tr>
+    <td><strong>aa-optimization</strong></td>
+    <td>2025-10-19 11:54</td>
+    <td>Tiny</td>
+    <td>0.704s</td>
+    <td>7,099 px/s</td>
+    <td class="speedup-positive">4.1x</td>
+</tr>
+<tr>
+    <td><strong>aa-optimization</strong></td>
+    <td>2025-10-19 11:54</td>
+    <td>Small</td>
+    <td>2.285s</td>
+    <td>6,565 px/s</td>
+    <td class="speedup-positive">4.16x</td>
+</tr>
+<tr>
+    <td><strong>aa-optimization</strong></td>
+    <td>2025-10-19 11:54</td>
+    <td>Medium</td>
+    <td>11.286s</td>
+    <td>2,658 px/s</td>
+    <td class="speedup-positive">7.69x</td>
+</tr>
                 </tbody>
             </table>
         </div>
 
         <div class="footer">
             <p>Generated from performance_results.json</p>
-            <p>Created: 2025-10-19 11:51:17</p>
+            <p>Created: 2025-10-19 11:55:29</p>
         </div>
     </div>
 
@@ -381,25 +405,25 @@
         new Chart(renderTimeCtx, {
             type: 'bar',
             data: {
-                labels: ["baseline","parallel-threads","cached-matrix","with-yjit","fast-path-materials","shadow-optimization","reduced-recursion"],
+                labels: ["baseline","parallel-threads","cached-matrix","with-yjit","fast-path-materials","shadow-optimization","reduced-recursion","aa-optimization"],
                 datasets: [
                     {
                         label: 'Tiny Scene',
-                        data: [2.886,3.141,1.083,0.708,0.692,0.712,0.787],
+                        data: [2.886,3.141,1.083,0.708,0.692,0.712,0.787,0.704],
                         backgroundColor: 'rgba(102, 126, 234, 0.8)',
                         borderColor: 'rgba(102, 126, 234, 1)',
                         borderWidth: 2
                     },
                     {
                         label: 'Small Scene',
-                        data: [9.514,9.727,3.825,2.36,2.515,2.277,2.434],
+                        data: [9.514,9.727,3.825,2.36,2.515,2.277,2.434,2.285],
                         backgroundColor: 'rgba(118, 75, 162, 0.8)',
                         borderColor: 'rgba(118, 75, 162, 1)',
                         borderWidth: 2
                     },
                     {
                         label: 'Medium Scene',
-                        data: [86.761,91.087,27.741,17.551,17.609,15.403,12.399],
+                        data: [86.761,91.087,27.741,17.551,17.609,15.403,12.399,11.286],
                         backgroundColor: 'rgba(237, 100, 166, 0.8)',
                         borderColor: 'rgba(237, 100, 166, 1)',
                         borderWidth: 2
@@ -438,11 +462,11 @@
         new Chart(speedupCtx, {
             type: 'line',
             data: {
-                labels: ["baseline","parallel-threads","cached-matrix","with-yjit","fast-path-materials","shadow-optimization","reduced-recursion"],
+                labels: ["baseline","parallel-threads","cached-matrix","with-yjit","fast-path-materials","shadow-optimization","reduced-recursion","aa-optimization"],
                 datasets: [
                     {
                         label: 'Tiny Scene',
-                        data: [1.0,0.92,2.66,4.08,4.17,4.05,3.67],
+                        data: [1.0,0.92,2.66,4.08,4.17,4.05,3.67,4.1],
                         borderColor: 'rgba(102, 126, 234, 1)',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         borderWidth: 3,
@@ -451,7 +475,7 @@
                     },
                     {
                         label: 'Small Scene',
-                        data: [1.0,0.98,2.49,4.03,3.78,4.18,3.91],
+                        data: [1.0,0.98,2.49,4.03,3.78,4.18,3.91,4.16],
                         borderColor: 'rgba(118, 75, 162, 1)',
                         backgroundColor: 'rgba(118, 75, 162, 0.1)',
                         borderWidth: 3,
@@ -460,7 +484,7 @@
                     },
                     {
                         label: 'Medium Scene',
-                        data: [1.0,0.95,3.13,4.94,4.93,5.63,7.0],
+                        data: [1.0,0.95,3.13,4.94,4.93,5.63,7.0,7.69],
                         borderColor: 'rgba(237, 100, 166, 1)',
                         backgroundColor: 'rgba(237, 100, 166, 0.1)',
                         borderWidth: 3,
