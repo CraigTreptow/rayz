@@ -163,7 +163,11 @@ module Rayz
       end
 
       # Multiple samples for anti-aliasing, focal blur, and/or motion blur
-      colors = []
+      # Accumulate color components directly (no array allocation)
+      total_red = 0.0
+      total_green = 0.0
+      total_blue = 0.0
+
       @samples_per_pixel.times do
         # Random offset within pixel for anti-aliasing
         pixel_offset_x = rand
@@ -183,15 +187,15 @@ module Rayz
           aperture_offset_y: aperture_offset_y,
           time: time)
 
-        colors << world.color_at(ray)
+        color = world.color_at(ray)
+        total_red += color.red
+        total_green += color.green
+        total_blue += color.blue
       end
 
       # Average all sampled colors
-      avg_red = colors.map(&:red).sum / colors.size.to_f
-      avg_green = colors.map(&:green).sum / colors.size.to_f
-      avg_blue = colors.map(&:blue).sum / colors.size.to_f
-
-      Color.new(red: avg_red, green: avg_green, blue: avg_blue)
+      divisor = @samples_per_pixel.to_f
+      Color.new(red: total_red / divisor, green: total_green / divisor, blue: total_blue / divisor)
     end
   end
 end

@@ -201,5 +201,34 @@
         "pixels_per_second": 2420
       }
     }
+  },
+  "aa-optimization": {
+    "timestamp": "2025-10-19T11:54:44-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.704,
+        "min": 0.68,
+        "max": 0.728,
+        "stddev": 0.024,
+        "pixels": 5000,
+        "pixels_per_second": 7099
+      },
+      "small": {
+        "avg": 2.285,
+        "min": 2.268,
+        "max": 2.301,
+        "stddev": 0.016,
+        "pixels": 15000,
+        "pixels_per_second": 6565
+      },
+      "medium": {
+        "avg": 11.286,
+        "min": 11.149,
+        "max": 11.424,
+        "stddev": 0.138,
+        "pixels": 30000,
+        "pixels_per_second": 2658
+      }
+    }
   }
 }
