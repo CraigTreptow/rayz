@@ -166,19 +166,19 @@
         <div class="stats-grid">
 <div class="stat-card">
     <h3>Best Medium Scene Time</h3>
-    <div class="stat-value">17.551s</div>
-    <div class="stat-label">with-yjit</div>
+    <div class="stat-value">15.403s</div>
+    <div class="stat-label">shadow-optimization</div>
 </div>
 
 <div class="stat-card">
     <h3>Best Throughput</h3>
-    <div class="stat-value">1,709</div>
+    <div class="stat-value">1,948</div>
     <div class="stat-label">pixels/second</div>
 </div>
 
 <div class="stat-card">
     <h3>Maximum Speedup</h3>
-    <div class="stat-value">4.94x</div>
+    <div class="stat-value">5.63x</div>
     <div class="stat-label">vs baseline</div>
 </div>
 </div>
@@ -293,13 +293,61 @@
     <td>1,709 px/s</td>
     <td class="speedup-positive">4.94x</td>
 </tr>
+<tr>
+    <td><strong>fast-path-materials</strong></td>
+    <td>2025-10-19 11:18</td>
+    <td>Tiny</td>
+    <td>0.692s</td>
+    <td>7,221 px/s</td>
+    <td class="speedup-positive">4.17x</td>
+</tr>
+<tr>
+    <td><strong>fast-path-materials</strong></td>
+    <td>2025-10-19 11:18</td>
+    <td>Small</td>
+    <td>2.515s</td>
+    <td>5,965 px/s</td>
+    <td class="speedup-positive">3.78x</td>
+</tr>
+<tr>
+    <td><strong>fast-path-materials</strong></td>
+    <td>2025-10-19 11:18</td>
+    <td>Medium</td>
+    <td>17.609s</td>
+    <td>1,704 px/s</td>
+    <td class="speedup-positive">4.93x</td>
+</tr>
+<tr>
+    <td><strong>shadow-optimization</strong></td>
+    <td>2025-10-19 11:36</td>
+    <td>Tiny</td>
+    <td>0.712s</td>
+    <td>7,021 px/s</td>
+    <td class="speedup-positive">4.05x</td>
+</tr>
+<tr>
+    <td><strong>shadow-optimization</strong></td>
+    <td>2025-10-19 11:36</td>
+    <td>Small</td>
+    <td>2.277s</td>
+    <td>6,587 px/s</td>
+    <td class="speedup-positive">4.18x</td>
+</tr>
+<tr>
+    <td><strong>shadow-optimization</strong></td>
+    <td>2025-10-19 11:36</td>
+    <td>Medium</td>
+    <td>15.403s</td>
+    <td>1,948 px/s</td>
+    <td class="speedup-positive">5.63x</td>
+</tr>
                 </tbody>
             </table>
         </div>
 
         <div class="footer">
             <p>Generated from performance_results.json</p>
-            <p>Created: 2025-10-19 11:10:48</p>
+            <p>Created: 2025-10-19 11:37:52</p>
         </div>
     </div>
 
@@ -309,25 +357,25 @@
         new Chart(renderTimeCtx, {
             type: 'bar',
             data: {
-                labels: ["baseline","parallel-threads","cached-matrix","with-yjit"],
+                labels: ["baseline","parallel-threads","cached-matrix","with-yjit","fast-path-materials","shadow-optimization"],
                 datasets: [
                     {
                         label: 'Tiny Scene',
-                        data: [2.886,3.141,1.083,0.708],
+                        data: [2.886,3.141,1.083,0.708,0.692,0.712],
                         backgroundColor: 'rgba(102, 126, 234, 0.8)',
                         borderColor: 'rgba(102, 126, 234, 1)',
                         borderWidth: 2
                     },
                     {
                         label: 'Small Scene',
-                        data: [9.514,9.727,3.825,2.36],
+                        data: [9.514,9.727,3.825,2.36,2.515,2.277],
                         backgroundColor: 'rgba(118, 75, 162, 0.8)',
                         borderColor: 'rgba(118, 75, 162, 1)',
                         borderWidth: 2
                     },
                     {
                         label: 'Medium Scene',
-                        data: [86.761,91.087,27.741,17.551],
+                        data: [86.761,91.087,27.741,17.551,17.609,15.403],
                         backgroundColor: 'rgba(237, 100, 166, 0.8)',
                         borderColor: 'rgba(237, 100, 166, 1)',
                         borderWidth: 2
@@ -366,11 +414,11 @@
         new Chart(speedupCtx, {
             type: 'line',
             data: {
-                labels: ["baseline","parallel-threads","cached-matrix","with-yjit"],
+                labels: ["baseline","parallel-threads","cached-matrix","with-yjit","fast-path-materials","shadow-optimization"],
                 datasets: [
                     {
                         label: 'Tiny Scene',
-                        data: [1.0,0.92,2.66,4.08],
+                        data: [1.0,0.92,2.66,4.08,4.17,4.05],
                         borderColor: 'rgba(102, 126, 234, 1)',
                         backgroundColor: 'rgba(102, 126, 234, 0.1)',
                         borderWidth: 3,
@@ -379,7 +427,7 @@
                     },
                     {
                         label: 'Small Scene',
-                        data: [1.0,0.98,2.49,4.03],
+                        data: [1.0,0.98,2.49,4.03,3.78,4.18],
                         borderColor: 'rgba(118, 75, 162, 1)',
                         backgroundColor: 'rgba(118, 75, 162, 0.1)',
                         borderWidth: 3,
@@ -388,7 +436,7 @@
                     },
                     {
                         label: 'Medium Scene',
-                        data: [1.0,0.95,3.13,4.94],
+                        data: [1.0,0.95,3.13,4.94,4.93,5.63],
                         borderColor: 'rgba(237, 100, 166, 1)',
                         backgroundColor: 'rgba(237, 100, 166, 0.1)',
                         borderWidth: 3,
