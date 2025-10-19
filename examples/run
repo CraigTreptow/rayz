@@ -81,7 +81,7 @@ module Rayz
         demo.run
       else
         puts "Error: Demo '#{name}' does not exist."
-        puts "Available demos: #{DEMOS.keys.sort.join(', ')}"
+        puts "Available demos: #{DEMOS.keys.sort.join(", ")}"
         exit 1
       end
     end
@@ -96,7 +96,7 @@ module Rayz
       puts "  ruby examples/run                  # Run all chapters and demos (default)"
       puts ""
       puts "Available chapters: 1-#{CHAPTERS.keys.max}"
-      puts "Available demos: #{DEMOS.keys.sort.join(', ')}"
+      puts "Available demos: #{DEMOS.keys.sort.join(", ")}"
     end
 
     def self.parse_and_run(args)
