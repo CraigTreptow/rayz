@@ -121,34 +121,55 @@ bundle exec cucumber features/bounding_boxes.feature
 
 ## Performance Optimization
 
-The ray tracer includes performance optimizations providing **4-5x speedup** on complex scenes:
+The ray tracer includes performance optimizations providing **7.69x speedup** on complex scenes:
 
-### YJIT Just-In-Time Compilation
-**Most effective optimization:** Ruby 3.4's YJIT JIT compiler provides dramatic performance improvements with zero code changes.
+### Optimizations Implemented
 
-- **Speedup:** 4.0-4.9x depending on scene complexity
-- **Benefit:** Hot code paths are compiled to native machine code automatically
-- **Usage:** Run with `ruby --yjit` flag (requires Ruby 3.4+ built with `--enable-yjit`)
+1. **Matrix Inverse Caching** (3.13x speedup)
+   - Caches expensive matrix inversions (computed once per transformation change)
+   - Eliminates hundreds of thousands of redundant O(n³) operations per render
+   - Medium scene: 86.76s → 27.74s
 
-### Matrix Inverse Caching
-Caches expensive matrix inversions (computed once per transformation change, reused for all ray intersections):
-- **Speedup:** 2.5-3.1x depending on scene complexity
-- **Benefit:** Eliminates hundreds of thousands of redundant O(n³) operations per render
+2. **YJIT Just-In-Time Compilation** (+1.58x = 4.94x total)
+   - Ruby 3.4's JIT compiler compiles hot paths to native machine code
+   - Zero code changes required - just run with `--yjit` flag
+   - Medium scene: 27.74s → 17.55s
 
-### Combined Effect
-YJIT and matrix caching work together:
-- **Baseline:** 86.8 seconds (200×150 medium scene)
-- **Matrix caching only:** 27.7 seconds (3.1x)
-- **YJIT + matrix caching:** 17.6 seconds (4.9x)
+3. **Shadow Ray Early Termination** (+1.14x = 5.63x total)
+   - Stops testing objects as soon as first shadow is found
+   - No need to test all objects or sort intersections for shadow rays
+   - Medium scene: 17.55s → 15.40s
+
+4. **Reduced Reflection/Refraction Depth** (+1.24x = 6.99x total)
+   - Reduced recursive depth from 5 to 3
+   - Minimal visual difference, significant performance gain
+   - Medium scene: 15.40s → 12.40s
+
+5. **Optimized Anti-Aliasing Sampling** (+1.10x = **7.69x total**)
+   - Direct color component accumulation instead of array allocation
+   - Eliminates intermediate Color object allocations
+   - Medium scene: 12.40s → **11.29s**
+
+### Performance Results
+
+**Medium scene (200×150 pixels with reflections/refractions):**
+
+| Optimization | Time | Individual Speedup | Cumulative Speedup |
+|-------------|------|--------------------|--------------------|
+| Baseline | 86.76s | 1.00x | 1.00x |
+| Matrix caching | 27.74s | 3.13x | 3.13x |
+| + YJIT | 17.55s | 1.58x | 4.94x |
+| + Shadow optimization | 15.40s | 1.14x | 5.63x |
+| + Reduced recursion | 12.40s | 1.24x | 6.99x |
+| + AA optimization | **11.29s** | 1.10x | **7.69x** |
+
+**Real-world impact:** 86.76s → 11.29s (87% time reduction, ~1.5 min → ~11 sec)
 
 ### Benchmarking & Profiling Tools
 
 ```bash
-# Run performance benchmark (baseline)
-ruby examples/benchmark.rb baseline
-
-# Run performance benchmark with YJIT
-ruby --yjit examples/benchmark.rb with-yjit
+# Run performance benchmark
+ruby --yjit examples/benchmark.rb optimized
 
 # View results in terminal
 ruby examples/show_results.rb
@@ -164,12 +185,7 @@ ruby examples/profile_render.rb cpu
 ruby examples/profile_render.rb memory
 ```
 
-**Results** (200×150 medium scene with reflections):
-- **Baseline:** 86.8 seconds
-- **Matrix caching only:** 27.7 seconds (3.1x faster)
-- **YJIT + matrix caching:** 17.6 seconds (4.9x faster)
-
-See `PROFILING_README.md` for detailed profiling documentation.
+**Note:** All scripts now use `--yjit` by default via shebang. See `PERFORMANCE_OPTIMIZATION_PLAN.md` for detailed optimization analysis including attempted optimizations that didn't work (thread parallelism, BVH spatial partitioning).
 
 ## Troubleshooting
 

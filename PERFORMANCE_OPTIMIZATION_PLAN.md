@@ -500,36 +500,56 @@ Rewrite hottest math operations in C or Rust:
    - Updated all scripts to use `--yjit` flag by default
    - Zero code changes required - just Ruby runtime flag
    - Works synergistically with matrix caching (1.5x boost over matrix caching alone)
+6. ✅ **Optimize shadow calculations** - **1.14x speedup** 🎯
+   - Early termination on first shadow ray hit
+   - No need to test all objects or sort intersections for shadow rays
+   - Medium scene: 17.55s → 15.40s (1.14x faster)
+7. ✅ **Reduce recursive depth** - **1.24x speedup** 🎯
+   - Reduced reflection/refraction recursion from 5 to 3
+   - Minimal visual difference, significant performance gain
+   - Medium scene: 15.40s → 12.40s (1.24x faster)
+8. ✅ **Optimize anti-aliasing sampling** - **1.10x speedup** 🎯
+   - Replaced array allocation with direct color accumulation
+   - Eliminated intermediate Color object allocations
+   - Medium scene: 12.40s → 11.29s (1.10x faster)
+
+**Combined Total: 7.69x speedup from baseline!** 🚀
+- Baseline: 86.76s → Final: 11.29s
+- All optimizations compound multiplicatively
 
 ### ⚠️ Attempted but Not Effective:
 - **Parallelize Camera.render() with Threads** - Ruby's GVL prevents true CPU parallelism
   - Result: Actually slower due to thread overhead (0.95x speedup)
   - Alternative: Ractor-based parallelism had high Marshal overhead
   - Conclusion: Single-threaded sequential rendering with YJIT is currently fastest
+- **BLACK constant caching** - Pre-allocate black color constant
+  - With YJIT: Color.new() allocations are already well-optimized
+  - Result: 3% slower (11.29s → 11.64s without --yjit flag)
+  - Conclusion: YJIT makes allocation optimization unnecessary
+- **BVH (Bounding Volume Hierarchy)** - Spatial partitioning for scenes with many objects
+  - Implemented BVHNode with recursive splitting by longest axis
+  - Handled infinite bounds (Plane) by keeping as direct children
+  - Critical bug: Calling bounds() on every ray was O(n) tree traversal
+  - Result: **6x slower** (121 objects: 20s → 125s) - catastrophic
+  - Root cause: Dynamic bounds() recomputation vs static pre-cached bounds needed
+  - Conclusion: Would need fundamental redesign with build-time caching to be viable
 
-### 🎯 Recommended Next Steps (High Value, Low Effort):
+### 🎯 Recommended Next Steps:
 
-6. **Optimize anti-aliasing sampling** (1-2 hours) - **1.1-1.2x speedup**
-   - Replace array allocations with direct accumulation
-   - See Section 2.3 for implementation details
+9. **Memory profiling & allocation reduction** (3-5 days) - **1.1-1.3x speedup**
+   - Profile with memory_profiler to find allocation hotspots
+   - Reduce object creation in hot paths
+10. **Adaptive sampling for AA** (1-2 weeks) - **1.5-2x for anti-aliasing**
+   - Sample more where variance is high (edges)
+   - Sample less in flat regions
 
-7. **Fast path for non-reflective materials** (1 hour) - **1.1-1.2x speedup**
-   - Early return when reflective == 0 && transparency == 0
-   - Skip expensive recursive ray tracing for simple materials
-   - See Section 3.3 for implementation details
-
-8. **Optimize shadow calculations** (2-3 hours) - **1.1-1.5x speedup**
-   - Early termination on first shadow ray hit
-   - See Section 3.4 for implementation details
-
-### Could Do (Month 2+):
-9. **Reduce recursive depth** (1 hour) - **1.1-1.3x speedup**
-10. **Memory profiling & allocation reduction** (3-5 days) - **1.1-1.3x speedup**
-11. **Spatial partitioning (BVH)** (1-2 weeks) - **1.5-3x for complex scenes**
-
-### Advanced (Future):
-12. **Adaptive sampling** (1-2 weeks)
-13. **Native extensions** (1-2 months)
+### Could Do (Future):
+11. **Spatial partitioning (BVH with cached bounds)** (2-3 weeks) - **1.5-3x for scenes with 100+ objects**
+    - Requires pre-caching bounds at build time, not runtime
+    - Complex implementation with marginal benefit for typical scenes
+12. **Native extensions** (1-2 months) - **2-4x speedup**
+    - Rewrite hottest math operations in C or Rust
+    - High complexity, maintenance burden
 
 ---
 
@@ -537,26 +557,32 @@ Rewrite hottest math operations in C or Rust:
 
 ### ✅ Current Performance (2025-10-19):
 - **Matrix caching:** 3.1x speedup
-- **YJIT:** 4.9x speedup (combined with matrix caching)
-- **Total achieved: ~5x speedup** 🎉
+- **YJIT:** 1.58x additional (4.94x total)
+- **Shadow optimization:** 1.14x additional (5.63x total)
+- **Reduced recursion:** 1.24x additional (6.99x total)
+- **AA optimization:** 1.10x additional (**7.69x total**) 🎉🚀
 
-### Actual Measurements:
-- **Baseline:** 86.8s (medium scene, 200×150)
-- **Matrix caching:** 27.7s (3.1x faster)
-- **Matrix caching + YJIT:** 17.6s (4.9x faster)
+### Actual Measurements (Medium Scene, 200×150):
+| Optimization | Time | Individual | Cumulative |
+|-------------|------|------------|------------|
+| Baseline | 86.76s | 1.00x | 1.00x |
+| Matrix caching | 27.74s | 3.13x | 3.13x |
+| + YJIT | 17.55s | 1.58x | 4.94x |
+| + Shadow early exit | 15.40s | 1.14x | 5.63x |
+| + Reduced recursion | 12.40s | 1.24x | 6.99x |
+| + AA optimization | 11.29s | 1.10x | **7.69x** |
 
-### Real-World Example:
-- **Before optimizations:** Medium scene = 86.8s
-- **After optimizations:** Medium scene = 17.6s
-- **Effective improvement: 4.9x faster**
+### Real-World Impact:
+- **Before optimizations:** Medium scene = 86.76s (~1.5 minutes)
+- **After optimizations:** Medium scene = 11.29s (~11 seconds)
+- **Improvement: 7.69x faster** (87% time reduction)
 
 ### Future Potential:
 Remaining optimization opportunities:
-- Optimize anti-aliasing sampling: **1.1-1.2x**
-- Fast path for non-reflective materials: **1.1-1.2x**
-- Optimize shadow calculations: **1.1-1.5x**
-- Spatial partitioning (BVH): **1.5-3x for complex scenes**
-- **Potential total: ~7-10x with all optimizations**
+- Memory profiling & allocation reduction: **1.1-1.3x**
+- Adaptive sampling: **1.5-2x for anti-aliasing**
+- BVH with cached bounds: **1.5-3x for scenes with 100+ objects** (complex)
+- **Potential total: ~10-15x with all optimizations**
 
 ---
 
