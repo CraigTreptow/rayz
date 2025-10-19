@@ -49,6 +49,16 @@ When(/c\.transform ← rotation_y\(π\/(\d+)\) \* translation\(([^,]+),\s*([^,]+
   @c.transform = Rayz::Transformations.rotation_y(radians: Math::PI / pi_divisor.to_f) * Rayz::Transformations.translation(x: tx.to_f, y: ty.to_f, z: tz.to_f)
 end
 
+Then("r.origin = point\\({float}, {float}, {float})") do |x, y, z|
+  expected = Rayz::Point.new(x: x, y: y, z: z)
+  assert_equal(@r.origin, expected)
+end
+
+Then("r.direction = vector\\({float}, {float}, {float})") do |x, y, z|
+  expected = Rayz::Vector.new(x: x, y: y, z: z)
+  assert_equal(@r.direction, expected)
+end
+
 Then(/r\.direction = vector\(√(\d+)\/(\d+), (\d+(?:\.\d+)?), -√(\d+)\/(\d+)\)/) do |sqrt_num_x, sqrt_den_x, y, sqrt_num_z, sqrt_den_z|
   expected = Rayz::Vector.new(
     x: Math.sqrt(sqrt_num_x.to_f) / sqrt_den_x.to_f,

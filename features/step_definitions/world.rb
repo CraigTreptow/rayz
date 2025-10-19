@@ -102,6 +102,19 @@ When("i ← intersection\\({float}, shape)") do |t|
   @i = Rayz::Intersection.new(t: t, object: @shape)
 end
 
+When(/^i ← intersection\((-?√\d+(?:\/\d+)?), shape\)$/) do |t_str|
+  # Handle √ notation like √2 or √2/2
+  t = if t_str =~ /^(-?)√(\d+)(?:\/(\d+))?$/
+    sign = ($1 == "-") ? -1 : 1
+    sqrt_val = Math.sqrt($2.to_f)
+    denominator = ($3) ? $3.to_f : 1.0
+    sign * sqrt_val / denominator
+  else
+    t_str.to_f
+  end
+  @i = Rayz::Intersection.new(t: t, object: @shape)
+end
+
 When("comps ← prepare_computations\\(i, r)") do
   @comps = @i.prepare_computations(@r)
 end
@@ -247,6 +260,14 @@ end
 
 Given("shape.material.ambient ← {int}") do |value|
   @shape.material.ambient = value
+end
+
+Given(/^shape\.material\.transparency ← ([0-9.]+)$/) do |value|
+  @shape.material.transparency = value.to_f
+end
+
+Given(/^shape\.material\.refractive_index ← ([0-9.]+)$/) do |value|
+  @shape.material.refractive_index = value.to_f
 end
 
 Given(/([A-Z]) ← the first object in w/) do |var_name|

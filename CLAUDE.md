@@ -8,7 +8,7 @@ Rayz is a Ruby implementation of a ray tracer based on ["The Ray Tracer Challeng
 
 **Book Implementation (Chapters 1-17):** Complete implementation of all chapters from the book, covering projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives, constructive solid geometry, and smooth triangles with normal interpolation.
 
-**Custom Extensions (Chapters 18-21):** Additional features beyond the book including Wavefront OBJ file parsing, enhanced shape hierarchy with world-to-object/normal-to-world transformations, bounding box optimization for performance, and advanced rendering features (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
+**Custom Extension Demos:** Additional demonstration programs beyond the book including Wavefront OBJ file parsing, enhanced shape hierarchy with world-to-object/normal-to-world transformations, bounding box optimization for performance, and advanced rendering features (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
 
 ## Development Commands
 
@@ -20,11 +20,17 @@ bundle install    # Install gem dependencies
 
 ### Running the Application
 ```bash
-ruby rayz                    # Execute all implemented chapters (1-21)
-ruby rayz all                # Explicitly run all chapters
-ruby rayz 4                  # Run only chapter 4
-ruby examples/run 7          # Alternative: run examples directly
+ruby rayz                          # Execute all chapters (1-17) and demos
+ruby rayz all                      # Explicitly run all chapters and demos
+ruby rayz 4                        # Run only chapter 4
+ruby examples/run 7                # Alternative: run examples directly
+ruby examples/run obj_parser       # Run OBJ parser demo
+ruby examples/run nested_groups    # Run nested groups demo
+ruby examples/run bounding_boxes   # Run bounding boxes demo
+ruby examples/run advanced_features # Run advanced features demo
 ```
+
+**Output Formatting:** Each chapter and demo script outputs a visual separator line (`puts "\n" + ("=" * 60) + "\n"`) after completion for better readability when running multiple examples sequentially.
 
 ### Testing
 ```bash
@@ -181,10 +187,10 @@ Uses the `async` gem for concurrent pixel writing with mutex protection for thre
   - `chapter15.ppm` - Scene with triangles (pyramid, octahedron, tetrahedron)
   - `chapter16.ppm` - Scene with CSG shapes (carved cube, lens, hollow sphere, die, rounded cylinder, wedge-cut sphere)
   - `chapter17.ppm` - Scene demonstrating smooth shading vs flat shading (smooth and flat pyramids)
-  - `chapter18.ppm` - Scene with 3D model loaded from Wavefront OBJ file (tetrahedron)
-  - `chapter19.ppm` - Scene demonstrating hierarchical transformations (solar system with nested planetary orbits, space station with rotating arms)
-  - `chapter20.ppm` - Scene with many grouped marbles demonstrating bounding box optimization for performance improvement
-  - `chapter21.ppm` - Scene showcasing advanced features (torus primitive, normal perturbation with wavy and quilted spheres, reflective materials)
+  - `obj_parser_demo.ppm` - Scene with 3D model loaded from Wavefront OBJ file (tetrahedron)
+  - `nested_groups_demo.ppm` - Scene demonstrating hierarchical transformations (solar system with nested planetary orbits, space station with rotating arms)
+  - `bounding_boxes_demo.ppm` - Scene with many grouped marbles demonstrating bounding box optimization for performance improvement
+  - `advanced_features_demo.ppm` - Scene showcasing advanced features (torus primitive, normal perturbation with wavy and quilted spheres, reflective materials)
 
 ## Implementation Status
 
@@ -209,13 +215,13 @@ All chapters from "The Ray Tracer Challenge" book are fully implemented:
 - **Chapter 16**: Constructive Solid Geometry (CSG union, intersection, and difference operations to combine primitives into complex shapes)
 - **Chapter 17**: Smooth Triangles (smooth shading using vertex normals and barycentric interpolation, creates smooth gradients across triangle surfaces)
 
-### Custom Extensions (18-21) - Beyond the Book
-Additional features implemented beyond the book's scope:
+### Custom Extension Demos - Beyond the Book
+Additional features implemented beyond the book's scope (these are demonstration programs, not book chapters):
 
-- **Chapter 18**: OBJ Files (Wavefront OBJ file parser for loading 3D models, supports vertices, normals, faces, groups, fan triangulation, automatic smooth/flat shading)
-- **Chapter 19**: Shape Helper Methods (enhanced Shape class with world_to_object and normal_to_world methods that properly traverse parent hierarchy for hierarchical transformations)
-- **Chapter 20**: Bounding Boxes (axis-aligned bounding box optimization for Groups, dramatically reduces intersection tests by skipping groups when rays miss their bounds, includes bounds transformation, merging, and hierarchical bounding box calculation)
-- **Chapter 21**: Advanced Features (torus primitive with quartic equation solving, area lights with soft shadows via grid sampling, spotlights with directional beams, anti-aliasing via supersampling, focal blur/depth of field, motion blur with time-based transformations, texture mapping with UV coordinates, normal perturbation for bump/displacement effects)
+- **OBJ Parser Demo**: Wavefront OBJ file parser for loading 3D models, supports vertices, normals, faces, groups, fan triangulation, automatic smooth/flat shading
+- **Nested Groups Demo**: Enhanced Shape class with world_to_object and normal_to_world methods that properly traverse parent hierarchy for hierarchical transformations
+- **Bounding Boxes Demo**: Axis-aligned bounding box optimization for Groups, dramatically reduces intersection tests by skipping groups when rays miss their bounds, includes bounds transformation, merging, and hierarchical bounding box calculation
+- **Advanced Features Demo**: Torus primitive with quartic equation solving, area lights with soft shadows via grid sampling, spotlights with directional beams, anti-aliasing via supersampling, focal blur/depth of field, motion blur with time-based transformations, texture mapping with UV coordinates, normal perturbation for bump/displacement effects
 
 ### Test Coverage
 - 295 scenarios passing (346 total scenarios in features/, 51 undefined for additional edge cases)

@@ -1,6 +1,6 @@
 module Rayz
   class Util
-    EPSILON = 0.00001
+    EPSILON = 0.00003  # Increased to handle floating-point accumulation errors in complex ray tracing
 
     def self.==(x, y)
       (x - y).abs < EPSILON

@@ -215,7 +215,7 @@ module Rayz
       puts "  - Union: Combines shapes preserving exteriors"
       puts "  - Intersection: Keeps only overlapping volumes"
       puts "  - Difference: Subtracts one shape from another"
-      puts "=" * 60
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

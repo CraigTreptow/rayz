@@ -37,16 +37,6 @@ Then(/^result = (true|false)$/) do |expected|
   assert_equal(expected == "true", @result)
 end
 
-Given(/^xs ← intersections\(([^)]*:[^)]+)\)$/) do |intersections_str|
-  # Parse the intersections string like "1:s1, 2:s2, 3:s1, 4:s2"
-  # Only matches if there's a colon in the string
-  @xs = intersections_str.split(",").map do |pair|
-    t, object_name = pair.strip.split(":")
-    object = instance_variable_get("@#{object_name}")
-    Rayz::Intersection.new(t: t.to_f, object: object)
-  end
-end
-
 When("result ← filter_intersections\\(c, xs)") do
   @result = Rayz.filter_intersections(@c, @xs)
 end
@@ -57,4 +47,30 @@ end
 
 Then(/^result\[(\d+)\] = xs\[(\d+)\]$/) do |result_index, xs_index|
   assert_equal(@xs[xs_index.to_i], @result[result_index.to_i])
+end
+
+Given("s2 ← cube\\()") do
+  @s2 = Rayz::Cube.new
+end
+
+When(/^c ← csg\("([^"]+)", (sphere|cube|plane)\(\), (sphere|cube|plane)\(\)\)$/) do |operation, left_type, right_type|
+  left_shape = case left_type
+  when "sphere"
+    Rayz::Sphere.new
+  when "cube"
+    Rayz::Cube.new
+  when "plane"
+    Rayz::Plane.new
+  end
+
+  right_shape = case right_type
+  when "sphere"
+    Rayz::Sphere.new
+  when "cube"
+    Rayz::Cube.new
+  when "plane"
+    Rayz::Plane.new
+  end
+
+  @c = Rayz.csg(operation, left_shape, right_shape)
 end

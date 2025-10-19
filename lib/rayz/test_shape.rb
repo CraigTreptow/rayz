@@ -4,9 +4,11 @@ require_relative "bounds"
 module Rayz
   # Test shape for debugging shape transformations
   class TestShape < Shape
+    attr_accessor :saved_ray
+
     def local_intersect(local_ray)
-      # Test shape doesn't calculate real intersections
-      # Just stores the ray for inspection
+      # Test shape stores the ray for inspection (used for bounding box optimization tests)
+      @saved_ray = local_ray
       []
     end
 

@@ -1,20 +1,20 @@
 require_relative "../lib/rayz"
 
 module Rayz
-  class Chapter21
+  class AdvancedFeaturesDemo
     def self.run
-      puts "Rendering Chapter 21: Next Steps (Advanced Features)..."
+      puts "Advanced Features Demo: Showcasing Extended Ray Tracing Capabilities"
       puts
 
       # Simple demonstration scene showcasing all features
       render_showcase_scene
 
       puts
-      puts "Chapter 21 complete!"
+      puts "Advanced features demo complete!"
     end
 
     def self.render_showcase_scene
-      puts "  Creating showcase scene with all Chapter 21 features..."
+      puts "  Creating showcase scene with advanced features..."
 
       # Create world
       w = World.new
@@ -76,9 +76,9 @@ module Rayz
       # Render
       canvas = camera.render(w)
       ppm = canvas.to_ppm
-      File.write("examples/chapter21.ppm", ppm)
+      File.write("examples/advanced_features_demo.ppm", ppm)
 
-      puts "    Saved to examples/chapter21.ppm"
+      puts "    Saved to examples/advanced_features_demo.ppm"
       puts
       puts "  Features demonstrated:"
       puts "    - Torus primitive (green donut)"
@@ -93,8 +93,9 @@ module Rayz
       puts "    - Focal blur/depth of field (aperture_size > 0, focal_distance)"
       puts "    - Motion blur (motion_blur: true, shape.motion_transform)"
       puts "    - Texture mapping (TextureMap with planar/cylindrical/spherical UV mapping)"
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end
 
-Rayz::Chapter21.run if __FILE__ == $0
+Rayz::AdvancedFeaturesDemo.run if __FILE__ == $0

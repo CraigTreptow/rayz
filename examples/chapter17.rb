@@ -176,6 +176,7 @@ module Rayz
       puts "Complete! Output written to: #{filename}"
       puts "Open the file in an image viewer to see the difference between"
       puts "flat shading (left) and smooth shading (right)."
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

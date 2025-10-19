@@ -18,10 +18,10 @@ require_relative "chapter14"
 require_relative "chapter15"
 require_relative "chapter16"
 require_relative "chapter17"
-require_relative "chapter18"
-require_relative "chapter19"
-require_relative "chapter20"
-require_relative "chapter21"
+require_relative "obj_parser_demo"
+require_relative "nested_groups_demo"
+require_relative "bounding_boxes_demo"
+require_relative "advanced_features_demo"
 
 module Rayz
   class ExamplesRunner
@@ -42,16 +42,25 @@ module Rayz
       14 => Chapter14,
       15 => Chapter15,
       16 => Chapter16,
-      17 => Chapter17,
-      18 => Chapter18,
-      19 => Chapter19,
-      20 => Chapter20,
-      21 => Chapter21
+      17 => Chapter17
+    }
+
+    DEMOS = {
+      "obj_parser" => ObjParserDemo,
+      "nested_groups" => NestedGroupsDemo,
+      "bounding_boxes" => BoundingBoxesDemo,
+      "advanced_features" => AdvancedFeaturesDemo
     }
 
     def self.run_all
+      # Run all book chapters first (1-17)
       CHAPTERS.keys.sort.each do |chapter_num|
         CHAPTERS[chapter_num].run
+      end
+
+      # Then run all demos
+      DEMOS.keys.sort.each do |demo_name|
+        DEMOS[demo_name].run
       end
     end
 
@@ -66,15 +75,28 @@ module Rayz
       end
     end
 
+    def self.run_demo(name)
+      demo = DEMOS[name]
+      if demo
+        demo.run
+      else
+        puts "Error: Demo '#{name}' does not exist."
+        puts "Available demos: #{DEMOS.keys.sort.join(", ")}"
+        exit 1
+      end
+    end
+
     def self.usage
-      puts "Usage: ruby examples/run [all|<chapter_number>]"
+      puts "Usage: ruby examples/run [all|<chapter_number>|<demo_name>]"
       puts ""
       puts "Examples:"
-      puts "  ruby examples/run all    # Run all chapters (1-21)"
-      puts "  ruby examples/run 4      # Run only chapter 4"
-      puts "  ruby examples/run        # Run all chapters (default)"
+      puts "  ruby examples/run all              # Run all chapters and demos"
+      puts "  ruby examples/run 4                # Run only chapter 4"
+      puts "  ruby examples/run obj_parser       # Run OBJ parser demo"
+      puts "  ruby examples/run                  # Run all chapters and demos (default)"
       puts ""
       puts "Available chapters: 1-#{CHAPTERS.keys.max}"
+      puts "Available demos: #{DEMOS.keys.sort.join(", ")}"
     end
 
     def self.parse_and_run(args)
@@ -83,6 +105,8 @@ module Rayz
       elsif /^\d+$/.match?(args.first)
         chapter_num = args.first.to_i
         run_chapter(chapter_num)
+      elsif DEMOS.key?(args.first)
+        run_demo(args.first)
       else
         usage
         exit 1

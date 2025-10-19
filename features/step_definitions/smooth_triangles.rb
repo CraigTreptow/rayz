@@ -68,8 +68,3 @@ When("n ← normal_at\\(tri, point\\({float}, {float}, {float}), i)") do |x, y, 
   point = Rayz::Point.new(x: x, y: y, z: z)
   @n = @tri.normal_at(point, @i)
 end
-
-Then(/^comps\.normalv = vector\(([^,]+),\s*([^,]+),\s*([^)]+)\)$/) do |x, y, z|
-  expected = Rayz::Vector.new(x: x.to_f, y: y.to_f, z: z.to_f)
-  assert_equal(@comps.normalv, expected)
-end
