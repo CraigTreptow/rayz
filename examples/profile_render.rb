@@ -27,14 +27,14 @@ class RenderProfiler
 
     RubyProf.start
 
-    image = camera.render(world)
+    camera.render(world)
 
     result = RubyProf.stop
 
     # Flat profile showing method call times
     puts "\nTop methods by total time:"
     printer = RubyProf::FlatPrinter.new(result)
-    printer.print(STDOUT, min_percent: 1)
+    printer.print($stdout, min_percent: 1)
 
     # Save detailed profile to file
     File.open("profile_graph.html", "w") do |file|

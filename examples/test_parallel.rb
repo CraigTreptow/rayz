@@ -29,13 +29,13 @@ world.objects << floor << sphere
 
 puts "\n1. Testing SEQUENTIAL rendering:"
 start = Time.now
-image1 = camera.render(world, parallel: false)
+camera.render(world, parallel: false)
 sequential_time = Time.now - start
 puts "Sequential: #{sequential_time.round(2)}s"
 
 puts "\n2. Testing PARALLEL rendering (Ractor):"
 start = Time.now
-image2 = camera.render(world, parallel: true)
+camera.render(world, parallel: true)
 parallel_time = Time.now - start
 puts "Parallel: #{parallel_time.round(2)}s"
 

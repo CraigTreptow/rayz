@@ -77,9 +77,13 @@ if sorted_labels.length > 1
     speedup = baseline_time / latest_time
     improvement = ((speedup - 1.0) * 100).round(1)
 
-    emoji = speedup > 1.0 ? "🚀" : (speedup < 1.0 ? "🐌" : "➡️")
+    emoji = if speedup > 1.0
+      "🚀"
+    else
+      ((speedup < 1.0) ? "🐌" : "➡️")
+    end
 
-    puts "  #{emoji} #{scene.capitalize}: #{baseline_time}s → #{latest_time}s (#{speedup.round(2)}x, #{improvement}% #{improvement >= 0 ? 'faster' : 'slower'})"
+    puts "  #{emoji} #{scene.capitalize}: #{baseline_time}s → #{latest_time}s (#{speedup.round(2)}x, #{improvement}% #{(improvement >= 0) ? "faster" : "slower"})"
   end
 end
 
