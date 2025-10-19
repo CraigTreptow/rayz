@@ -6,7 +6,6 @@ Scenario: An intersection encapsulates t and object
   Then i.t = 3.5
     And i.object = s
 
-@skip
 Scenario: Precomputing the state of an intersection
   Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
     And shape ← sphere()
@@ -18,15 +17,13 @@ Scenario: Precomputing the state of an intersection
     And comps.eyev = vector(0, 0, -1)
     And comps.normalv = vector(0, 0, -1)
 
-@skip
 Scenario: Precomputing the reflection vector
   Given shape ← plane()
     And r ← ray(point(0, 1, -1), vector(0, -√2/2, √2/2)) 
     And i ← intersection(√2, shape)                      
   When comps ← prepare_computations(i, r)
-  Then comps.reflectv = vector(0, √2/2, √2/2)                
+  Then comps.reflectv = vector(0, √2/2, √2/2)
 
-@skip
 Scenario: The hit, when an intersection occurs on the outside
   Given r ← ray(point(0, 0, -5), vector(0, 0, 1))
     And shape ← sphere()
@@ -64,7 +61,6 @@ Scenario: The under point is offset below the surface
   Then comps.under_point.z > EPSILON/2
     And comps.point.z < comps.under_point.z
 
-@skip
 Scenario: Aggregating intersections
   Given s ← sphere()
     And i1 ← intersection(1, s)
@@ -74,7 +70,6 @@ Scenario: Aggregating intersections
     And xs[0].t = 1
     And xs[1].t = 2
 
-@skip
 Scenario: The hit, when all intersections have positive t
   Given s ← sphere()
     And i1 ← intersection(1, s)
@@ -83,7 +78,6 @@ Scenario: The hit, when all intersections have positive t
   When i ← hit(xs)
   Then i = i1
 
-@skip
 Scenario: The hit, when some intersections have negative t
   Given s ← sphere()
     And i1 ← intersection(-1, s)
@@ -92,7 +86,6 @@ Scenario: The hit, when some intersections have negative t
   When i ← hit(xs)
   Then i = i2
 
-@skip
 Scenario: The hit, when all intersections have negative t
   Given s ← sphere()
     And i1 ← intersection(-2, s)
@@ -101,7 +94,6 @@ Scenario: The hit, when all intersections have negative t
   When i ← hit(xs)
   Then i is nothing
 
-@skip
 Scenario: The hit is always the lowest nonnegative intersection
   Given s ← sphere()
   And i1 ← intersection(5, s)
@@ -112,7 +104,6 @@ Scenario: The hit is always the lowest nonnegative intersection
 When i ← hit(xs)
 Then i = i4
 
-@skip
 Scenario Outline: Finding n1 and n2 at various intersections
   Given A ← glass_sphere() with:
       | transform                 | scaling(2, 2, 2) |
