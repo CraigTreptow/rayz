@@ -1,9 +1,9 @@
 require_relative "../lib/rayz"
 
 module Rayz
-  module Chapter20
+  module BoundingBoxesDemo
     def self.run
-      puts "Chapter 20: Bounding Boxes Optimization"
+      puts "Bounding Boxes Demo: Performance Optimization with AABBs"
       puts "Rendering a scene with many grouped objects..."
       puts "Bounding boxes dramatically reduce intersection tests."
 
@@ -103,7 +103,7 @@ module Rayz
       puts "Rendered in #{render_time.round(2)} seconds"
 
       # Save to file
-      filename = File.join(File.dirname(__FILE__), "chapter20.ppm")
+      filename = File.join(File.dirname(__FILE__), "bounding_boxes_demo.ppm")
       File.write(filename, canvas.to_ppm)
       puts "Saved to #{filename}"
       puts

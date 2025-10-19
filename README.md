@@ -744,13 +744,13 @@ flat shading (left) and smooth shading (right).
 
 ---
 
-# Custom Extensions (18-21)
+# Custom Extension Demos
 
-The features below extend beyond the book's content with additional advanced ray tracing capabilities.
+The features below extend beyond the book's content with additional advanced ray tracing capabilities. These are demonstration programs, not book chapters.
 
-## Chapter 18 - OBJ File Parsing
+## OBJ Parser Demo
 
-**Note:** This is a custom extension beyond the book.
+**Note:** This is a custom extension beyond the book, not an actual chapter.
 
 Demonstrates loading external 3D models from Wavefront OBJ files:
 - OBJParser class for parsing OBJ file format
@@ -762,7 +762,7 @@ Demonstrates loading external 3D models from Wavefront OBJ files:
 - Automatic smooth/flat triangle selection based on normal data
 - Visual demonstration: rendering a tetrahedron loaded from OBJ file
 
-**Output:** `examples/chapter18.ppm` - A 600×400 pixel image showing a 3D model loaded from a Wavefront OBJ file
+**Output:** `examples/obj_parser_demo.ppm` - A 600×400 pixel image showing a 3D model loaded from a Wavefront OBJ file
 
 ### About the Wavefront OBJ Format
 
@@ -834,7 +834,7 @@ f 1 2 4  # Side 3
 
 **Example output:**
 ```
-Chapter 18: OBJ File Parsing
+OBJ Parser Demo: Loading 3D Models from Wavefront OBJ Files
 Loading and rendering 3D models from Wavefront OBJ files
 
 Rendering scene with OBJ model (4 vertices, 4 triangles)...
@@ -843,12 +843,12 @@ Progress (each dot = 10 rows):
 Done!
 Rendering took 45.23 seconds
 Time per row: 113.1 ms
-Scene saved to examples/chapter18.ppm
+Scene saved to examples/obj_parser_demo.ppm
 ```
 
-## Chapter 19 - Hierarchical Transformations
+## Nested Groups Demo
 
-**Note:** This is a custom extension beyond the book.
+**Note:** This is a custom extension beyond the book, not an actual chapter.
 
 Demonstrates complex hierarchical transformations using deeply nested group structures:
 - Enhanced `world_to_object` method traversing parent hierarchy to convert world coordinates to object space
@@ -857,7 +857,7 @@ Demonstrates complex hierarchical transformations using deeply nested group stru
 - Vector type preservation through normalize operations
 - Visual demonstration: solar system model with nested planetary orbits and space station
 
-**Output:** `examples/chapter19.ppm` - An 800×600 pixel image showing a solar system with hierarchical transformations
+**Output:** `examples/nested_groups_demo.ppm` - An 800×600 pixel image showing a solar system with hierarchical transformations
 
 **Key concepts:**
 - `world_to_object(point)` recursively applies inverse transformations up the parent chain
@@ -869,7 +869,7 @@ Demonstrates complex hierarchical transformations using deeply nested group stru
 
 **Example output:**
 ```
-Chapter 19: Hierarchical Transformations
+Nested Groups Demo: Hierarchical Transformations
 Demonstrating nested group transformations with world_to_object and normal_to_world
 ================================================================================
 
@@ -883,16 +883,16 @@ Each object's position and orientation is calculated through
 multiple levels of group transformations using world_to_object
 and normal_to_world methods.
 
-Scene rendered to examples/chapter19.ppm
+Scene rendered to examples/nested_groups_demo.ppm
 
 Note: The correct rendering of this complex hierarchy demonstrates
 that world_to_object and normal_to_world properly cascade through
 multiple levels of parent transformations.
 ```
 
-## Chapter 20 - Bounding Boxes Optimization
+## Bounding Boxes Demo
 
-**Note:** This is a custom extension beyond the book.
+**Note:** This is a custom extension beyond the book, not an actual chapter.
 
 Demonstrates performance optimization using axis-aligned bounding boxes (AABBs) for ray tracing:
 - `Bounds` class for axis-aligned bounding boxes with min/max extents
@@ -903,7 +903,7 @@ Demonstrates performance optimization using axis-aligned bounding boxes (AABBs) 
 - Group optimization: test bounding box first, skip all children if ray misses
 - Visual demonstration: scene with 96 marbles in 16 groups showing dramatic performance improvement
 
-**Output:** `examples/chapter20.ppm` - A 600×400 pixel image showing many grouped objects with bounding box optimization
+**Output:** `examples/bounding_boxes_demo.ppm` - A 600×400 pixel image showing many grouped objects with bounding box optimization
 
 **Key concepts:**
 - Bounding boxes provide fast ray-intersection tests before checking complex shapes
@@ -917,22 +917,22 @@ Demonstrates performance optimization using axis-aligned bounding boxes (AABBs) 
 
 **Example output:**
 ```
-Chapter 20: Bounding Boxes Optimization
+Bounding Boxes Demo: Performance Optimization with AABBs
 Rendering a scene with many grouped objects...
 Bounding boxes dramatically reduce intersection tests.
 Rendering 600x400 image...
 With bounding boxes: groups are tested once, not every sphere individually
 Rendered in 45.67 seconds
-Saved to examples/chapter20.ppm
+Saved to examples/bounding_boxes_demo.ppm
 
 This scene contains 96 spheres organized into 16 groups.
 Bounding boxes allow the ray tracer to skip entire groups when rays miss their bounds,
 dramatically reducing the number of intersection tests required.
 ```
 
-## Chapter 21 - Advanced Features
+## Advanced Features Demo
 
-**Note:** This is a custom extension beyond the book.
+**Note:** This is a custom extension beyond the book, not an actual chapter.
 
 Demonstrates 8 advanced ray tracing techniques:
 - **Torus primitive**: Donut-shaped objects using quartic equation solving (Durand-Kerner method)
@@ -944,7 +944,7 @@ Demonstrates 8 advanced ray tracing techniques:
 - **Texture mapping**: Image-based patterns with planar/cylindrical/spherical UV mapping
 - **Normal perturbation**: Bump/displacement effects (sine waves, quilted patterns, noise, ripples)
 
-**Output:** `examples/chapter21.ppm` - A 400×200 pixel image showcasing advanced features with a torus, normal-perturbed spheres, and reflective materials
+**Output:** `examples/advanced_features_demo.ppm` - A 400×200 pixel image showcasing advanced features with a torus, normal-perturbed spheres, and reflective materials
 
 **Key concepts:**
 - **Torus**: Quartic intersection equation (4th degree polynomial) solved numerically
@@ -1008,8 +1008,8 @@ sphere.material.normal_perturbation = NormalPerturbations.sine_wave(
 
 **Example output:**
 ```
-Chapter 21: Next Steps (Advanced Features)
-Rendering showcase scene with advanced features...
+Advanced Features Demo: Showcasing Extended Ray Tracing Capabilities
+Creating showcase scene with advanced features...
 Features demonstrated:
   - Torus primitive (green donut)
   - Normal perturbation (wavy red sphere, quilted blue sphere)
@@ -1025,7 +1025,7 @@ Additional features available (not shown to keep render times reasonable):
   - Texture mapping (TextureMap with planar/cylindrical/spherical UV mapping)
 
 Rendering took 52.34 seconds
-Saved to examples/chapter21.ppm
+Saved to examples/advanced_features_demo.ppm
 ```
 
 ## Viewing Output Files

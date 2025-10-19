@@ -1,9 +1,9 @@
 require_relative "../lib/rayz"
 
 module Rayz
-  module Chapter18
+  module ObjParserDemo
     def self.run
-      puts "Chapter 18: OBJ File Parsing"
+      puts "OBJ Parser Demo: Loading 3D Models from Wavefront OBJ Files"
       puts "Loading and rendering 3D models from Wavefront OBJ files"
       puts ""
 
@@ -61,7 +61,7 @@ module Rayz
       canvas = camera.render(world)
 
       # Save to file
-      filename = File.join(__dir__, "chapter18.ppm")
+      filename = File.join(__dir__, "obj_parser_demo.ppm")
       File.write(filename, canvas.to_ppm)
       puts "Scene saved to #{filename}"
       puts "\n" + ("=" * 60) + "\n"
@@ -91,4 +91,4 @@ module Rayz
 end
 
 # Run if executed directly
-Rayz::Chapter18.run if __FILE__ == $PROGRAM_NAME
+Rayz::ObjParserDemo.run if __FILE__ == $PROGRAM_NAME

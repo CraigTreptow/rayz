@@ -1,9 +1,9 @@
 require_relative "../lib/rayz"
 
 module Rayz
-  class Chapter19
+  class NestedGroupsDemo
     def self.run
-      puts "Chapter 19: Hierarchical Transformations"
+      puts "Nested Groups Demo: Hierarchical Transformations"
       puts "Demonstrating nested group transformations with world_to_object and normal_to_world"
       puts "=" * 80
 
@@ -186,7 +186,7 @@ module Rayz
 
       canvas = camera.render(world)
 
-      output_path = File.join(File.dirname(__FILE__), "chapter19.ppm")
+      output_path = File.join(File.dirname(__FILE__), "nested_groups_demo.ppm")
       File.write(output_path, canvas.to_ppm)
 
       puts "Scene rendered to #{output_path}"
@@ -198,4 +198,4 @@ module Rayz
   end
 end
 
-Rayz::Chapter19.run if __FILE__ == $0
+Rayz::NestedGroupsDemo.run if __FILE__ == $0
