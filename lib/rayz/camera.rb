@@ -1,4 +1,5 @@
 require "matrix"
+require "etc"
 
 module Rayz
   class Camera
@@ -66,7 +67,15 @@ module Rayz
       Ray.new(origin: origin, direction: direction, time: time)
     end
 
-    def render(world)
+    def render(world, parallel: true)
+      if parallel
+        render_parallel(world)
+      else
+        render_sequential(world)
+      end
+    end
+
+    def render_sequential(world)
       image = Canvas.new(width: @hsize, height: @vsize)
 
       start_time = Time.now
@@ -87,6 +96,58 @@ module Rayz
 
       puts "\nDone!"
       puts "Rendering took #{total_time.round(2)} seconds"
+      puts "Time per row: #{(time_per_row * 1000).round(2)} ms"
+
+      image
+    end
+
+    def render_parallel(world)
+      image = Canvas.new(width: @hsize, height: @vsize)
+
+      start_time = Time.now
+      cpu_count = Etc.nprocessors
+      puts "Rendering with #{cpu_count} CPU cores (Thread-based parallelism):"
+      puts "Progress (each dot = 10 rows):"
+
+      # Thread-safe progress counter
+      progress_mutex = Mutex.new
+      completed_rows = 0
+
+      # Distribute rows among threads
+      rows = (0...@vsize).to_a
+      threads = []
+
+      cpu_count.times do |thread_id|
+        threads << Thread.new do
+          # Each thread processes every Nth row (round-robin distribution)
+          rows.each_with_index do |y, idx|
+            next unless idx % cpu_count == thread_id
+
+            # Render entire row
+            (0...@hsize).each do |x|
+              color = render_pixel(x, y, world)
+              # Canvas.write_pixel already has mutex protection
+              image.write_pixel(row: @vsize - 1 - y, col: x, color: color)
+            end
+
+            # Update progress (thread-safe)
+            progress_mutex.synchronize do
+              completed_rows += 1
+              print "." if completed_rows % 10 == 0
+            end
+          end
+        end
+      end
+
+      # Wait for all threads to complete
+      threads.each(&:join)
+
+      end_time = Time.now
+      total_time = end_time - start_time
+      time_per_row = total_time / @vsize
+
+      puts "\nDone!"
+      puts "Rendering took #{total_time.round(2)} seconds (#{cpu_count} threads)"
       puts "Time per row: #{(time_per_row * 1000).round(2)} ms"
 
       image

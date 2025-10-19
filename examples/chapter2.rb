@@ -47,7 +47,7 @@ module Rayz
       file_name = "examples/chapter2.ppm"
       print "Writing PPM to #{file_name}..."
       Async do
-        ppm_content = canvas.to_ppm_async
+        ppm_content = canvas.to_ppm
         File.write(file_name, ppm_content)
       end.wait
       puts "Done"

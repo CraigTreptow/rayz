@@ -7,8 +7,8 @@ The ray tracer has async infrastructure in the Canvas class, but the critical bo
 
 ### What's Already Optimized ✅
 - **Bounding boxes** (Chapter 20): Groups use AABB to skip intersection tests
-- **Async PPM export**: `ppm_body_async` parallelizes row processing during file export
-- **Mutex protection**: Thread-safe canvas pixel writing
+- **Async PPM export**: `Canvas#ppm_body` parallelizes row processing (now the default, sync version removed)
+- **Mutex protection**: Thread-safe canvas pixel writing for concurrent access
 
 ### Major Bottleneck Identified 🔴
 - **Camera.render()** (camera.rb:69-93): Completely sequential pixel processing
@@ -19,10 +19,11 @@ The ray tracer has async infrastructure in the Canvas class, but the critical bo
     - Each ray calls `world.color_at()` with recursive reflection/refraction
     - Shadow calculations, intersection tests, material calculations
 
-### Current Async Implementation Issues
-- `Canvas.write_pixel_async()` just calls synchronous version (no parallelization)
-- Async is only used for PPM export (I/O bound, not compute bound)
-- The compute-heavy work (ray tracing) is not parallelized
+### Current Async Implementation Status
+- ✅ `Canvas#to_ppm` now uses async row processing by default (sync version removed)
+- ✅ `Canvas#write_pixel` uses mutex for thread safety
+- ❌ **Main bottleneck remains:** Camera.render() is still completely sequential
+- The compute-heavy work (ray tracing) is not yet parallelized
 
 ---
 
@@ -479,10 +480,13 @@ Rewrite hottest math operations in C or Rust:
 
 ## Implementation Priority Ranking
 
+### Completed:
+0. ✅ **Consolidate async Canvas methods** (done 2025-10-19) - Code cleanup
+
 ### Must Do (Weeks 1-2):
-1. ✅ **Setup profiling** (1 day)
-2. ✅ **Baseline metrics** (1 day)
-3. 🔥 **Parallelize Camera.render()** (2-3 days) - **3-8x speedup**
+1. 📊 **Setup profiling** (1 day) - Measure before optimizing
+2. 📊 **Baseline metrics** (1 day) - Establish performance baseline
+3. 🔥 **Parallelize Camera.render()** (2-3 days) - **3-8x speedup** ← **NEXT PRIORITY**
 4. 💰 **Cache matrix inversions** (2 days) - **1.2-1.5x speedup**
 
 ### Should Do (Weeks 3-4):
@@ -550,11 +554,34 @@ diff examples/chapter7.ppm examples/chapter7_baseline.ppm
 
 ---
 
+## Completed Optimizations
+
+### ✅ Canvas Async Consolidation (2025-10-19)
+**Branch:** `remove-sync-canvas-methods`
+
+**Changes made:**
+- Removed synchronous `ppm_body` private method
+- Renamed `ppm_body_async` → `ppm_body` (now uses async by default)
+- Renamed `to_ppm_async` → `to_ppm` (async is now the only implementation)
+- Updated `chapter2.rb` to use standard `to_ppm` method
+- Fixed row indexing bug in async implementation
+
+**Impact:**
+- Code simplification: Single async implementation instead of maintaining two versions
+- All PPM exports now use parallel row processing by default
+- Maintains thread safety via mutex for pixel writes
+- **Performance impact:** Minimal (PPM export is <5% of total render time)
+
+**Next steps:** Focus on parallelizing the render loop (90%+ of time)
+
+---
+
 ## Profiling Questions to Answer
 
-From the user's question: **"Are async Canvas methods helpful?"**
+### Question: "Are async Canvas methods helpful?"
 
-**Answer:** The current async Canvas methods (`ppm_body_async`) only help with PPM export, which is I/O bound and typically <5% of total time. The big win is parallelizing the **render loop itself**, which is 90%+ of the time.
+**Answer (Updated 2025-10-19):**
+Async Canvas methods help with PPM export, which is I/O bound and typically <5% of total render time. We've now consolidated to use async by default, eliminating code duplication. However, the **real win is parallelizing the render loop itself**, which accounts for 90%+ of execution time.
 
 **Measurement approach:**
 ```ruby
@@ -565,24 +592,20 @@ render_time = Time.now - start
 
 # Test 2: Measure PPM export time
 start = Time.now
-ppm_sync = image.to_ppm
-sync_time = Time.now - start
-
-start = Time.now
-ppm_async = image.to_ppm_async
-async_time = Time.now - start
+ppm = image.to_ppm  # Now async by default
+export_time = Time.now - start
 
 puts "Render: #{render_time}s"
-puts "PPM sync: #{sync_time}s"
-puts "PPM async: #{async_time}s"
+puts "PPM export: #{export_time}s"
+puts "Render is #{(render_time / export_time).round(1)}x slower than export"
 ```
 
 **Expected results:**
 - Render: 60s (95% of total)
-- PPM sync: 3s (5% of total)
-- PPM async: 1s (saves 2s, but tiny compared to render)
+- PPM export: 1-3s (5% of total)
+- Ratio: Render is 20-60x slower than export
 
-**Conclusion:** Async PPM helps marginally, but parallelizing render is 30x more important.
+**Conclusion:** Async PPM export is good hygiene and now the default. The critical optimization is parallelizing `Camera#render()`.
 
 ---
 
