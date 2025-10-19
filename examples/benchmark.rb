@@ -81,8 +81,6 @@ class PerformanceBenchmark
     end
   end
 
-  private
-
   def self.create_tiny_scene
     # 100x50, very fast test for quick iteration
     camera = Rayz::Camera.new(hsize: 100, vsize: 50, field_of_view: Math::PI / 3)
@@ -216,6 +214,8 @@ class PerformanceBenchmark
     all_results = JSON.parse(File.read(RESULTS_FILE))
     all_results[label]["results"]
   end
+
+  private_class_method :create_tiny_scene, :create_small_scene, :create_medium_scene, :save_results, :load_results
 end
 
 # Run if executed directly
