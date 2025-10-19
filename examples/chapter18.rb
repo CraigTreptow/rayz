@@ -64,6 +64,7 @@ module Rayz
       filename = File.join(__dir__, "chapter18.ppm")
       File.write(filename, canvas.to_ppm)
       puts "Scene saved to #{filename}"
+      puts "\n" + ("=" * 60) + "\n"
     end
 
     def self.apply_material_to_group(group, material)

@@ -123,6 +123,7 @@ module Rayz
       puts "Writing to chapter10.ppm..."
       File.write("examples/chapter10.ppm", image.to_ppm)
       puts "Scene rendered to chapter10.ppm"
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

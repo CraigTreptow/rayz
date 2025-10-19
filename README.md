@@ -69,6 +69,8 @@ ruby examples/run all
 ruby examples/run 4
 ```
 
+**Note:** Each chapter outputs a visual separator line (60 equals signs) after completion, making it easy to distinguish between chapter outputs when running multiple chapters sequentially.
+
 ## Testing
 
 Run all tests:

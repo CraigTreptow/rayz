@@ -110,6 +110,7 @@ module Rayz
       puts "This scene contains #{groups.length * 6} spheres organized into #{groups.length} groups."
       puts "Bounding boxes allow the ray tracer to skip entire groups when rays miss their bounds,"
       puts "dramatically reducing the number of intersection tests required."
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

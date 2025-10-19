@@ -193,6 +193,7 @@ module Rayz
       puts "\nNote: The correct rendering of this complex hierarchy demonstrates"
       puts "that world_to_object and normal_to_world properly cascade through"
       puts "multiple levels of parent transformations."
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

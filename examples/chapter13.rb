@@ -172,6 +172,7 @@ module Rayz
       puts "  - Compound objects (snowman made from spheres and cylinder)"
       puts "  - Group transformations cascading to children"
       puts "  - Multiple grouped objects in a single scene"
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

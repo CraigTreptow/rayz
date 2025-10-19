@@ -93,6 +93,7 @@ module Rayz
       puts "    - Focal blur/depth of field (aperture_size > 0, focal_distance)"
       puts "    - Motion blur (motion_blur: true, shape.motion_transform)"
       puts "    - Texture mapping (TextureMap with planar/cylindrical/spherical UV mapping)"
+      puts "\n" + ("=" * 60) + "\n"
     end
   end
 end

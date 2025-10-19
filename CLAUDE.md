@@ -26,6 +26,8 @@ ruby rayz 4                  # Run only chapter 4
 ruby examples/run 7          # Alternative: run examples directly
 ```
 
+**Output Formatting:** Each chapter script outputs a visual separator line (`puts "\n" + ("=" * 60) + "\n"`) after completion for better readability when running multiple chapters sequentially.
+
 ### Testing
 ```bash
 bundle exec cucumber                    # Run all implemented tests
