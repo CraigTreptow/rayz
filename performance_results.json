@@ -1,0 +1,118 @@
+{
+  "baseline": {
+    "timestamp": "2025-10-19T10:12:20-05:00",
+    "results": {
+      "tiny": {
+        "avg": 2.886,
+        "min": 2.677,
+        "max": 3.095,
+        "stddev": 0.209,
+        "pixels": 5000,
+        "pixels_per_second": 1732
+      },
+      "small": {
+        "avg": 9.514,
+        "min": 9.145,
+        "max": 9.882,
+        "stddev": 0.368,
+        "pixels": 15000,
+        "pixels_per_second": 1577
+      },
+      "medium": {
+        "avg": 86.761,
+        "min": 86.0,
+        "max": 87.521,
+        "stddev": 0.761,
+        "pixels": 30000,
+        "pixels_per_second": 346
+      }
+    }
+  },
+  "parallel-threads": {
+    "timestamp": "2025-10-19T10:27:25-05:00",
+    "results": {
+      "tiny": {
+        "avg": 3.141,
+        "min": 2.782,
+        "max": 3.5,
+        "stddev": 0.359,
+        "pixels": 5000,
+        "pixels_per_second": 1592
+      },
+      "small": {
+        "avg": 9.727,
+        "min": 9.646,
+        "max": 9.809,
+        "stddev": 0.081,
+        "pixels": 15000,
+        "pixels_per_second": 1542
+      },
+      "medium": {
+        "avg": 91.087,
+        "min": 91.047,
+        "max": 91.127,
+        "stddev": 0.04,
+        "pixels": 30000,
+        "pixels_per_second": 329
+      }
+    }
+  },
+  "cached-matrix": {
+    "timestamp": "2025-10-19T10:32:26-05:00",
+    "results": {
+      "tiny": {
+        "avg": 1.083,
+        "min": 1.076,
+        "max": 1.091,
+        "stddev": 0.007,
+        "pixels": 5000,
+        "pixels_per_second": 4615
+      },
+      "small": {
+        "avg": 3.825,
+        "min": 3.797,
+        "max": 3.854,
+        "stddev": 0.028,
+        "pixels": 15000,
+        "pixels_per_second": 3921
+      },
+      "medium": {
+        "avg": 27.741,
+        "min": 27.283,
+        "max": 28.2,
+        "stddev": 0.459,
+        "pixels": 30000,
+        "pixels_per_second": 1081
+      }
+    }
+  },
+  "with-yjit": {
+    "timestamp": "2025-10-19T11:10:33-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.708,
+        "min": 0.689,
+        "max": 0.726,
+        "stddev": 0.019,
+        "pixels": 5000,
+        "pixels_per_second": 7066
+      },
+      "small": {
+        "avg": 2.36,
+        "min": 2.326,
+        "max": 2.393,
+        "stddev": 0.034,
+        "pixels": 15000,
+        "pixels_per_second": 6357
+      },
+      "medium": {
+        "avg": 17.551,
+        "min": 17.256,
+        "max": 17.846,
+        "stddev": 0.295,
+        "pixels": 30000,
+        "pixels_per_second": 1709
+      }
+    }
+  }
+}
