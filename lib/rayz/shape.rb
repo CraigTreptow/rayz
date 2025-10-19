@@ -2,26 +2,37 @@ require "matrix"
 
 module Rayz
   class Shape
-    attr_accessor :transform, :material, :parent, :motion_transform
+    attr_accessor :material, :parent, :motion_transform
     attr_accessor :saved_ray # For test_shape debugging
+    attr_reader :transform
 
     def initialize
       @transform = Matrix.identity(4)
+      @transform_inverse = Matrix.identity(4)
+      @transform_inverse_transpose = Matrix.identity(4)
       @material = Material.new
       @parent = nil
       @motion_transform = nil # Optional: proc that takes time and returns a transform
     end
 
+    def transform=(matrix)
+      @transform = matrix
+      @transform_inverse = matrix.inverse
+      @transform_inverse_transpose = matrix.inverse.transpose
+    end
+
     def intersect(ray, time = 0.0)
-      # Get the effective transform (base transform plus motion if applicable)
-      effective_transform = if @motion_transform
-        @motion_transform.call(time) * @transform
+      # Get the effective transform inverse (cached for static scenes)
+      effective_transform_inverse = if @motion_transform
+        # Motion blur requires dynamic inverse calculation
+        (@motion_transform.call(time) * @transform).inverse
       else
-        @transform
+        # Use cached inverse for static scenes
+        @transform_inverse
       end
 
       # Transform the ray by the inverse of the shape's transformation
-      local_ray = ray.transform(effective_transform.inverse)
+      local_ray = ray.transform(effective_transform_inverse)
       @saved_ray = local_ray # For test_shape debugging
       local_intersect(local_ray)
     end
@@ -47,8 +58,8 @@ module Rayz
       # Convert point to object space by traversing parent hierarchy
       point = @parent.world_to_object(point) if @parent
 
-      # Apply this object's inverse transformation
-      object_point_matrix = @transform.inverse * point.to_matrix
+      # Apply this object's inverse transformation (using cached value)
+      object_point_matrix = @transform_inverse * point.to_matrix
       Point.new(
         x: object_point_matrix[0, 0],
         y: object_point_matrix[1, 0],
@@ -57,8 +68,8 @@ module Rayz
     end
 
     def normal_to_world(normal)
-      # Apply this object's inverse transpose transformation
-      world_normal_matrix = @transform.inverse.transpose * normal.to_matrix
+      # Apply this object's inverse transpose transformation (using cached value)
+      world_normal_matrix = @transform_inverse_transpose * normal.to_matrix
       world_normal = Vector.new(
         x: world_normal_matrix[0, 0],
         y: world_normal_matrix[1, 0],

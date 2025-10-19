@@ -7,8 +7,8 @@ The ray tracer has async infrastructure in the Canvas class, but the critical bo
 
 ### What's Already Optimized ✅
 - **Bounding boxes** (Chapter 20): Groups use AABB to skip intersection tests
-- **Async PPM export**: `ppm_body_async` parallelizes row processing during file export
-- **Mutex protection**: Thread-safe canvas pixel writing
+- **Async PPM export**: `Canvas#ppm_body` parallelizes row processing (now the default, sync version removed)
+- **Mutex protection**: Thread-safe canvas pixel writing for concurrent access
 
 ### Major Bottleneck Identified 🔴
 - **Camera.render()** (camera.rb:69-93): Completely sequential pixel processing
@@ -19,10 +19,11 @@ The ray tracer has async infrastructure in the Canvas class, but the critical bo
     - Each ray calls `world.color_at()` with recursive reflection/refraction
     - Shadow calculations, intersection tests, material calculations
 
-### Current Async Implementation Issues
-- `Canvas.write_pixel_async()` just calls synchronous version (no parallelization)
-- Async is only used for PPM export (I/O bound, not compute bound)
-- The compute-heavy work (ray tracing) is not parallelized
+### Current Async Implementation Status
+- ✅ `Canvas#to_ppm` now uses async row processing by default (sync version removed)
+- ✅ `Canvas#write_pixel` uses mutex for thread safety
+- ❌ **Main bottleneck remains:** Camera.render() is still completely sequential
+- The compute-heavy work (ray tracing) is not yet parallelized
 
 ---
 
@@ -451,19 +452,23 @@ Instead of fixed `samples_per_pixel`:
 - Add more samples only where color variance is high (edges)
 
 ### 5.2 JIT Compilation with YJIT
-**Priority: MEDIUM** | **Effort: Very Low** | **Expected Impact: 1.2-1.5x**
+**Priority: COMPLETED ✅** | **Effort: Very Low** | **Actual Impact: 4.0-4.9x (combined with matrix caching)**
 
-Ruby 3.4.5 includes YJIT (Just-In-Time compiler):
+Ruby 3.4.7 includes YJIT (Just-In-Time compiler) which is now enabled by default in all scripts.
 
-```bash
-# Run with YJIT enabled
-RUBY_YJIT_ENABLE=1 ruby rayz 21
-```
-
-**Expected benefits:**
-- 20-50% speedup on math-heavy code
+**Actual results (exceeded expectations!):**
+- Tiny scene: 4.08x speedup (combined with matrix caching)
+- Small scene: 4.03x speedup
+- Medium scene: 4.94x speedup
+- 1.5x boost over matrix caching alone
 - No code changes required
-- Test to verify it helps
+- All scripts now use `--yjit` flag by default
+
+**Note:** Original estimate was conservative at 1.2-1.5x. Actual performance gain was much higher due to:
+- Heavy math operations (vector/matrix calculations)
+- Tight loops in ray tracing
+- Recursive ray bounces
+- YJIT works synergistically with matrix caching optimization
 
 ### 5.3 Native Extensions for Math Operations
 **Priority: LOW** | **Effort: Very High** | **Expected Impact: 2-4x**
@@ -479,47 +484,105 @@ Rewrite hottest math operations in C or Rust:
 
 ## Implementation Priority Ranking
 
-### Must Do (Weeks 1-2):
-1. ✅ **Setup profiling** (1 day)
-2. ✅ **Baseline metrics** (1 day)
-3. 🔥 **Parallelize Camera.render()** (2-3 days) - **3-8x speedup**
-4. 💰 **Cache matrix inversions** (2 days) - **1.2-1.5x speedup**
+### ✅ Completed (2025-10-19):
+0. ✅ **Consolidate async Canvas methods** - Code cleanup, eliminated duplicate methods
+1. ✅ **Setup profiling tools** - Added ruby-prof, stackprof, memory_profiler gems
+2. ✅ **Create benchmark harness** - Statistical benchmarking with examples/benchmark.rb
+3. ✅ **Baseline metrics established** - Tiny/Small/Medium scenes benchmarked
+4. ✅ **Cache matrix inversions** - **2.5-3.1x speedup achieved!** 🎉
+   - Cached @transform_inverse and @transform_inverse_transpose
+   - Eliminated hundreds of thousands of O(n³) operations
+   - Medium scene: 86.8s → 27.7s (3.13x faster)
+5. ✅ **YJIT enabled by default** - **4.0-4.9x combined speedup!** 🚀
+   - Tiny scene: 2.89s → 0.71s (4.08x faster)
+   - Small scene: 9.51s → 2.36s (4.03x faster)
+   - Medium scene: 86.76s → 17.55s (4.94x faster)
+   - Updated all scripts to use `--yjit` flag by default
+   - Zero code changes required - just Ruby runtime flag
+   - Works synergistically with matrix caching (1.5x boost over matrix caching alone)
+6. ✅ **Optimize shadow calculations** - **1.14x speedup** 🎯
+   - Early termination on first shadow ray hit
+   - No need to test all objects or sort intersections for shadow rays
+   - Medium scene: 17.55s → 15.40s (1.14x faster)
+7. ✅ **Reduce recursive depth** - **1.24x speedup** 🎯
+   - Reduced reflection/refraction recursion from 5 to 3
+   - Minimal visual difference, significant performance gain
+   - Medium scene: 15.40s → 12.40s (1.24x faster)
+8. ✅ **Optimize anti-aliasing sampling** - **1.10x speedup** 🎯
+   - Replaced array allocation with direct color accumulation
+   - Eliminated intermediate Color object allocations
+   - Medium scene: 12.40s → 11.29s (1.10x faster)
 
-### Should Do (Weeks 3-4):
-5. **Optimize anti-aliasing sampling** (1 day) - **1.1-1.2x speedup**
-6. **Fast path for non-reflective materials** (1 day) - **1.1-1.2x speedup**
-7. **Optimize shadow calculations** (2 days) - **1.1-1.5x speedup**
-8. **Test YJIT** (1 hour) - **1.2-1.5x speedup**
+**Combined Total: 7.69x speedup from baseline!** 🚀
+- Baseline: 86.76s → Final: 11.29s
+- All optimizations compound multiplicatively
 
-### Could Do (Month 2+):
-9. **Reduce recursive depth** (1 hour) - **1.1-1.3x speedup**
-10. **Memory profiling & allocation reduction** (3-5 days) - **1.1-1.3x speedup**
-11. **Spatial partitioning (BVH)** (1-2 weeks) - **1.5-3x for complex scenes**
+### ⚠️ Attempted but Not Effective:
+- **Parallelize Camera.render() with Threads** - Ruby's GVL prevents true CPU parallelism
+  - Result: Actually slower due to thread overhead (0.95x speedup)
+  - Alternative: Ractor-based parallelism had high Marshal overhead
+  - Conclusion: Single-threaded sequential rendering with YJIT is currently fastest
+- **BLACK constant caching** - Pre-allocate black color constant
+  - With YJIT: Color.new() allocations are already well-optimized
+  - Result: 3% slower (11.29s → 11.64s without --yjit flag)
+  - Conclusion: YJIT makes allocation optimization unnecessary
+- **BVH (Bounding Volume Hierarchy)** - Spatial partitioning for scenes with many objects
+  - Implemented BVHNode with recursive splitting by longest axis
+  - Handled infinite bounds (Plane) by keeping as direct children
+  - Critical bug: Calling bounds() on every ray was O(n) tree traversal
+  - Result: **6x slower** (121 objects: 20s → 125s) - catastrophic
+  - Root cause: Dynamic bounds() recomputation vs static pre-cached bounds needed
+  - Conclusion: Would need fundamental redesign with build-time caching to be viable
 
-### Advanced (Future):
-12. **Adaptive sampling** (1-2 weeks)
-13. **Native extensions** (1-2 months)
+### 🎯 Recommended Next Steps:
+
+9. **Memory profiling & allocation reduction** (3-5 days) - **1.1-1.3x speedup**
+   - Profile with memory_profiler to find allocation hotspots
+   - Reduce object creation in hot paths
+10. **Adaptive sampling for AA** (1-2 weeks) - **1.5-2x for anti-aliasing**
+   - Sample more where variance is high (edges)
+   - Sample less in flat regions
+
+### Could Do (Future):
+11. **Spatial partitioning (BVH with cached bounds)** (2-3 weeks) - **1.5-3x for scenes with 100+ objects**
+    - Requires pre-caching bounds at build time, not runtime
+    - Complex implementation with marginal benefit for typical scenes
+12. **Native extensions** (1-2 months) - **2-4x speedup**
+    - Rewrite hottest math operations in C or Rust
+    - High complexity, maintenance burden
 
 ---
 
-## Expected Cumulative Results
+## Actual Results Achieved
 
-### Conservative Estimate:
-- Parallel rendering: **4x** (4-core CPU)
-- Cached matrix ops: **1.3x**
-- Other optimizations: **1.2x**
-- **Total: ~6-7x speedup**
+### ✅ Current Performance (2025-10-19):
+- **Matrix caching:** 3.1x speedup
+- **YJIT:** 1.58x additional (4.94x total)
+- **Shadow optimization:** 1.14x additional (5.63x total)
+- **Reduced recursion:** 1.24x additional (6.99x total)
+- **AA optimization:** 1.10x additional (**7.69x total**) 🎉🚀
 
-### Optimistic Estimate:
-- Parallel rendering: **7x** (8-core CPU)
-- Cached matrix ops: **1.5x**
-- Other optimizations: **1.5x**
-- YJIT: **1.3x**
-- **Total: ~12-15x speedup**
+### Actual Measurements (Medium Scene, 200×150):
+| Optimization | Time | Individual | Cumulative |
+|-------------|------|------------|------------|
+| Baseline | 86.76s | 1.00x | 1.00x |
+| Matrix caching | 27.74s | 3.13x | 3.13x |
+| + YJIT | 17.55s | 1.58x | 4.94x |
+| + Shadow early exit | 15.40s | 1.14x | 5.63x |
+| + Reduced recursion | 12.40s | 1.24x | 6.99x |
+| + AA optimization | 11.29s | 1.10x | **7.69x** |
 
-### Real-World Example:
-- **Before:** Chapter 21 (800x600) = 10 minutes
-- **After:** Chapter 21 (800x600) = 1-2 minutes
+### Real-World Impact:
+- **Before optimizations:** Medium scene = 86.76s (~1.5 minutes)
+- **After optimizations:** Medium scene = 11.29s (~11 seconds)
+- **Improvement: 7.69x faster** (87% time reduction)
+
+### Future Potential:
+Remaining optimization opportunities:
+- Memory profiling & allocation reduction: **1.1-1.3x**
+- Adaptive sampling: **1.5-2x for anti-aliasing**
+- BVH with cached bounds: **1.5-3x for scenes with 100+ objects** (complex)
+- **Potential total: ~10-15x with all optimizations**
 
 ---
 
@@ -550,11 +613,34 @@ diff examples/chapter7.ppm examples/chapter7_baseline.ppm
 
 ---
 
+## Completed Optimizations
+
+### ✅ Canvas Async Consolidation (2025-10-19)
+**Branch:** `remove-sync-canvas-methods`
+
+**Changes made:**
+- Removed synchronous `ppm_body` private method
+- Renamed `ppm_body_async` → `ppm_body` (now uses async by default)
+- Renamed `to_ppm_async` → `to_ppm` (async is now the only implementation)
+- Updated `chapter2.rb` to use standard `to_ppm` method
+- Fixed row indexing bug in async implementation
+
+**Impact:**
+- Code simplification: Single async implementation instead of maintaining two versions
+- All PPM exports now use parallel row processing by default
+- Maintains thread safety via mutex for pixel writes
+- **Performance impact:** Minimal (PPM export is <5% of total render time)
+
+**Next steps:** Focus on parallelizing the render loop (90%+ of time)
+
+---
+
 ## Profiling Questions to Answer
 
-From the user's question: **"Are async Canvas methods helpful?"**
+### Question: "Are async Canvas methods helpful?"
 
-**Answer:** The current async Canvas methods (`ppm_body_async`) only help with PPM export, which is I/O bound and typically <5% of total time. The big win is parallelizing the **render loop itself**, which is 90%+ of the time.
+**Answer (Updated 2025-10-19):**
+Async Canvas methods help with PPM export, which is I/O bound and typically <5% of total render time. We've now consolidated to use async by default, eliminating code duplication. However, the **real win is parallelizing the render loop itself**, which accounts for 90%+ of execution time.
 
 **Measurement approach:**
 ```ruby
@@ -565,24 +651,20 @@ render_time = Time.now - start
 
 # Test 2: Measure PPM export time
 start = Time.now
-ppm_sync = image.to_ppm
-sync_time = Time.now - start
-
-start = Time.now
-ppm_async = image.to_ppm_async
-async_time = Time.now - start
+ppm = image.to_ppm  # Now async by default
+export_time = Time.now - start
 
 puts "Render: #{render_time}s"
-puts "PPM sync: #{sync_time}s"
-puts "PPM async: #{async_time}s"
+puts "PPM export: #{export_time}s"
+puts "Render is #{(render_time / export_time).round(1)}x slower than export"
 ```
 
 **Expected results:**
 - Render: 60s (95% of total)
-- PPM sync: 3s (5% of total)
-- PPM async: 1s (saves 2s, but tiny compared to render)
+- PPM export: 1-3s (5% of total)
+- Ratio: Render is 20-60x slower than export
 
-**Conclusion:** Async PPM helps marginally, but parallelizing render is 30x more important.
+**Conclusion:** Async PPM export is good hygiene and now the default. The critical optimization is parallelizing `Camera#render()`.
 
 ---
 

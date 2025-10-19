@@ -1,0 +1,234 @@
+{
+  "baseline": {
+    "timestamp": "2025-10-19T10:12:20-05:00",
+    "results": {
+      "tiny": {
+        "avg": 2.886,
+        "min": 2.677,
+        "max": 3.095,
+        "stddev": 0.209,
+        "pixels": 5000,
+        "pixels_per_second": 1732
+      },
+      "small": {
+        "avg": 9.514,
+        "min": 9.145,
+        "max": 9.882,
+        "stddev": 0.368,
+        "pixels": 15000,
+        "pixels_per_second": 1577
+      },
+      "medium": {
+        "avg": 86.761,
+        "min": 86.0,
+        "max": 87.521,
+        "stddev": 0.761,
+        "pixels": 30000,
+        "pixels_per_second": 346
+      }
+    }
+  },
+  "parallel-threads": {
+    "timestamp": "2025-10-19T10:27:25-05:00",
+    "results": {
+      "tiny": {
+        "avg": 3.141,
+        "min": 2.782,
+        "max": 3.5,
+        "stddev": 0.359,
+        "pixels": 5000,
+        "pixels_per_second": 1592
+      },
+      "small": {
+        "avg": 9.727,
+        "min": 9.646,
+        "max": 9.809,
+        "stddev": 0.081,
+        "pixels": 15000,
+        "pixels_per_second": 1542
+      },
+      "medium": {
+        "avg": 91.087,
+        "min": 91.047,
+        "max": 91.127,
+        "stddev": 0.04,
+        "pixels": 30000,
+        "pixels_per_second": 329
+      }
+    }
+  },
+  "cached-matrix": {
+    "timestamp": "2025-10-19T10:32:26-05:00",
+    "results": {
+      "tiny": {
+        "avg": 1.083,
+        "min": 1.076,
+        "max": 1.091,
+        "stddev": 0.007,
+        "pixels": 5000,
+        "pixels_per_second": 4615
+      },
+      "small": {
+        "avg": 3.825,
+        "min": 3.797,
+        "max": 3.854,
+        "stddev": 0.028,
+        "pixels": 15000,
+        "pixels_per_second": 3921
+      },
+      "medium": {
+        "avg": 27.741,
+        "min": 27.283,
+        "max": 28.2,
+        "stddev": 0.459,
+        "pixels": 30000,
+        "pixels_per_second": 1081
+      }
+    }
+  },
+  "with-yjit": {
+    "timestamp": "2025-10-19T11:10:33-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.708,
+        "min": 0.689,
+        "max": 0.726,
+        "stddev": 0.019,
+        "pixels": 5000,
+        "pixels_per_second": 7066
+      },
+      "small": {
+        "avg": 2.36,
+        "min": 2.326,
+        "max": 2.393,
+        "stddev": 0.034,
+        "pixels": 15000,
+        "pixels_per_second": 6357
+      },
+      "medium": {
+        "avg": 17.551,
+        "min": 17.256,
+        "max": 17.846,
+        "stddev": 0.295,
+        "pixels": 30000,
+        "pixels_per_second": 1709
+      }
+    }
+  },
+  "fast-path-materials": {
+    "timestamp": "2025-10-19T11:18:31-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.692,
+        "min": 0.662,
+        "max": 0.723,
+        "stddev": 0.031,
+        "pixels": 5000,
+        "pixels_per_second": 7221
+      },
+      "small": {
+        "avg": 2.515,
+        "min": 2.449,
+        "max": 2.58,
+        "stddev": 0.066,
+        "pixels": 15000,
+        "pixels_per_second": 5965
+      },
+      "medium": {
+        "avg": 17.609,
+        "min": 17.225,
+        "max": 17.993,
+        "stddev": 0.384,
+        "pixels": 30000,
+        "pixels_per_second": 1704
+      }
+    }
+  },
+  "shadow-optimization": {
+    "timestamp": "2025-10-19T11:36:24-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.712,
+        "min": 0.682,
+        "max": 0.743,
+        "stddev": 0.031,
+        "pixels": 5000,
+        "pixels_per_second": 7021
+      },
+      "small": {
+        "avg": 2.277,
+        "min": 2.226,
+        "max": 2.328,
+        "stddev": 0.051,
+        "pixels": 15000,
+        "pixels_per_second": 6587
+      },
+      "medium": {
+        "avg": 15.403,
+        "min": 15.402,
+        "max": 15.403,
+        "stddev": 0.0,
+        "pixels": 30000,
+        "pixels_per_second": 1948
+      }
+    }
+  },
+  "reduced-recursion": {
+    "timestamp": "2025-10-19T11:50:19-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.787,
+        "min": 0.739,
+        "max": 0.834,
+        "stddev": 0.047,
+        "pixels": 5000,
+        "pixels_per_second": 6355
+      },
+      "small": {
+        "avg": 2.434,
+        "min": 2.352,
+        "max": 2.516,
+        "stddev": 0.082,
+        "pixels": 15000,
+        "pixels_per_second": 6163
+      },
+      "medium": {
+        "avg": 12.399,
+        "min": 12.231,
+        "max": 12.568,
+        "stddev": 0.169,
+        "pixels": 30000,
+        "pixels_per_second": 2420
+      }
+    }
+  },
+  "aa-optimization": {
+    "timestamp": "2025-10-19T11:54:44-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.704,
+        "min": 0.68,
+        "max": 0.728,
+        "stddev": 0.024,
+        "pixels": 5000,
+        "pixels_per_second": 7099
+      },
+      "small": {
+        "avg": 2.285,
+        "min": 2.268,
+        "max": 2.301,
+        "stddev": 0.016,
+        "pixels": 15000,
+        "pixels_per_second": 6565
+      },
+      "medium": {
+        "avg": 11.286,
+        "min": 11.149,
+        "max": 11.424,
+        "stddev": 0.138,
+        "pixels": 30000,
+        "pixels_per_second": 2658
+      }
+    }
+  }
+}

@@ -37,7 +37,7 @@ module Rayz
         positions.each do |pos|
           task.async do
             x_pos = pos[:x].round
-            y_pos = canvas.height - pos[:y].round - 1
+            y_pos = pos[:y].round
             canvas.write_pixel_async(row: y_pos, col: x_pos, color: red)
           end
         end
@@ -47,7 +47,7 @@ module Rayz
       file_name = "examples/chapter2.ppm"
       print "Writing PPM to #{file_name}..."
       Async do
-        ppm_content = canvas.to_ppm_async
+        ppm_content = canvas.to_ppm
         File.write(file_name, ppm_content)
       end.wait
       puts "Done"

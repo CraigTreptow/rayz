@@ -42,8 +42,8 @@ module Rayz
       back_wall.transform = Transformations.rotation_x(radians: Math::PI / 2) *
         Transformations.translation(x: 0, y: 0, z: 5)
       back_wall.material.pattern = GradientPattern.new(
-        Color.new(red: 0.3, green: 0.4, blue: 0.6),
-        Color.new(red: 0.1, green: 0.2, blue: 0.3)
+        a: Color.new(red: 0.3, green: 0.4, blue: 0.6),
+        b: Color.new(red: 0.1, green: 0.2, blue: 0.3)
       )
       back_wall.material.pattern.transform = Transformations.rotation_y(radians: Math::PI / 2) *
         Transformations.scaling(x: 2, y: 1, z: 1)
