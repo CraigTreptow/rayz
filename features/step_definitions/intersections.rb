@@ -165,6 +165,14 @@ Then("comps.inside = {word}") do |value|
   assert_equal(expected, @comps.inside)
 end
 
+Then("comps.t = i.t") do
+  assert_equal(@i.t, @comps.t)
+end
+
+Then("comps.object = i.object") do
+  assert_equal(@i.object, @comps.object)
+end
+
 # Glass sphere for 'shape' variable only (not 's' which is in spheres.rb)
 Given(/^shape ← glass_sphere\(\)$/) do
   @shape = Rayz.glass_sphere

@@ -99,11 +99,11 @@ Given(/^matrix ← (rotation_[xyz]\([^)]+\) \* rotation_[xyz]\([^)]+\))$/) do |e
   @matrix = eval_transformation(expression)
 end
 
-Given(/^set_transform\(s, (translation\([^)]+\) \* scaling\([^)]+\))$/) do |expression|
+Given(/^set_transform\(s, (.+\s*\*\s*.+)\)$/) do |expression|
   @s.transform = eval_transformation(expression)
 end
 
-Given(/^set_transform\(c, (translation\([^)]+\) \* scaling\([^)]+\))$/) do |expression|
+Given(/^set_transform\(c, (.+\s*\*\s*.+)\)$/) do |expression|
   @c.transform = eval_transformation(expression)
 end
 
