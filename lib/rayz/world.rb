@@ -133,10 +133,18 @@ module Rayz
       direction = v.normalize
 
       r = Ray.new(origin: point, direction: direction)
-      intersections = intersect(r)
-      h = Rayz.hit(intersections)
 
-      !!(h && h.t < distance)
+      # Early termination optimization: stop at first blocking object
+      # No need to test all objects or sort intersections for shadow rays
+      @objects.each do |obj|
+        intersections = obj.intersect(r, r.time)
+        intersections.each do |i|
+          # Found an intersection between point and light - we're in shadow
+          return true if i.t > 0 && i.t < distance
+        end
+      end
+
+      false  # No blocking objects found
     end
   end
 end

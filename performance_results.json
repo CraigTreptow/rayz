@@ -114,5 +114,63 @@
         "pixels_per_second": 1709
       }
     }
+  },
+  "fast-path-materials": {
+    "timestamp": "2025-10-19T11:18:31-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.692,
+        "min": 0.662,
+        "max": 0.723,
+        "stddev": 0.031,
+        "pixels": 5000,
+        "pixels_per_second": 7221
+      },
+      "small": {
+        "avg": 2.515,
+        "min": 2.449,
+        "max": 2.58,
+        "stddev": 0.066,
+        "pixels": 15000,
+        "pixels_per_second": 5965
+      },
+      "medium": {
+        "avg": 17.609,
+        "min": 17.225,
+        "max": 17.993,
+        "stddev": 0.384,
+        "pixels": 30000,
+        "pixels_per_second": 1704
+      }
+    }
+  },
+  "shadow-optimization": {
+    "timestamp": "2025-10-19T11:36:24-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.712,
+        "min": 0.682,
+        "max": 0.743,
+        "stddev": 0.031,
+        "pixels": 5000,
+        "pixels_per_second": 7021
+      },
+      "small": {
+        "avg": 2.277,
+        "min": 2.226,
+        "max": 2.328,
+        "stddev": 0.051,
+        "pixels": 15000,
+        "pixels_per_second": 6587
+      },
+      "medium": {
+        "avg": 15.403,
+        "min": 15.402,
+        "max": 15.403,
+        "stddev": 0.0,
+        "pixels": 30000,
+        "pixels_per_second": 1948
+      }
+    }
   }
 }
