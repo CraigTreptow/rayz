@@ -37,7 +37,7 @@ module Rayz
         positions.each do |pos|
           task.async do
             x_pos = pos[:x].round
-            y_pos = canvas.height - pos[:y].round - 1
+            y_pos = pos[:y].round
             canvas.write_pixel_async(row: y_pos, col: x_pos, color: red)
           end
         end
