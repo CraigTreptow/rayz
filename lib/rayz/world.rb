@@ -90,9 +90,13 @@ module Rayz
 
       material = comps.object.material
       if material.reflective > 0 && material.transparency > 0
+        # For materials that are both reflective and transparent,
+        # use Fresnel approximation to blend reflection and refraction
         reflectance = Rayz.schlick(comps)
         surface + reflected * reflectance + refracted * (1 - reflectance)
       else
+        # For materials with only transparency or only reflection
+        # refracted already scaled by transparency, reflected by reflective
         surface + reflected + refracted
       end
     end

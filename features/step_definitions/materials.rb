@@ -37,6 +37,15 @@ Then("m.refractive_index = {float}") do |value|
   assert_equal(@m.refractive_index, value)
 end
 
+# Material property assertions for 's' variable
+Then("s.material.transparency = {float}") do |value|
+  assert_equal(@s.material.transparency, value)
+end
+
+Then("s.material.refractive_index = {float}") do |value|
+  assert_equal(@s.material.refractive_index, value)
+end
+
 # Lighting step definitions
 Given("eyev ← vector\\({float}, {float}, {float})") do |x, y, z|
   @eyev = Rayz::Vector.new(x: x, y: y, z: z)
@@ -87,9 +96,11 @@ Then("result = color\\({float}, {float}, {float})") do |r, g, b|
   assert_equal(@result, expected)
 end
 
-# Pattern-related steps (skipping for now)
+# Pattern-related steps
 Given("m.pattern ← stripe_pattern\\(color\\({float}, {float}, {float}), color\\({float}, {float}, {float}))") do |r1, g1, b1, r2, g2, b2|
-  skip("Patterns not implemented yet")
+  color1 = Rayz::Color.new(red: r1, green: g1, blue: b1)
+  color2 = Rayz::Color.new(red: r2, green: g2, blue: b2)
+  @m.pattern = Rayz::StripePattern.new(a: color1, b: color2)
 end
 
 Given("m.ambient ← {float}") do |value|
@@ -105,17 +116,27 @@ Given("m.specular ← {float}") do |value|
 end
 
 When("c1 ← lighting\\(m, light, point\\({float}, {float}, {float}), eyev, normalv, false)") do |x, y, z|
-  skip("Patterns not implemented yet")
+  point = Rayz::Point.new(x: x, y: y, z: z)
+  # Need to create a dummy object for pattern evaluation
+  object = Rayz::Sphere.new
+  intensity = 1.0 # false means not shadowed
+  @c1 = Rayz.lighting(@m, @light, point, @eyev, @normalv, intensity, object)
 end
 
 When("c2 ← lighting\\(m, light, point\\({float}, {float}, {float}), eyev, normalv, false)") do |x, y, z|
-  skip("Patterns not implemented yet")
+  point = Rayz::Point.new(x: x, y: y, z: z)
+  # Need to create a dummy object for pattern evaluation
+  object = Rayz::Sphere.new
+  intensity = 1.0 # false means not shadowed
+  @c2 = Rayz.lighting(@m, @light, point, @eyev, @normalv, intensity, object)
 end
 
 Then("c1 = color\\({float}, {float}, {float})") do |r, g, b|
-  skip("Patterns not implemented yet")
+  expected = Rayz::Color.new(red: r, green: g, blue: b)
+  assert_equal(@c1, expected)
 end
 
 Then("c2 = color\\({float}, {float}, {float})") do |r, g, b|
-  skip("Patterns not implemented yet")
+  expected = Rayz::Color.new(red: r, green: g, blue: b)
+  assert_equal(@c2, expected)
 end

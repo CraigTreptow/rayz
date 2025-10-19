@@ -2,6 +2,14 @@ Given("t ← triangle\\({point}, {point}, {point})") do |p1, p2, p3|
   @t = Rayz::Triangle.new(p1: p1, p2: p2, p3: p3)
 end
 
+Given("t ← triangle\\(p1, p2, p3)") do
+  # Use @point_p1 and @point_p2 from tuple.rb, @p3 from smooth_triangles.rb
+  @t = Rayz::Triangle.new(p1: @point_p1, p2: @point_p2, p3: @p3)
+  # Also save them with simple names for later comparison
+  @p1 = @point_p1
+  @p2 = @point_p2
+end
+
 Then("t.p1 = p1") do
   assert_equal(@t.p1, @p1)
 end

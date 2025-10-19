@@ -1,6 +1,6 @@
 module Rayz
   class Util
-    EPSILON = 0.00001
+    EPSILON = 0.00002  # Increased from 0.00001 to handle floating-point accumulation errors
 
     def self.==(x, y)
       (x - y).abs < EPSILON

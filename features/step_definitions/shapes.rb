@@ -119,3 +119,26 @@ When(/^(n|p) ← normal_to_world\((s|g\d+), vector\(([^,]+),\s*([^,]+),\s*([^)]+
   result = obj.normal_to_world(vector)
   instance_variable_set("@#{result_var}", result)
 end
+
+# Step for normal_at with mixed √ notation (e.g., point(0, √2/2, -√2/2))
+When(/^n ← normal_at\(s, point\((\d+(?:\.\d+)?),\s*(-?√\d+\/\d+),\s*(-?√\d+\/\d+)\)\)$/) do |x, y, z|
+  # rubocop:disable Security/Eval
+  x_val = x.to_f
+  y_val = eval(y.gsub(/(-?)√(\d+)\/(\d+)/, '\1Math.sqrt(\2)/\3'))
+  z_val = eval(z.gsub(/(-?)√(\d+)\/(\d+)/, '\1Math.sqrt(\2)/\3'))
+  # rubocop:enable Security/Eval
+  point = Rayz::Point.new(x: x_val, y: y_val, z: z_val)
+  @n = @s.normal_at(point)
+end
+
+# Assertion for p = point(...)
+Then("{transform} = {point}") do |var_name, point|
+  actual = instance_variable_get("@#{var_name}")
+  assert_equal(point, actual)
+end
+
+# Assertion for s.transform = translation(...)
+Then(/^s\.transform = translation\(([^,]+),\s*([^,]+),\s*([^)]+)\)$/) do |x, y, z|
+  expected = Rayz::Transformations.translation(x: x.to_f, y: y.to_f, z: z.to_f)
+  assert_equal(expected, @s.transform)
+end

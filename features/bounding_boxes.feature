@@ -101,8 +101,11 @@ Scenario: Intersecting a ray with a bounding box at the origin
   And r ← ray(point(-5, 0, 0), direction)
   Then intersects(box, r) = true
 
-Scenario: Intersecting a ray with a bounding box at the origin (examples)
+Scenario Outline: Intersecting a ray with a bounding box at the origin (examples)
   Given box ← bounds(min: point(-1, -1, -1), max: point(1, 1, 1))
+  And r ← ray(<origin>, <direction>)
+  Then intersects(box, r) = <result>
+
   Examples:
   | origin            | direction        | result |
   | point(5, 0.5, 0)  | vector(-1, 0, 0) | true   |
@@ -119,8 +122,11 @@ Scenario: Intersecting a ray with a bounding box at the origin (examples)
   | point(0, 2, 2)    | vector(0, -1, 0) | false  |
   | point(2, 2, 0)    | vector(-1, 0, 0) | false  |
 
-Scenario: Intersecting a ray with a non-cubic bounding box
+Scenario Outline: Intersecting a ray with a non-cubic bounding box
   Given box ← bounds(min: point(5, -2, 0), max: point(11, 4, 7))
+  And r ← ray(<origin>, <direction>)
+  Then intersects(box, r) = <result>
+
   Examples:
   | origin             | direction        | result |
   | point(15, 1, 2)    | vector(-1, 0, 0) | true   |

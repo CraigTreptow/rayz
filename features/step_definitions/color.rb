@@ -1,3 +1,8 @@
+# Generic color creation for any variable name (2+ characters to avoid conflicts with specific 'c' step)
+Given(/^([a-z_]{2,}) ← color\(([^,]+),\s*([^,]+),\s*([^)]+)\)$/) do |var_name, r, g, b|
+  instance_variable_set("@#{var_name}", Rayz::Color.new(red: r.to_f, green: g.to_f, blue: b.to_f))
+end
+
 Given('c ← color\({float}, {float}, {float})') do |float, float2, float3|
   @c = Rayz::Color.new(red: float, green: float2, blue: float3)
 end

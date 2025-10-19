@@ -20,9 +20,7 @@ Then('every pixel of canvas is color\({float}, {float}, {float})') do |float, fl
   end
 end
 
-Given('red ← color\({float}, {float}, {float})') do |float, float2, float3|
-  @red = Rayz::Color.new(red: float, green: float2, blue: float3)
-end
+# Note: 'red ← color(...)' is now handled by generic step in color.rb
 
 When('write_pixel\(canvas, {int}, {int}, red)') do |int, int2|
   @canvas.write_pixel(col: int, row: int2, color: @red)

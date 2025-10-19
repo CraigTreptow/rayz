@@ -18,8 +18,24 @@ Then("r.direction = direction") do
   assert_equal(@r.direction, @direction)
 end
 
-Given('r ← ray\(point\({float}, {float}, {float}), vector\({float}, {float}, {float}))') do |x1, y1, z1, x2, y2, z2|
-  @r = Rayz::Ray.new(origin: Rayz::Point.new(x: x1, y: y1, z: z1), direction: Rayz::Vector.new(x: x2, y: y2, z: z2))
+# Ray creation supporting both regular numbers and √ notation
+Given(/^r ← ray\(point\(([^,]+),\s*([^,]+),\s*([^)]+)\), vector\(([^,]+),\s*([^,]+),\s*([^)]+)\)\)$/) do |px, py, pz, vx, vy, vz|
+  # Helper to parse value (handles both regular numbers and √ notation)
+  parse_val = lambda do |val|
+    if val.include?("√")
+      # rubocop:disable Security/Eval
+      result = eval(val.gsub(/(-?)√(\d+)\/(\d+)/, '\1Math.sqrt(\2)/\3'))
+      # rubocop:enable Security/Eval
+      result
+    else
+      val.to_f
+    end
+  end
+
+  @r = Rayz::Ray.new(
+    origin: Rayz::Point.new(x: parse_val.call(px), y: parse_val.call(py), z: parse_val.call(pz)),
+    direction: Rayz::Vector.new(x: parse_val.call(vx), y: parse_val.call(vy), z: parse_val.call(vz))
+  )
 end
 
 Then(/^position\(r, (.+)\) = point\((.+), (.+), (.+)\)$/) do |t, x, y, z|

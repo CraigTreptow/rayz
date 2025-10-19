@@ -43,7 +43,7 @@ Then("i = i2") do
 end
 
 Then("i is nothing") do
-  assert_equal(@i, nil)
+  assert_nil(@i)
 end
 
 Given('i3 ← intersection\({int}, s)') do |t|
@@ -104,10 +104,16 @@ When(/^xs ← intersections\((.+:.+)\)$/) do |list|
       parts = item.split(":")
       t_str = parts[0].strip
       obj_name = parts[1].strip
-      t = if t_str =~ /√(\d+)\/(\d+)/
-        Math.sqrt($1.to_f) / $2.to_f
+      t = if t_str =~ /^-?√(\d+)\/(\d+)$/
+        # Handle ±√n/d format
+        sign = t_str.start_with?("-") ? -1 : 1
+        sign * Math.sqrt($1.to_f) / $2.to_f
+      elsif t_str =~ /^-?√(\d+)$/
+        # Handle ±√n format
+        sign = t_str.start_with?("-") ? -1 : 1
+        sign * Math.sqrt($1.to_f)
       else
-        (t_str =~ /-?√(\d+)\/(\d+)/) ? -Math.sqrt($1.to_f) / $2.to_f : t_str.to_f
+        t_str.to_f
       end
       obj = instance_variable_get("@#{obj_name}")
       intersections << Rayz::Intersection.new(t: t, object: obj)
@@ -130,5 +136,110 @@ When("reflectance ← schlick\\(comps)") do
 end
 
 Then("reflectance = {float}") do |value|
-  assert_equal(@reflectance, value)
+  assert_in_delta(@reflectance, value, Rayz::Util::EPSILON)
+end
+
+Then("comps.over_point.z < -EPSILON\\/2") do
+  assert(@comps.over_point.z < -Rayz::Util::EPSILON / 2)
+end
+
+Then("comps.point.z > comps.over_point.z") do
+  assert(@comps.point.z > @comps.over_point.z)
+end
+
+# Computations assertions using {point} and {vector} parameter types
+Then("comps.point = {point}") do |point|
+  assert_equal(point, @comps.point)
+end
+
+Then("comps.eyev = {vector}") do |vector|
+  assert_equal(vector, @comps.eyev)
+end
+
+Then("comps.normalv = {vector}") do |vector|
+  assert_equal(vector, @comps.normalv)
+end
+
+Then("comps.inside = {word}") do |value|
+  expected = value == "true"
+  assert_equal(expected, @comps.inside)
+end
+
+# Glass sphere for 'shape' variable only (not 's' which is in spheres.rb)
+Given(/^shape ← glass_sphere\(\)$/) do
+  @shape = Rayz.glass_sphere
+end
+
+# Glass sphere with properties for 'shape' variable (not 's' which is in spheres.rb)
+Given(/^shape ← glass_sphere\(\) with:$/) do |table|
+  @shape = Rayz.glass_sphere
+  table.raw.each do |row|
+    property = row[0].strip
+    value = row[1].strip
+
+    case property
+    when "transform"
+      if value =~ /scaling\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
+        @shape.transform = Rayz::Transformations.scaling(x: $1.to_f, y: $2.to_f, z: $3.to_f)
+      elsif value =~ /translation\(([^,]+),\s*([^,]+),\s*([^)]+)\)/
+        @shape.transform = Rayz::Transformations.translation(x: $1.to_f, y: $2.to_f, z: $3.to_f)
+      end
+    when "material.refractive_index"
+      @shape.material.refractive_index = value.to_f
+    when "material.transparency"
+      @shape.material.transparency = value.to_f
+    end
+  end
+end
+
+Given(/^s ← triangle\(point\(([^,]+),\s*([^,]+),\s*([^)]+)\), point\(([^,]+),\s*([^,]+),\s*([^)]+)\), point\(([^,]+),\s*([^,]+),\s*([^)]+)\)\)$/) do |p1x, p1y, p1z, p2x, p2y, p2z, p3x, p3y, p3z|
+  p1 = Rayz::Point.new(x: p1x.to_f, y: p1y.to_f, z: p1z.to_f)
+  p2 = Rayz::Point.new(x: p2x.to_f, y: p2y.to_f, z: p2z.to_f)
+  p3 = Rayz::Point.new(x: p3x.to_f, y: p3y.to_f, z: p3z.to_f)
+  @s = Rayz::Triangle.new(p1: p1, p2: p2, p3: p3)
+end
+
+When("i ← intersection_with_uv\\({float}, s, {float}, {float})") do |t, u, v|
+  @i = Rayz::Intersection.new(t: t, object: @s, u: u, v: v)
+end
+
+Then("i.u = {float}") do |u|
+  assert_equal(@i.u, u)
+end
+
+Then("i.v = {float}") do |v|
+  assert_equal(@i.v, v)
+end
+
+# Helper to evaluate transformation expressions
+def eval_transformation(expression)
+  # Replace π with Math::PI
+  expression = expression.gsub("π", "Math::PI")
+
+  # Replace transformation function names with module calls
+  expression = expression.gsub(/translation\(([^)]+)\)/) do
+    args = $1.split(",").map(&:strip)
+    "Rayz::Transformations.translation(x: #{args[0]}, y: #{args[1]}, z: #{args[2]})"
+  end
+
+  expression = expression.gsub(/scaling\(([^)]+)\)/) do
+    args = $1.split(",").map(&:strip)
+    "Rayz::Transformations.scaling(x: #{args[0]}, y: #{args[1]}, z: #{args[2]})"
+  end
+
+  expression = expression.gsub(/rotation_x\(([^)]+)\)/) do
+    "Rayz::Transformations.rotation_x(radians: #{$1})"
+  end
+
+  expression = expression.gsub(/rotation_y\(([^)]+)\)/) do
+    "Rayz::Transformations.rotation_y(radians: #{$1})"
+  end
+
+  expression = expression.gsub(/rotation_z\(([^)]+)\)/) do
+    "Rayz::Transformations.rotation_z(radians: #{$1})"
+  end
+
+  # rubocop:disable Security/Eval
+  eval(expression)
+  # rubocop:enable Security/Eval
 end
