@@ -33,7 +33,7 @@ module Rayz
       all_intersections.sort_by(&:t)
     end
 
-    def reflected_color(comps, remaining = 5)
+    def reflected_color(comps, remaining = 3)
       return Color.new(red: 0, green: 0, blue: 0) if remaining <= 0
       return Color.new(red: 0, green: 0, blue: 0) if comps.object.material.reflective == 0
 
@@ -43,7 +43,7 @@ module Rayz
       color * comps.object.material.reflective
     end
 
-    def refracted_color(comps, remaining = 5)
+    def refracted_color(comps, remaining = 3)
       return Color.new(red: 0, green: 0, blue: 0) if remaining <= 0
       return Color.new(red: 0, green: 0, blue: 0) if comps.object.material.transparency == 0
 
@@ -63,7 +63,7 @@ module Rayz
       color_at(refract_ray, remaining - 1) * comps.object.material.transparency
     end
 
-    def shade_hit(comps, remaining = 5)
+    def shade_hit(comps, remaining = 3)
       # Calculate shadow intensity (0.0 = fully lit, 1.0 = fully shadowed for point lights)
       # For area lights, intensity is between 0.0 and 1.0
       if @light.is_a?(PointLight)
@@ -101,7 +101,7 @@ module Rayz
       end
     end
 
-    def color_at(ray, remaining = 5)
+    def color_at(ray, remaining = 3)
       intersections = intersect(ray)
       hit = Rayz.hit(intersections)
       return Color.new(red: 0, green: 0, blue: 0) unless hit

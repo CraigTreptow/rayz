@@ -172,5 +172,34 @@
         "pixels_per_second": 1948
       }
     }
+  },
+  "reduced-recursion": {
+    "timestamp": "2025-10-19T11:50:19-05:00",
+    "results": {
+      "tiny": {
+        "avg": 0.787,
+        "min": 0.739,
+        "max": 0.834,
+        "stddev": 0.047,
+        "pixels": 5000,
+        "pixels_per_second": 6355
+      },
+      "small": {
+        "avg": 2.434,
+        "min": 2.352,
+        "max": 2.516,
+        "stddev": 0.082,
+        "pixels": 15000,
+        "pixels_per_second": 6163
+      },
+      "medium": {
+        "avg": 12.399,
+        "min": 12.231,
+        "max": 12.568,
+        "stddev": 0.169,
+        "pixels": 30000,
+        "pixels_per_second": 2420
+      }
+    }
   }
 }
