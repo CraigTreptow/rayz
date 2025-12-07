@@ -9,23 +9,13 @@ if [ "$1" = "crystal" ]; then
 
   # Check if pre-compiled binary exists (fastest)
   if [ -f "$CRYSTAL_DIR/bin/rayz" ]; then
-    echo "Using pre-compiled Crystal binary (fastest)"
+    # Pre-compiled binary exists - use it with args
     exec "$CRYSTAL_DIR/bin/rayz" "$@"
   else
     echo "Pre-compiled binary not found. Run 'cd crystal && make release' for best performance."
     echo "Using crystal run --release (slower - compiles each time)..."
     cd "$CRYSTAL_DIR"
-
-    # If no args or "all", run all examples
-    if [ $# -eq 0 ] || [ "$1" = "all" ]; then
-      exec crystal run --release examples/run_all.cr
-    # If numeric argument, run specific chapter
-    elif [[ "$1" =~ ^[0-9]+$ ]]; then
-      exec crystal run --release "examples/chapter$1.cr"
-    # Otherwise, run specific demo
-    else
-      exec crystal run --release "examples/${1}_demo.cr"
-    fi
+    exec crystal run --release examples/run_all.cr -- "$@"
   fi
 else
   # Default to Ruby with YJIT

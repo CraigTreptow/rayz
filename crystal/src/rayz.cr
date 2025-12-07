@@ -73,5 +73,9 @@ module Rayz
   end
 end
 
-# Run demo when executed as a program
-Rayz.demo
+# Load examples runner - must be at top level for Crystal
+require "../examples/run_all"
+
+# When compiled as a binary, parse command-line arguments
+# This matches the Ruby examples/run interface
+Rayz::ExamplesRunner.parse_and_run(ARGV)

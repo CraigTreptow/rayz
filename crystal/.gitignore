@@ -1,5 +1,6 @@
 # Crystal build artifacts
-/bin/
+/bin/*
+!bin/.gitkeep
 *.dwarf
 
 # Dependency lock file (some projects ignore this, we'll keep it)
