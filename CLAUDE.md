@@ -4,11 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book by Jamis Buck.
+Rayz is a Ruby implementation of a ray tracer based on ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book by Jamis Buck, with a Crystal port in progress for performance comparison.
 
 **Book Implementation (Chapters 1-17):** Complete implementation of all chapters from the book, covering projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives, constructive solid geometry, and smooth triangles with normal interpolation.
 
 **Custom Extension Demos:** Additional demonstration programs beyond the book including Wavefront OBJ file parsing, enhanced shape hierarchy with world-to-object/normal-to-world transformations, bounding box optimization for performance, and advanced rendering features (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
+
+**Crystal Port:** Parallel implementation in Crystal for dramatic performance improvements (target: 10-50x speedup). Crystal compiles to native code with static typing and true parallelism. See `crystal/PORTING_STATUS.md` for current progress.
 
 ## Development Commands
 
@@ -16,9 +18,15 @@ Rayz is a Ruby implementation of a ray tracer based on ["The Ray Tracer Challeng
 ```bash
 mise install      # Install Ruby 3.4.5 (required)
 bundle install    # Install gem dependencies
+
+# For Crystal development (optional)
+mise install crystal@latest  # Or: brew install crystal
+cd crystal && shards install
 ```
 
 ### Running the Application
+
+**Ruby (default):**
 ```bash
 ./rayz                             # Execute all chapters (1-17) and demos (YJIT enabled by default)
 ./rayz all                         # Explicitly run all chapters and demos
@@ -30,7 +38,14 @@ ruby examples/run bounding_boxes   # Run bounding boxes demo
 ruby examples/run advanced_features # Run advanced features demo
 ```
 
-**Note:** YJIT is enabled by default in all scripts for 4-5x performance improvement. Ruby 3.4+ with YJIT support is required (see Installation section).
+**Crystal (in progress):**
+```bash
+./rayz crystal                     # Run all Crystal examples
+./rayz crystal 4                   # Run chapter 4 in Crystal
+cd crystal && crystal run --release examples/run_all.cr
+```
+
+**Note:** YJIT is enabled by default in all Ruby scripts for 4-5x performance improvement. Ruby 3.4+ with YJIT support is required (see Installation section).
 
 **Output Formatting:** Each chapter and demo script outputs a visual separator line (`puts "\n" + ("=" * 60) + "\n"`) after completion for better readability when running multiple examples sequentially.
 
@@ -227,6 +242,11 @@ open performance_results.html                 # View graphs in browser
 - `/features/` - Cucumber BDD tests for implemented features
 - `/book_features/` - Reference tests from the book for future implementation
 - `/book/` - Reference book in epub format
+- `/crystal/` - Crystal port of the ray tracer (in progress)
+  - `/crystal/src/rayz/` - Crystal source files
+  - `/crystal/examples/` - Crystal example scripts
+  - `/crystal/spec/` - Crystal specs (equivalent to Ruby Cucumber tests)
+  - `/crystal/PORTING_STATUS.md` - Detailed porting progress tracker
 
 ## Output Files
 - PPM image files generated in the `examples/` directory for visual demonstrations

@@ -1,12 +1,22 @@
 # Rayz
 
-An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book by Jamis Buck, written in Ruby.
+An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book by Jamis Buck, written in Ruby with a **Crystal port in progress** for performance comparison.
 
 ## Project Scope
 
 **Book Chapters (1-17):** ✅ Complete implementation of all chapters from "The Ray Tracer Challenge" book, covering the fundamentals of ray tracing from projectile physics through smooth triangle rendering.
 
 **Custom Extensions (18-21):** Additional features implemented beyond the book's scope, including OBJ file loading, advanced hierarchical transformations, bounding box optimization, and advanced rendering techniques (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
+
+**Crystal Port:** 🚧 Side-by-side Crystal implementation for performance comparison. See [`crystal/`](crystal/README.md) directory and [`crystal/PORTING_STATUS.md`](crystal/PORTING_STATUS.md) for details.
+
+## Language Implementations
+
+### Ruby (Primary - Complete)
+Fully featured implementation with all 17 book chapters plus custom extensions. Uses YJIT for 4-5x performance improvement.
+
+### Crystal (Secondary - In Progress)
+High-performance port targeting 10-50x speedup over Ruby. Currently implements core mathematical foundations (Tuple, Point, Vector, Color, Canvas). See [Crystal README](crystal/README.md) for installation and usage.
 
 ## Installation
 

@@ -1,3 +1,23 @@
 #!/bin/bash
-# Run the rayz examples with YJIT enabled by default
-exec ruby --yjit "$(dirname "$0")/examples/run" "$@"
+# Run the rayz examples with YJIT enabled by default (Ruby)
+# Or run Crystal version with: ./rayz crystal [args]
+
+# Check if first argument is "crystal"
+if [ "$1" = "crystal" ]; then
+  shift  # Remove "crystal" from arguments
+  cd "$(dirname "$0")/crystal"
+
+  # If no args or "all", run all examples
+  if [ $# -eq 0 ] || [ "$1" = "all" ]; then
+    exec crystal run --release examples/run_all.cr
+  # If numeric argument, run specific chapter
+  elif [[ "$1" =~ ^[0-9]+$ ]]; then
+    exec crystal run --release "examples/chapter$1.cr"
+  # Otherwise, run specific demo
+  else
+    exec crystal run --release "examples/${1}_demo.cr"
+  fi
+else
+  # Default to Ruby with YJIT
+  exec ruby --yjit "$(dirname "$0")/examples/run" "$@"
+fi

@@ -1,0 +1,17 @@
+name: rayz
+version: 0.1.0
+
+authors:
+  - Crystal port of The Ray Tracer Challenge
+
+description: |
+  A Crystal implementation of a ray tracer based on "The Ray Tracer Challenge" by Jamis Buck.
+  This is a parallel implementation to the Ruby version for performance comparison.
+
+crystal: ">= 1.10.0"
+
+license: MIT
+
+targets:
+  rayz:
+    main: src/rayz.cr
