@@ -113,6 +113,131 @@ ruby examples/run 4  # Only if you removed --yjit from the shebang
 - YJIT is enabled by default in the `rayz` and `examples/run` scripts for 4-5x performance improvement
 - Each chapter outputs a visual separator line (60 equals signs) after completion, making it easy to distinguish between chapter outputs when running multiple chapters sequentially
 
+## Running with Crystal (High Performance)
+
+### Crystal Installation
+
+Install Crystal using mise (recommended):
+```bash
+# Install Crystal version specified in mise.toml (1.18.2)
+mise install crystal
+
+# Verify installation
+crystal --version  # Should show "Crystal 1.18.2"
+
+# Install Crystal dependencies
+cd crystal
+shards install
+```
+
+**Alternative installation methods:**
+```bash
+# macOS
+brew install crystal
+
+# Ubuntu/Debian
+curl -fsSL https://crystal-lang.org/install.sh | sudo bash
+
+# Or download from https://crystal-lang.org/install/
+```
+
+### Running Crystal Examples
+
+Crystal compiles to native code, providing dramatic performance improvements (10-50x faster than Ruby):
+
+```bash
+# Run all Crystal examples (optimized release build)
+./rayz crystal
+
+# Run specific chapter in Crystal
+./rayz crystal 4
+
+# Run from crystal directory
+cd crystal
+crystal run --release examples/chapter4.cr
+
+# Development build (faster compilation, slower execution)
+crystal run examples/chapter4.cr
+```
+
+**Build options:**
+```bash
+cd crystal
+
+# Development build (fast compile, slower runtime)
+make build
+./bin/rayz
+
+# Release build (slow compile, fast runtime - recommended for benchmarking)
+make release
+./bin/rayz
+
+# Run without building executable
+crystal run --release examples/run_all.cr
+```
+
+### Performance Comparison: Ruby vs Crystal
+
+Compare the same scene rendered in both languages:
+
+**Quick comparison (once Crystal port is complete):**
+```bash
+# Render in Ruby (with YJIT optimization)
+time ./rayz 7
+
+# Render in Crystal (native compilation)
+time ./rayz crystal 7
+
+# Compare PPM output files
+diff examples/chapter7.ppm crystal/examples/chapter7.ppm
+```
+
+**Detailed benchmarking:**
+```bash
+# Ruby benchmark (with all optimizations including YJIT)
+ruby --yjit examples/benchmark.rb optimized
+
+# Crystal benchmark (once implemented)
+cd crystal
+crystal run --release examples/benchmark.cr
+
+# View comparison
+ruby examples/show_results.rb
+```
+
+### Expected Performance Gains
+
+Based on Crystal's compilation characteristics and similar ray tracing ports:
+
+| Scene Size | Ruby+YJIT | Crystal (expected) | Speedup |
+|------------|-----------|-------------------|---------|
+| 100×50 px (tiny) | 0.71s | ~0.05-0.10s | 7-14x faster |
+| 150×100 px (small) | 2.36s | ~0.15-0.30s | 8-16x faster |
+| 200×150 px (medium) | 11.29s* | ~0.8-1.5s | 7-14x faster |
+| 800×600 px (large) | ~180s | ~15-25s | 7-12x faster |
+
+*Ruby optimized with matrix caching, YJIT, shadow optimization, reduced recursion, and AA optimization
+
+**Why Crystal is faster:**
+- **Native compilation**: Compiles directly to machine code (no interpreter overhead)
+- **Static typing**: Enables aggressive compiler optimizations at compile-time
+- **No GIL**: True parallelism across CPU cores (future enhancement)
+- **LLVM backend**: Industry-standard optimizing compiler infrastructure
+- **Zero-cost abstractions**: Object-oriented code compiles to efficient machine code
+
+**Trade-offs:**
+- **Compilation time**: Crystal takes longer to compile (~5-30 seconds for release builds)
+- **Development speed**: Ruby is faster for iterative development
+- **Ecosystem**: Ruby has more libraries; Crystal port requires custom implementations
+
+### Current Status
+
+See [`crystal/PORTING_STATUS.md`](crystal/PORTING_STATUS.md) for detailed progress. Currently implemented:
+- ✅ Core math types (Tuple, Point, Vector)
+- ✅ Graphics primitives (Color, Canvas with PPM export)
+- 🚧 Matrix operations (in progress)
+- 📋 Rendering pipeline (Ray, Sphere, Camera, etc. - planned)
+
 ## Testing
 
 Run all tests:
