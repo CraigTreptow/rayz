@@ -1,0 +1,6 @@
+# Crystal build artifacts
+/bin/
+*.dwarf
+
+# Dependency lock file (some projects ignore this, we'll keep it)
+# shard.lock
