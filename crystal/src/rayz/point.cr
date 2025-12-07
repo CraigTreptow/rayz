@@ -5,11 +5,13 @@ require "./tuple"
 
 module Rayz
   class Point < Tuple
-    def initialize(x : Number, y : Number, z : Number)
-      @x = x.to_f
-      @y = y.to_f
-      @z = z.to_f
-      @w = 1.0
+    def initialize(x : Float64, y : Float64, z : Float64)
+      super(x, y, z, 1.0)
+    end
+
+    # Allow integer or other numeric initialization
+    def self.new(x : Number, y : Number, z : Number)
+      new(x.to_f, y.to_f, z.to_f)
     end
   end
 end

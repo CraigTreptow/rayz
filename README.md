@@ -117,6 +117,16 @@ ruby examples/run 4  # Only if you removed --yjit from the shebang
 
 ### Crystal Installation
 
+**Install system dependencies first:**
+```bash
+# Ubuntu/Debian
+sudo apt-get update
+sudo apt-get install -y pkg-config libssl-dev libpcre3-dev libevent-dev
+
+# macOS (usually included, but if needed)
+brew install pkg-config openssl pcre libevent
+```
+
 Install Crystal using mise (recommended):
 ```bash
 # Install Crystal version specified in mise.toml (1.18.2)

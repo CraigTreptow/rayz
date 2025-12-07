@@ -12,11 +12,9 @@ module Rayz
     def initialize(@red : Float64, @green : Float64, @blue : Float64)
     end
 
-    # Allow integer initialization
-    def initialize(red : Number, green : Number, blue : Number)
-      @red = red.to_f
-      @green = green.to_f
-      @blue = blue.to_f
+    # Allow integer or other numeric initialization
+    def self.new(red : Number, green : Number, blue : Number)
+      new(red.to_f, green.to_f, blue.to_f)
     end
 
     # Color addition

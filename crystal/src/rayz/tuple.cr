@@ -13,12 +13,9 @@ module Rayz
     def initialize(@x : Float64, @y : Float64, @z : Float64, @w : Float64)
     end
 
-    # Allow integer initialization
-    def initialize(x : Number, y : Number, z : Number, w : Number)
-      @x = x.to_f
-      @y = y.to_f
-      @z = z.to_f
-      @w = w.to_f
+    # Allow integer or other numeric initialization
+    def self.new(x : Number, y : Number, z : Number, w : Number)
+      new(x.to_f, y.to_f, z.to_f, w.to_f)
     end
 
     def to_s(io : IO)
