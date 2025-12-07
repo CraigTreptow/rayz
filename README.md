@@ -153,38 +153,44 @@ curl -fsSL https://crystal-lang.org/install.sh | sudo bash
 
 ### Running Crystal Examples
 
-Crystal compiles to native code, providing dramatic performance improvements (10-50x faster than Ruby):
+**Note:** Crystal port is currently in progress. Only core classes are implemented. Full examples coming soon!
 
+**Quick test (no compilation needed):**
 ```bash
-# Run all Crystal examples (optimized release build)
+# From project root - runs and compiles on-the-fly
 ./rayz crystal
-
-# Run specific chapter in Crystal
-./rayz crystal 4
-
-# Run from crystal directory
-cd crystal
-crystal run --release examples/chapter4.cr
-
-# Development build (faster compilation, slower execution)
-crystal run examples/chapter4.cr
 ```
 
-**Build options:**
+**For development/testing:**
 ```bash
 cd crystal
 
-# Development build (fast compile, slower runtime)
-make build
-./bin/rayz
+# Run without building binary (compiles and runs immediately)
+crystal run examples/run_all.cr
 
-# Release build (slow compile, fast runtime - recommended for benchmarking)
-make release
-./bin/rayz
-
-# Run without building executable
+# Run with optimizations (slower compile, faster execution)
 crystal run --release examples/run_all.cr
 ```
+
+**For benchmarking (build optimized binary once, run many times):**
+```bash
+cd crystal
+
+# Build optimized binary (takes ~10-30 seconds)
+make release
+
+# Run the compiled binary (very fast)
+./bin/rayz
+
+# Or run specific chapter (once implemented)
+crystal run --release examples/chapter4.cr
+```
+
+**Understanding the commands:**
+- `crystal run` - Compiles and runs immediately (good for development)
+- `crystal run --release` - Compiles with optimizations (good for testing performance)
+- `make release` - Builds standalone binary (best for repeated benchmarking)
+- `./rayz crystal` - Convenience wrapper that uses `crystal run --release`
 
 ### Performance Comparison: Ruby vs Crystal
 

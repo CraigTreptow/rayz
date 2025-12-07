@@ -8,11 +8,13 @@ all: build
 # Development build
 build:
 	@echo "Building rayz (development)..."
+	@mkdir -p bin
 	@crystal build src/rayz.cr -o bin/rayz
 
 # Optimized release build
 release:
 	@echo "Building rayz (release with optimizations)..."
+	@mkdir -p bin
 	@crystal build --release src/rayz.cr -o bin/rayz
 	@echo "Release build complete! Binary: bin/rayz"
 
