@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Rayz is a Ruby implementation of a ray tracer based on ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book by Jamis Buck.
+This is a multi-language repository. `book_features/` at the root contains language-agnostic Gherkin specs from the book — the starting point for any new language implementation. Each language lives in its own subdirectory (e.g., `ruby/`, `python/`).
+
+Rayz is a ray tracer based on ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) by Jamis Buck.
 
 **Book Implementation (Chapters 1-17):** Complete implementation of all chapters from the book, covering projectile physics, canvas visualization, matrix operations, transformation matrices, ray-sphere intersections, Phong shading, reflection/refraction, hierarchical scene composition, triangle primitives, constructive solid geometry, and smooth triangles with normal interpolation.
 
@@ -14,12 +16,14 @@ Rayz is a Ruby implementation of a ray tracer based on ["The Ray Tracer Challeng
 
 ### Setup
 ```bash
-mise install      # Install Ruby 3.4.5 (required)
+cd ruby
+mise install      # Install Ruby version from ruby/mise.toml
 bundle install    # Install gem dependencies
 ```
 
 ### Running the Application
 ```bash
+cd ruby
 ./rayz                             # Execute all chapters (1-17) and demos (YJIT enabled by default)
 ./rayz all                         # Explicitly run all chapters and demos
 ./rayz 4                           # Run only chapter 4
@@ -36,13 +40,15 @@ ruby examples/run advanced_features # Run advanced features demo
 
 ### Testing
 ```bash
-bundle exec cucumber                    # Run all implemented tests
-bundle exec cucumber features/         # Run working features only
+cd ruby
+bundle exec cucumber                          # Run all implemented tests
+bundle exec cucumber features/               # Run working features only
 bundle exec cucumber features/tuples.feature  # Run specific feature
 ```
 
 ### Code Quality
 ```bash
+cd ruby
 bundle exec standardrb       # Check code style
 bundle exec standardrb --fix # Auto-fix formatting issues
 ```
@@ -56,7 +62,7 @@ The project is built on a mathematical hierarchy centered around 4D tuples:
 - `Point` - Inherits from Tuple with w=1.0 (positions in 3D space)  
 - `Vector` - Inherits from Tuple with w=0.0 (directions/displacements)
 
-Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
+Key files: `ruby/lib/rayz/tuple.rb`, `ruby/lib/rayz/point.rb`, `ruby/lib/rayz/vector.rb`
 
 ### Graphics Components
 - `Canvas` - 2D pixel grid with PPM export, origin at bottom-left, Y-axis increases upward
@@ -96,7 +102,7 @@ Key files: `lib/rayz/tuple.rb`, `lib/rayz/point.rb`, `lib/rayz/vector.rb`
 ### Physics Simulation
 - `Projectile` - Object with position (Point) and velocity (Vector)
 - `Environment` - Contains gravity and wind forces as Vectors
-- Chapter demonstration scripts in `/examples/` showcase progressive complexity
+- Chapter demonstration scripts in `/ruby/examples/` showcase progressive complexity
 
 ### Performance Optimization
 
@@ -116,14 +122,14 @@ The ray tracer includes several performance optimizations providing **4-5x speed
 
 **Usage**:
 ```bash
-ruby --yjit rayz                    # Run with YJIT enabled
-ruby --yjit examples/benchmark.rb   # Benchmark with YJIT
+ruby --yjit rayz                    # Run with YJIT enabled (from ruby/)
+ruby --yjit examples/benchmark.rb   # Benchmark with YJIT (from ruby/)
 ```
 
 #### Matrix Inverse Caching
 Second most significant optimization: shapes cache their transformation matrix inverses when the transform is set, eliminating hundreds of thousands of redundant O(n³) inverse calculations during rendering.
 
-**Implementation** (`lib/rayz/shape.rb`):
+**Implementation** (`ruby/lib/rayz/shape.rb`):
 - `@transform_inverse` - Cached inverse matrix
 - `@transform_inverse_transpose` - Cached inverse transpose for normal transformations
 - Both computed once in `transform=` setter, reused for all ray intersections
@@ -142,13 +148,14 @@ Second most significant optimization: shapes cache their transformation matrix i
 Uses the `async` gem for concurrent pixel writing with mutex protection for thread-safe canvas operations. Note: async provides minimal speedup (~5%) since rendering (not I/O) is the bottleneck.
 
 #### Benchmarking Tools
-Performance measurement infrastructure in `/examples/`:
+Performance measurement infrastructure in `/ruby/examples/`:
 - `benchmark.rb` - Statistical benchmarking with multiple iterations, saves results to `performance_results.json`
 - `show_results.rb` - Terminal display of all benchmark results with comparison
 - `visualize_results.rb` - Generates interactive HTML dashboard with Chart.js graphs
 
 **Usage**:
 ```bash
+cd ruby
 ruby examples/benchmark.rb baseline          # Run baseline benchmark
 ruby --yjit examples/benchmark.rb with-yjit  # Run YJIT benchmark
 ruby examples/show_results.rb                 # Display results in terminal
@@ -164,9 +171,9 @@ open performance_results.html                 # View graphs in browser
 
 ### Behavior-Driven Development with Cucumbe
 - Primary testing uses Cucumber with Gherkin syntax
-- Working tests in `/features/` directory
-- Reference tests from the book in `/book_features/` (future implementations)
-- Step definitions in `/features/step_definitions/`
+- Working tests in `/ruby/features/` directory
+- Reference tests from the book in `/book_features/` at the repo root (language-agnostic, used as starting point for new language implementations)
+- Step definitions in `/ruby/features/step_definitions/`
 
 ### Test Structure
 - `tuples.feature` - Core mathematical operations including vector reflection
@@ -210,8 +217,8 @@ open performance_results.html                 # View graphs in browser
 2. Write Cucumber feature file first (BDD approach)
 3. Implement step definitions
 4. Create/modify Ruby classes
-5. Run tests with `bundle exec cucumber`
-6. Format code with `bundle exec standardrb --fix`
+5. Run tests with `cd ruby && bundle exec cucumber`
+6. Format code with `cd ruby && bundle exec standardrb --fix`
 7. **Always open a pull request** when work is complete
 
 ## Key Dependencies
@@ -222,16 +229,16 @@ open performance_results.html                 # View graphs in browser
 - `debug` - Debugging support
 
 ## Project Structure
-- `/lib/rayz/` - Core ray tracer library (mathematical foundations, primitives, rendering engine)
-- `/examples/` - Chapter demonstration scripts and their output files
-- `/features/` - Cucumber BDD tests for implemented features
-- `/book_features/` - Reference tests from the book for future implementation
+- `/book_features/` - Language-agnostic Gherkin specs from the book (repo root, starting point for new language implementations)
+- `/ruby/lib/rayz/` - Core ray tracer library (mathematical foundations, primitives, rendering engine)
+- `/ruby/examples/` - Chapter demonstration scripts and their output files
+- `/ruby/features/` - Cucumber BDD tests for the Ruby implementation
 - `/book/` - Reference book in epub format
 
 ## Output Files
-- PPM image files generated in the `examples/` directory for visual demonstrations
+- PPM image files generated in the `ruby/examples/` directory for visual demonstrations
 - Canvas coordinate system: origin bottom-left, Y increases upward
-- Generated files in `examples/`:
+- Generated files in `ruby/examples/`:
   - `chapter2.ppm` - Projectile trajectory visualization
   - `chapter3.ppm` - Clock face using rotation matrices
   - `chapter4.ppm` - Analog clock at 3:00 using transformation matrices
@@ -285,8 +292,8 @@ Additional features implemented beyond the book's scope (these are demonstration
 - **Advanced Features Demo**: Torus primitive with quartic equation solving, area lights with soft shadows via grid sampling, spotlights with directional beams, anti-aliasing via supersampling, focal blur/depth of field, motion blur with time-based transformations, texture mapping with UV coordinates, normal perturbation for bump/displacement effects
 
 ### Test Coverage
-- 295 scenarios passing (346 total scenarios in features/, 51 undefined for additional edge cases)
-- 23 feature files in `/features/` directory:
+- 295 scenarios passing (346 total scenarios in ruby/features/, 51 undefined for additional edge cases)
+- 23 feature files in `/ruby/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -311,7 +318,7 @@ Additional features implemented beyond the book's scope (these are demonstration
   - `obj_file.feature` - OBJ file parser with vertex, normal, face parsing, and group support
   - `bounding_boxes.feature` - Bounding box optimization with bounds creation, transformation, merging, intersection testing, and group optimization
   - `shapes.feature` - Abstract shape tests for world_to_object and normal_to_world transformations
-- Additional reference tests from the book in `/book_features/` for future implementation
+- Reference tests from the book in `/book_features/` at the repo root (language-agnostic)
 
 ### Assertions and Testing
 - Use Minitest assertions (`assert`, `assert_equal`, `assert_in_delta`, `assert_nil`, `refute_nil`) not RSpec's `expect`
