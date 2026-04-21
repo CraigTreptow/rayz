@@ -1,6 +1,13 @@
-name: Test
+name: Test (Ruby)
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'ruby/**'
+  pull_request:
+    paths:
+      - 'ruby/**'
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -10,7 +17,8 @@ jobs:
         with:
           ruby-version: 4.0.2
           bundler-cache: true
+          working-directory: ruby
       - run: |
           set -e
-          bundle install
+          cd ruby
           bundle exec cucumber

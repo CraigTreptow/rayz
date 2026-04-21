@@ -1,6 +1,13 @@
-name: Lint
+name: Lint (Ruby)
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+      - 'ruby/**'
+  pull_request:
+    paths:
+      - 'ruby/**'
+
 permissions:
   contents: read
   checks: write
@@ -16,7 +23,9 @@ jobs:
         with:
           ruby-version: 4.0.2
           bundler-cache: true
+          working-directory: ruby
       - name: Run standardrb
         run: |
           set -e
+          cd ruby
           bundle exec standardrb
