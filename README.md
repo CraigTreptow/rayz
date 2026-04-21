@@ -1,33 +1,27 @@
 # Rayz
 
-An implementation of a ray tracer based on the ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) book by Jamis Buck, written in Ruby.
+Implementations of a ray tracer based on ["The Ray Tracer Challenge"](https://pragprog.com/book/jbtracer/the-ray-tracer-challenge) by Jamis Buck, in multiple languages.
+
+## Repository Structure
+
+```
+rayz/
+├── book_features/   # language-agnostic Gherkin specs from the book (starting point for new languages)
+├── ruby/            # Ruby implementation
+└── python/          # Python implementation (coming soon)
+```
 
 ## Project Scope
 
 **Book Chapters (1-17):** ✅ Complete implementation of all chapters from "The Ray Tracer Challenge" book, covering the fundamentals of ray tracing from projectile physics through smooth triangle rendering.
 
-**Custom Extensions (18-21):** Additional features implemented beyond the book's scope, including OBJ file loading, advanced hierarchical transformations, bounding box optimization, and advanced rendering techniques (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
+**Custom Extensions:** Additional features implemented beyond the book's scope, including OBJ file loading, advanced hierarchical transformations, bounding box optimization, and advanced rendering techniques (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
+
+---
+
+# Ruby
 
 ## Installation
-
-This project requires Ruby 3.4+ and several system dependencies for proper gem compilation.
-
-### Prerequisites
-
-**Install required system libraries:**
-
-Using **apt-get** (Ubuntu/Debian):
-```bash
-sudo apt-get update
-sudo apt-get install -y zlib1g-dev libssl-dev libreadline-dev libyaml-dev libffi-dev build-essential
-```
-
-Using **brew** (macOS/Linux):
-```bash
-brew install zlib openssl readline libyaml libffi
-```
-
-### Ruby Version Management
 
 This project uses [mise-en-place](https://mise.jdx.dev/) to manage the Ruby version.
 
@@ -40,18 +34,27 @@ brew install mise
 curl https://mise.jdx.dev/install.sh | sh
 ```
 
+**Install system libraries** (required for gem compilation):
+
+Using **apt-get** (Ubuntu/Debian):
+```bash
+sudo apt-get update
+sudo apt-get install -y zlib1g-dev libssl-dev libreadline-dev libyaml-dev libffi-dev build-essential
+```
+
+Using **brew** (macOS/Linux):
+```bash
+brew install zlib openssl readline libyaml libffi
+```
+
 **Install Ruby and dependencies:**
 ```bash
-# Install the specified Ruby version
-mise install
-
-# Install Ruby gems
+cd ruby
+mise install   # installs the Ruby version from ruby/mise.toml
 bundle install
 ```
 
 **Rebuilding Ruby with YJIT Support** (for 4-5x performance boost):
-
-Ruby's YJIT (Yet another Just-In-Time compiler) provides significant speedup for ray tracing workloads. To enable it:
 
 ```bash
 # 1. Install Rust (required for YJIT)
@@ -59,65 +62,44 @@ mise use --global rust@latest
 
 # 2. Rebuild Ruby with YJIT enabled
 export PATH="$HOME/.cargo/bin:$PATH"
-RUBY_CONFIGURE_OPTS="--enable-yjit" mise install ruby@3.4.7
+RUBY_CONFIGURE_OPTS="--enable-yjit" mise install ruby@4.0.2
 
-# 3. Switch to the YJIT-enabled Ruby
-mise use ruby@3.4.7
-bundle install
-
-# 4. Verify YJIT is available
+# 3. Verify YJIT is available
 ruby --yjit --version  # Should show "+YJIT" in output
-```
-
-Run benchmarks with YJIT:
-```bash
-ruby --yjit examples/benchmark.rb yjit
-```
-
-**Alternative: Manual Ruby Installation**
-
-If not using mise, ensure you have Ruby 3.4+ installed with the system libraries above, then run:
-```bash
-gem install bundler
-bundle install
 ```
 
 ## Running
 
-Run chapter demonstrations (generates PPM image files in `examples/` directory):
+Run chapter demonstrations from the `ruby/` directory (generates PPM image files in `ruby/examples/`):
 
 ```bash
-# Run all chapters (1-21) - YJIT enabled by default for 4-5x speedup
+cd ruby
+
+# Run all chapters and demos - YJIT enabled by default for 4-5x speedup
 ./rayz all
-ruby examples/run all  # Alternative using Ruby directly with YJIT
 
 # Run individual chapter
 ./rayz 4
-ruby examples/run 4
 
-# Disable YJIT if needed (not recommended - much slower)
-ruby examples/run 4  # Only if you removed --yjit from the shebang
+# Run a specific demo
+./rayz obj_parser
 ```
-
-**Note:**
-- YJIT is enabled by default in the `rayz` and `examples/run` scripts for 4-5x performance improvement
-- Each chapter outputs a visual separator line (60 equals signs) after completion, making it easy to distinguish between chapter outputs when running multiple chapters sequentially
 
 ## Testing
 
-Run all tests:
 ```bash
-bundle exec cucumber
-```
-
-Run specific feature:
-```bash
-bundle exec cucumber features/bounding_boxes.feature
+cd ruby
+bundle exec cucumber                                    # all tests
+bundle exec cucumber features/bounding_boxes.feature   # specific feature
 ```
 
 ## Formatting
 
-`bundle exec standardrb`
+```bash
+cd ruby
+bundle exec standardrb        # check
+bundle exec standardrb --fix  # auto-fix
+```
 
 ## Performance Optimization
 
@@ -167,6 +149,8 @@ The ray tracer includes performance optimizations providing **7.69x speedup** on
 
 ### Benchmarking & Profiling Tools
 
+From `ruby/`:
+
 ```bash
 # Run performance benchmark
 ruby --yjit examples/benchmark.rb optimized
@@ -185,7 +169,7 @@ ruby examples/profile_render.rb cpu
 ruby examples/profile_render.rb memory
 ```
 
-**Note:** All scripts now use `--yjit` by default via shebang. See `PERFORMANCE_OPTIMIZATION_PLAN.md` for detailed optimization analysis including attempted optimizations that didn't work (thread parallelism, BVH spatial partitioning).
+**Note:** All scripts use `--yjit` by default via shebang. See `ruby/PERFORMANCE_OPTIMIZATION_PLAN.md` for detailed analysis.
 
 ## Troubleshooting
 
@@ -197,10 +181,10 @@ If you encounter `LoadError: cannot load such file -- zlib` when running bundle:
    sudo apt update && sudo apt install zlib1g-dev
    ```
 
-2. Reinstall Ruby to pick up the zlib library:
+2. Reinstall Ruby:
    ```bash
-   mise uninstall ruby 3.4.5
-   mise install ruby 3.4.5
+   mise uninstall ruby
+   mise install ruby
    ```
 
 3. Try `bundle` again.
@@ -1130,15 +1114,15 @@ Saved to examples/advanced_features_demo.ppm
 
 ## Viewing Output Files
 
-The generated `.ppm` files are saved in the `examples/` directory and can be viewed with most image viewers or converted to other formats:
+The generated `.ppm` files are saved in `ruby/examples/` and can be viewed with most image viewers or converted to other formats:
 
 ```bash
 # View with ImageMagick
-display examples/chapter4.ppm
+display ruby/examples/chapter4.ppm
 
 # Convert to PNG
-convert examples/chapter4.ppm examples/chapter4.png
+convert ruby/examples/chapter4.ppm ruby/examples/chapter4.png
 
 # Copy to Windows (WSL users)
-cp examples/chapter4.ppm /mnt/c/Users/YourUsername/
+cp ruby/examples/chapter4.ppm /mnt/c/Users/YourUsername/
 ```
