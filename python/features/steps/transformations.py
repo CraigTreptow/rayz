@@ -66,9 +66,12 @@ def step_given_shearing(context, var, xy, xz, yx, yz, zx, zy):
         context,
         var,
         shearing(
-            parse_math(xy), parse_math(xz),
-            parse_math(yx), parse_math(yz),
-            parse_math(zx), parse_math(zy),
+            parse_math(xy),
+            parse_math(xz),
+            parse_math(yx),
+            parse_math(yz),
+            parse_math(zx),
+            parse_math(zy),
         ),
     )
 

@@ -1,4 +1,5 @@
 """Chapter 4: Transformation matrices — translation, scaling, rotation, shearing, and a clock demo."""
+
 from __future__ import annotations
 
 import math
