@@ -11,7 +11,7 @@ from rayz.constants import EPSILON
 
 
 def parse_math(text: str) -> float:
-    text = text.strip()
+    text = "".join(text.split())  # normalize: "π / 4" → "π/4"
 
     if text == "infinity":
         return float("inf")

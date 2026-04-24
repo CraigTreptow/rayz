@@ -12,11 +12,13 @@ import sys
 from examples.chapter1 import run as ch1
 from examples.chapter2 import run as ch2
 from examples.chapter3 import run as ch3
+from examples.chapter4 import run as ch4
 
 CHAPTERS: dict[int, tuple[str, object]] = {
     1: ("Projectile physics", ch1),
     2: ("Canvas & PPM export", ch2),
     3: ("Matrices", ch3),
+    4: ("Transformations", ch4),
 }
 
 
