@@ -1,0 +1,22 @@
+name: Test (Python)
+
+on:
+  push:
+    paths:
+      - 'python/**'
+  pull_request:
+    paths:
+      - 'python/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.14"
+      - run: |
+          set -e
+          cd python
+          uv run behave features/

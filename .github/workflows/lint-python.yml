@@ -1,0 +1,25 @@
+name: Lint (Python)
+
+on:
+  push:
+    paths:
+      - 'python/**'
+  pull_request:
+    paths:
+      - 'python/**'
+
+jobs:
+  ruff:
+    name: Ruff Linter
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.14"
+      - name: Run ruff
+        run: |
+          set -e
+          cd python
+          uv run ruff check .
+          uv run ruff format --check .

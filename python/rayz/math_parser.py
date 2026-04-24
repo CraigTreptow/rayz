@@ -36,4 +36,9 @@ def parse_math(text: str) -> float:
         divisor = float(pi_match.group(1)) if pi_match.group(1) else 1.0
         return math.pi / divisor
 
+    # Plain integer fraction like -160/532 or 105/532
+    frac_match = re.fullmatch(r"(-?\d+)/(\d+)", text)
+    if frac_match:
+        return float(frac_match.group(1)) / float(frac_match.group(2))
+
     return float(text)
