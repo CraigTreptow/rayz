@@ -1,4 +1,3 @@
-import pytest
 from behave import given, then, use_step_matcher, when
 
 from rayz.math_parser import parse_math
