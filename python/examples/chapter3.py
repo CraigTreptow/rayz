@@ -69,12 +69,14 @@ def demo_clock_face() -> None:
         cos_a, sin_a = math.cos(angle), math.sin(angle)
 
         # Rotation in the XZ plane (Y-axis rotation), viewed from above
-        rotation = Matrix([
-            [cos_a,  0, sin_a, 0],
-            [0,      1, 0,     0],
-            [-sin_a, 0, cos_a, 0],
-            [0,      0, 0,     1],
-        ])
+        rotation = Matrix(
+            [
+                [cos_a, 0, sin_a, 0],
+                [0, 1, 0, 0],
+                [-sin_a, 0, cos_a, 0],
+                [0, 0, 0, 1],
+            ]
+        )
 
         twelve_oclock = Point(0, 0, radius)
         rotated = rotation * twelve_oclock

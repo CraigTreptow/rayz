@@ -160,12 +160,16 @@ def step_then_submatrix(context, var, row, col):
 
 @then(rf"minor\({_V},\s*{_I},\s*{_I}\) = {_A}")
 def step_then_minor(context, var, row, col, val):
-    assert _resolve(context, var).minor(int(row), int(col)) == pytest.approx(parse_math(val), abs=1e-5)
+    assert _resolve(context, var).minor(int(row), int(col)) == pytest.approx(
+        parse_math(val), abs=1e-5
+    )
 
 
 @then(rf"cofactor\({_V},\s*{_I},\s*{_I}\) = {_A}")
 def step_then_cofactor(context, var, row, col, val):
-    assert _resolve(context, var).cofactor(int(row), int(col)) == pytest.approx(parse_math(val), abs=1e-5)
+    assert _resolve(context, var).cofactor(int(row), int(col)) == pytest.approx(
+        parse_math(val), abs=1e-5
+    )
 
 
 # ---------------------------------------------------------------------------
