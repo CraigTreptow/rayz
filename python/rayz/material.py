@@ -24,6 +24,7 @@ class Material:
         self.reflective = reflective
         self.transparency = transparency
         self.refractive_index = refractive_index
+        self.pattern = None
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Material):
