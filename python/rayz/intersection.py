@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from rayz.constants import EPSILON
+
 
 class Intersection:
     def __init__(self, t: float, obj) -> None:
@@ -28,3 +30,24 @@ def hit(xs: list[Intersection]) -> Intersection | None:
 
 def intersect(shape, ray) -> list[Intersection]:
     return shape.intersect(ray)
+
+
+def prepare_computations(intersection: Intersection, ray, xs=None):
+    from rayz.computations import Computations
+
+    t = intersection.t
+    obj = intersection.object
+    point = ray.position(t)
+    eyev = -ray.direction
+    normalv = obj.normal_at(point)
+
+    inside = False
+    if normalv.dot(eyev) < 0:
+        inside = True
+        normalv = -normalv
+
+    over_point = point + normalv * EPSILON
+    under_point = point - normalv * EPSILON
+    reflectv = ray.direction.reflect(normalv)
+
+    return Computations(t, obj, point, eyev, normalv, inside, over_point, reflectv, under_point=under_point)
