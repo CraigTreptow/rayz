@@ -46,5 +46,5 @@ class Camera:
             for x in range(self.hsize):
                 ray = self.ray_for_pixel(x, y)
                 color = world.color_at(ray)
-                image.write_pixel(col=x, row=y, color=color)
+                image.write_pixel(col=x, row=self.vsize - 1 - y, color=color)
         return image
