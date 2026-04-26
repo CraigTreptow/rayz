@@ -30,6 +30,7 @@ _TRANSFORM_FUNCS = {
 
 def _eval_transform(context, expr: str) -> Matrix:
     import re
+
     expr = expr.strip()
     m = re.fullmatch(r"(scaling|translation|rotation_x|rotation_y|rotation_z)\((.+)\)", expr)
     if m:

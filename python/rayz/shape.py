@@ -28,12 +28,10 @@ class Shape(ABC):
         return Vector(world_normal.x, world_normal.y, world_normal.z).normalize()
 
     @abstractmethod
-    def local_intersect(self, ray) -> list:
-        ...
+    def local_intersect(self, ray) -> list: ...
 
     @abstractmethod
-    def local_normal_at(self, point) -> Vector:
-        ...
+    def local_normal_at(self, point) -> Vector: ...
 
 
 class TestShape(Shape):

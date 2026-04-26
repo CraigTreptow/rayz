@@ -49,9 +49,7 @@ def step_given_true(context, var):
     setattr(context, var, True)
 
 
-@when(
-    rf"{_V} ← lighting\({_V},\s*{_V},\s*{_V},\s*{_V},\s*{_V}\)"
-)
+@when(rf"{_V} ← lighting\({_V},\s*{_V},\s*{_V},\s*{_V},\s*{_V}\)")
 def step_when_lighting_no_shadow(context, result, mat, light, pos, eyev, normalv):
     setattr(
         context,
@@ -66,9 +64,7 @@ def step_when_lighting_no_shadow(context, result, mat, light, pos, eyev, normalv
     )
 
 
-@when(
-    rf"{_V} ← lighting\({_V},\s*{_V},\s*{_V},\s*{_V},\s*{_V},\s*{_V}\)"
-)
+@when(rf"{_V} ← lighting\({_V},\s*{_V},\s*{_V},\s*{_V},\s*{_V},\s*{_V}\)")
 def step_when_lighting_with_shadow(context, result, mat, light, pos, eyev, normalv, shadow):
     shadow_val = getattr(context, shadow) if hasattr(context, shadow) else (shadow == "true")
     setattr(
@@ -85,9 +81,7 @@ def step_when_lighting_with_shadow(context, result, mat, light, pos, eyev, norma
     )
 
 
-@when(
-    rf"{_V} ← lighting\({_V},\s*{_V},\s*point\({_A},\s*{_A},\s*{_A}\),\s*{_V},\s*{_V},\s*(false|true)\)"
-)
+@when(rf"{_V} ← lighting\({_V},\s*{_V},\s*point\({_A},\s*{_A},\s*{_A}\),\s*{_V},\s*{_V},\s*(false|true)\)")
 def step_when_lighting_inline_point(context, result, mat, light, px, py, pz, eyev, normalv, shadow):
     setattr(
         context,
