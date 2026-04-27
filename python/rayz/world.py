@@ -55,8 +55,25 @@ class World:
         from rayz.ray import Ray
 
         reflect_ray = Ray(comps.over_point, comps.reflectv)
-        color = self.color_at(reflect_ray, remaining - 1)
-        return color * comps.object.material.reflective
+        return self.color_at(reflect_ray, remaining - 1) * comps.object.material.reflective
+
+    def refracted_color(self, comps, remaining: int = 3) -> Color:
+        if remaining <= 0 or comps.object.material.transparency == 0:
+            return Color(0, 0, 0)
+        import math
+
+        n_ratio = comps.n1 / comps.n2
+        cos_i = comps.eyev.dot(comps.normalv)
+        sin2_t = n_ratio * n_ratio * (1 - cos_i * cos_i)
+        if sin2_t > 1.0:
+            return Color(0, 0, 0)
+
+        cos_t = math.sqrt(1.0 - sin2_t)
+        direction = comps.normalv * (n_ratio * cos_i - cos_t) - comps.eyev * n_ratio
+        from rayz.ray import Ray
+
+        refract_ray = Ray(comps.under_point, direction)
+        return self.color_at(refract_ray, remaining - 1) * comps.object.material.transparency
 
     def shade_hit(self, comps, remaining: int = 3) -> Color:
         shadowed = self.is_shadowed(comps.over_point)
@@ -70,7 +87,12 @@ class World:
             comps.object,
         )
         reflected = self.reflected_color(comps, remaining)
-        return surface + reflected
+        refracted = self.refracted_color(comps, remaining)
+        mat = comps.object.material
+        if mat.reflective > 0 and mat.transparency > 0:
+            reflectance = schlick(comps)
+            return surface + reflected * reflectance + refracted * (1 - reflectance)
+        return surface + reflected + refracted
 
     def color_at(self, ray, remaining: int = 3) -> Color:
         xs = self.intersect_world(ray)
@@ -83,3 +105,17 @@ class World:
 
 def default_world() -> World:
     return World.default_world()
+
+
+def schlick(comps) -> float:
+    import math
+
+    cos = comps.eyev.dot(comps.normalv)
+    if comps.n1 > comps.n2:
+        n = comps.n1 / comps.n2
+        sin2_t = n * n * (1.0 - cos * cos)
+        if sin2_t > 1.0:
+            return 1.0
+        cos = math.sqrt(1.0 - sin2_t)
+    r0 = ((comps.n1 - comps.n2) / (comps.n1 + comps.n2)) ** 2
+    return r0 + (1 - r0) * (1 - cos) ** 5

@@ -1,8 +1,10 @@
+import pytest
 from behave import given, then, use_step_matcher, when
 
 from rayz.color import Color
 from rayz.intersection import Intersection, prepare_computations
 from rayz.math_parser import parse_math
+from rayz.plane import Plane
 from rayz.point_light import PointLight
 from rayz.sphere import Sphere
 from rayz.transformations import scaling, translation
@@ -44,6 +46,11 @@ def _apply_table(obj, table):
             obj.material.transparency = parse_math(raw)
         elif prop == "material.refractive_index":
             obj.material.refractive_index = parse_math(raw)
+        elif prop == "material.pattern":
+            if raw == "test_pattern()":
+                from rayz.pattern import test_pattern
+
+                obj.material.pattern = test_pattern()
 
 
 # ---------------------------------------------------------------------------
@@ -176,5 +183,55 @@ def step_then_c_eq_material_color(context, shape_var):
 
 @then(rf"color = color\({_A},\s*{_A},\s*{_A}\)")
 def step_then_color_eq(context, r, g, b):
-    expected = Color(parse_math(r), parse_math(g), parse_math(b))
-    assert context.color == expected, f"{context.color!r} != {expected!r}"
+    c = context.color
+    assert c.red == pytest.approx(parse_math(r), abs=1e-4)
+    assert c.green == pytest.approx(parse_math(g), abs=1e-4)
+    assert c.blue == pytest.approx(parse_math(b), abs=1e-4)
+
+
+# ---------------------------------------------------------------------------
+# Planes + reflection/refraction additions
+# ---------------------------------------------------------------------------
+
+
+@given(rf"{_V} ← plane\(\) with:")
+def step_given_plane_with_table(context, var):
+    p = Plane()
+    _apply_table(p, context.table)
+    setattr(context, var, p)
+
+
+@given(rf"{_V} has:")
+def step_given_shape_has_table(context, var):
+    _apply_table(getattr(context, var), context.table)
+
+
+@when(rf"comps ← prepare_computations\(xs\[(\d+)\],\s*{_V},\s*xs\)")
+def step_when_prepare_computations_xs(context, idx, ray_var):
+    context.comps = prepare_computations(context.xs[int(idx)], getattr(context, ray_var), context.xs)
+
+
+@when(rf"c ← refracted_color\({_V},\s*comps,\s*(\d+)\)")
+def step_when_refracted_color(context, world_var, remaining):
+    context.c = getattr(context, world_var).refracted_color(context.comps, int(remaining))
+
+
+@when(rf"color ← reflected_color\({_V},\s*comps,\s*(\d+)\)")
+def step_when_reflected_color_remaining(context, world_var, remaining):
+    context.color = getattr(context, world_var).reflected_color(context.comps, int(remaining))
+
+
+@when(rf"color ← shade_hit\({_V},\s*comps\)")
+def step_when_shade_hit_color(context, world_var):
+    context.color = getattr(context, world_var).shade_hit(context.comps)
+
+
+@when(rf"color ← shade_hit\({_V},\s*comps,\s*(\d+)\)")
+def step_when_shade_hit_remaining(context, world_var, remaining):
+    context.color = getattr(context, world_var).shade_hit(context.comps, int(remaining))
+
+
+@then(rf"color_at\({_V},\s*{_V}\) should terminate successfully")
+def step_then_color_at_terminates(context, world_var, ray_var):
+    result = getattr(context, world_var).color_at(getattr(context, ray_var))
+    assert result is not None
