@@ -50,4 +50,30 @@ def prepare_computations(intersection: Intersection, ray, xs=None):
     under_point = point - normalv * EPSILON
     reflectv = ray.direction.reflect(normalv)
 
-    return Computations(t, obj, point, eyev, normalv, inside, over_point, reflectv, under_point=under_point)
+    n1, n2 = 1.0, 1.0
+    if xs is not None:
+        containers: list = []
+        for i in xs:
+            if i == intersection:
+                n1 = containers[-1].material.refractive_index if containers else 1.0
+            if i.object in containers:
+                containers.remove(i.object)
+            else:
+                containers.append(i.object)
+            if i == intersection:
+                n2 = containers[-1].material.refractive_index if containers else 1.0
+                break
+
+    return Computations(
+        t,
+        obj,
+        point,
+        eyev,
+        normalv,
+        inside,
+        over_point,
+        reflectv,
+        n1=n1,
+        n2=n2,
+        under_point=under_point,
+    )

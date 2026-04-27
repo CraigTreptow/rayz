@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from rayz.constants import EPSILON
-
 
 class Color:
     """An RGB color with floating-point components."""
@@ -15,9 +13,9 @@ class Color:
         if not isinstance(other, Color):
             return NotImplemented
         return (
-            abs(self.red - other.red) < EPSILON
-            and abs(self.green - other.green) < EPSILON
-            and abs(self.blue - other.blue) < EPSILON
+            abs(self.red - other.red) < 1e-4
+            and abs(self.green - other.green) < 1e-4
+            and abs(self.blue - other.blue) < 1e-4
         )
 
     __hash__ = None  # type: ignore[assignment]

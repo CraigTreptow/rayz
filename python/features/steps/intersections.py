@@ -1,7 +1,7 @@
 import pytest
 from behave import given, then, use_step_matcher, when
 
-from rayz.intersection import Intersection, hit, intersections
+from rayz.intersection import Intersection, hit
 from rayz.math_parser import parse_math
 from rayz.sphere import Sphere
 
@@ -27,10 +27,21 @@ def step_given_intersection(context, var, t, obj_var):
     setattr(context, var, Intersection(parse_math(t), getattr(context, obj_var)))
 
 
+def _parse_intersections(context, args):
+    items = []
+    for a in args.split(","):
+        a = a.strip()
+        if ":" in a:
+            t_str, obj_var = a.split(":", 1)
+            items.append(Intersection(parse_math(t_str.strip()), getattr(context, obj_var.strip())))
+        else:
+            items.append(getattr(context, a))
+    return items
+
+
 @given(rf"{_V} ← intersections\((.+)\)")
 def step_given_intersections(context, var, args):
-    items = [getattr(context, a.strip()) for a in args.split(",")]
-    setattr(context, var, intersections(*items))
+    setattr(context, var, sorted(_parse_intersections(context, args), key=lambda i: i.t))
 
 
 # ---------------------------------------------------------------------------
@@ -45,8 +56,7 @@ def step_when_intersection(context, var, t, obj_var):
 
 @when(rf"{_V} ← intersections\((.+)\)")
 def step_when_intersections(context, var, args):
-    items = [getattr(context, a.strip()) for a in args.split(",")]
-    setattr(context, var, intersections(*items))
+    setattr(context, var, sorted(_parse_intersections(context, args), key=lambda i: i.t))
 
 
 @when(rf"{_V} ← hit\({_V}\)")
