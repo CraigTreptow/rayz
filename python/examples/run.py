@@ -20,6 +20,7 @@ from examples.chapter8 import run as ch8
 from examples.chapter9 import run as ch9
 from examples.chapter10 import run as ch10
 from examples.chapter11 import run as ch11
+from examples.chapter12 import run as ch12
 
 CHAPTERS: dict[int, tuple[str, object]] = {
     1: ("Projectile physics", ch1),
@@ -33,6 +34,7 @@ CHAPTERS: dict[int, tuple[str, object]] = {
     9: ("Planes", ch9),
     10: ("Reflection and Refraction", ch10),
     11: ("Cubes", ch11),
+    12: ("Cylinders", ch12),
 }
 
 
