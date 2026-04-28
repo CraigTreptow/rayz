@@ -28,6 +28,18 @@ def step_when_ray_vars(context, var, orig, dirn):
     setattr(context, var, Ray(getattr(context, orig), getattr(context, dirn)))
 
 
+@when(rf"{_V} ← ray\(point\({_A},\s*{_A},\s*{_A}\),\s*vector\({_A},\s*{_A},\s*{_A}\)\)")
+def step_when_ray_inline(context, var, ox, oy, oz, dx, dy, dz):
+    setattr(
+        context,
+        var,
+        Ray(
+            Point(parse_math(ox), parse_math(oy), parse_math(oz)),
+            Vector(parse_math(dx), parse_math(dy), parse_math(dz)),
+        ),
+    )
+
+
 # ---------------------------------------------------------------------------
 # Given: named transform matrices (reuse transform factories)
 # ---------------------------------------------------------------------------
