@@ -20,12 +20,24 @@ class Shape(ABC):
         local_ray = ray.transform(self.transform.inverse())
         return self.local_intersect(local_ray)
 
-    def normal_at(self, world_point) -> Vector:
+    def world_to_object(self, point):
+        p = point
+        if self.parent is not None:
+            p = self.parent.world_to_object(p)
+        return self.transform.inverse() * p
+
+    def normal_to_world(self, normal) -> Vector:
         inv = self.transform.inverse()
-        local_point = inv * world_point
+        n = inv.transpose() * normal
+        n = Vector(n.x, n.y, n.z).normalize()
+        if self.parent is not None:
+            n = self.parent.normal_to_world(n)
+        return n
+
+    def normal_at(self, world_point) -> Vector:
+        local_point = self.world_to_object(world_point)
         local_normal = self.local_normal_at(local_point)
-        world_normal = inv.transpose() * local_normal
-        return Vector(world_normal.x, world_normal.y, world_normal.z).normalize()
+        return self.normal_to_world(local_normal)
 
     @abstractmethod
     def local_intersect(self, ray) -> list: ...

@@ -1,1 +1,1 @@
-EPSILON: float = 1e-5
+EPSILON: float = 1e-4
