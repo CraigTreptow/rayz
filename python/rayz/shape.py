@@ -34,16 +34,16 @@ class Shape(ABC):
             n = self.parent.normal_to_world(n)
         return n
 
-    def normal_at(self, world_point) -> Vector:
+    def normal_at(self, world_point, hit=None) -> Vector:
         local_point = self.world_to_object(world_point)
-        local_normal = self.local_normal_at(local_point)
+        local_normal = self.local_normal_at(local_point, hit)
         return self.normal_to_world(local_normal)
 
     @abstractmethod
     def local_intersect(self, ray) -> list: ...
 
     @abstractmethod
-    def local_normal_at(self, point) -> Vector: ...
+    def local_normal_at(self, point, hit=None) -> Vector: ...
 
 
 class TestShape(Shape):
@@ -55,5 +55,5 @@ class TestShape(Shape):
         self.saved_ray = ray
         return []
 
-    def local_normal_at(self, point) -> Vector:
+    def local_normal_at(self, point, hit=None) -> Vector:
         return Vector(point.x, point.y, point.z)

@@ -4,9 +4,11 @@ from rayz.constants import EPSILON
 
 
 class Intersection:
-    def __init__(self, t: float, obj) -> None:
+    def __init__(self, t: float, obj, u: float | None = None, v: float | None = None) -> None:
         self.t = t
         self.object = obj
+        self.u = u
+        self.v = v
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Intersection):
@@ -15,6 +17,10 @@ class Intersection:
 
     def __repr__(self) -> str:
         return f"Intersection(t={self.t}, object={self.object!r})"
+
+
+def intersection_with_uv(t: float, obj, u: float, v: float) -> Intersection:
+    return Intersection(t, obj, u, v)
 
 
 def intersections(*args: Intersection) -> list[Intersection]:
@@ -39,7 +45,7 @@ def prepare_computations(intersection: Intersection, ray, xs=None):
     obj = intersection.object
     point = ray.position(t)
     eyev = -ray.direction
-    normalv = obj.normal_at(point)
+    normalv = obj.normal_at(point, intersection)
 
     inside = False
     if normalv.dot(eyev) < 0:

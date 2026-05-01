@@ -19,5 +19,5 @@ class Group(Shape):
             xs.extend(child.intersect(ray))
         return sorted(xs, key=lambda i: i.t)
 
-    def local_normal_at(self, point) -> Vector:
+    def local_normal_at(self, point, hit=None) -> Vector:
         raise RuntimeError("Groups have no surface normals")

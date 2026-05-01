@@ -1,0 +1,44 @@
+from __future__ import annotations
+
+from rayz.constants import EPSILON
+from rayz.intersection import Intersection
+from rayz.shape import Shape
+from rayz.tuple import Vector
+
+
+class Triangle(Shape):
+    def __init__(self, p1, p2, p3) -> None:
+        super().__init__()
+        self.p1 = p1
+        self.p2 = p2
+        self.p3 = p3
+        d1 = p2 - p1
+        d2 = p3 - p1
+        self.e1 = Vector(d1.x, d1.y, d1.z)
+        self.e2 = Vector(d2.x, d2.y, d2.z)
+        self.normal = self.e2.cross(self.e1).normalize()
+
+    def local_intersect(self, ray) -> list:
+        dir = Vector(ray.direction.x, ray.direction.y, ray.direction.z)
+        dir_cross_e2 = dir.cross(self.e2)
+        det = self.e1.dot(dir_cross_e2)
+        if abs(det) < EPSILON:
+            return []
+        f = 1.0 / det
+        p1_to_origin = ray.origin - self.p1
+        p1o = Vector(p1_to_origin.x, p1_to_origin.y, p1_to_origin.z)
+        u = f * p1o.dot(dir_cross_e2)
+        if u < 0 or u > 1:
+            return []
+        origin_cross_e1 = p1o.cross(self.e1)
+        v = f * dir.dot(origin_cross_e1)
+        if v < 0 or (u + v) > 1:
+            return []
+        t = f * self.e2.dot(origin_cross_e1)
+        return self._make_intersections(t, u, v)
+
+    def _make_intersections(self, t, u, v) -> list:
+        return [Intersection(t, self)]
+
+    def local_normal_at(self, point, hit=None) -> Vector:
+        return self.normal
