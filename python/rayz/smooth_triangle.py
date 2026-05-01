@@ -19,3 +19,15 @@ class SmoothTriangle(Triangle):
         if hit is not None and hit.u is not None and hit.v is not None:
             return self.n2 * hit.u + self.n3 * hit.v + self.n1 * (1 - hit.u - hit.v)
         return self.normal
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SmoothTriangle):
+            return NotImplemented
+        return (
+            self.p1 == other.p1
+            and self.p2 == other.p2
+            and self.p3 == other.p3
+            and self.n1 == other.n1
+            and self.n2 == other.n2
+            and self.n3 == other.n3
+        )

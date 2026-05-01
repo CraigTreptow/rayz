@@ -42,3 +42,8 @@ class Triangle(Shape):
 
     def local_normal_at(self, point, hit=None) -> Vector:
         return self.normal
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Triangle):
+            return NotImplemented
+        return self.p1 == other.p1 and self.p2 == other.p2 and self.p3 == other.p3

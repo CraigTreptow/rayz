@@ -26,6 +26,7 @@ from examples.chapter14 import run as ch14
 from examples.chapter15 import run as ch15
 from examples.chapter16 import run as ch16
 from examples.chapter17 import run as ch17
+from examples.obj_parser_demo import run as obj_demo
 
 CHAPTERS: dict[int, tuple[str, object]] = {
     1: ("Projectile physics", ch1),
@@ -45,6 +46,7 @@ CHAPTERS: dict[int, tuple[str, object]] = {
     15: ("Triangles", ch15),
     16: ("CSG", ch16),
     17: ("Smooth Triangles", ch17),
+    18: ("OBJ Parser Demo", obj_demo),
 }
 
 
