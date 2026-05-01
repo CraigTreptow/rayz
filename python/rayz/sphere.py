@@ -20,7 +20,7 @@ class Sphere(Shape):
         t2 = (-b + math.sqrt(disc)) / (2 * a)
         return [Intersection(t1, self), Intersection(t2, self)]
 
-    def local_normal_at(self, point) -> Vector:
+    def local_normal_at(self, point, hit=None) -> Vector:
         return point - Point(0, 0, 0)
 
 

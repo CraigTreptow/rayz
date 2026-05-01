@@ -39,7 +39,7 @@ class Cylinder(Shape):
         self._intersect_caps(ray, xs)
         return xs
 
-    def local_normal_at(self, point) -> Vector:
+    def local_normal_at(self, point, hit=None) -> Vector:
         dist = point.x**2 + point.z**2
         if dist < 1 and point.y >= self.maximum - EPSILON:
             return Vector(0, 1, 0)

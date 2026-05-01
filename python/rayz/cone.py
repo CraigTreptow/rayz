@@ -46,7 +46,7 @@ class Cone(Shape):
         self._intersect_caps(ray, xs)
         return xs
 
-    def local_normal_at(self, point) -> Vector:
+    def local_normal_at(self, point, hit=None) -> Vector:
         dist = point.x * point.x + point.z * point.z
         if dist < point.y * point.y and point.y >= self.maximum - EPSILON:
             return Vector(0, 1, 0)
