@@ -1,0 +1,2 @@
+# PPM files are large and reproducible — don't commit them
+*.ppm

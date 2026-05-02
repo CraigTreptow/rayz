@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ray Tracer Benchmark — 2026-05-02T17-20-15</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <style>
+    body { font-family: sans-serif; max-width: 1100px; margin: 2rem auto; padding: 0 1rem; color: #222; }
+    h1   { font-size: 1.5rem; }
+    h2   { font-size: 1.2rem; margin-top: 2rem; border-bottom: 1px solid #ccc; padding-bottom: .3rem; }
+    table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+    th, td { border: 1px solid #ddd; padding: .4rem .6rem; text-align: left; }
+    th   { background: #f4f4f4; }
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 1rem 0; }
+    .chart-wrap canvas { max-height: 320px; }
+  </style>
+</head>
+<body>
+  <h1>Ray Tracer Benchmark — 2026-05-02 17:20:15</h1>
+
+  <h2>Machine</h2>
+  <table>
+    <tr><th>Hostname</th><td>craig-beelink</td></tr>
+    <tr><th>CPU</th><td>AMD Ryzen 7 255 w/ Radeon 780M Graphics</td></tr>
+    <tr><th>Cores</th><td>16</td></tr>
+    <tr><th>Memory</th><td>27 GB</td></tr>
+    <tr><th>OS</th><td>Linux 6.17.0-22-generic x86_64</td></tr>
+  </table>
+
+  <h2>Charts</h2>
+  <div class="charts">
+    <div class="chart-wrap">
+      <canvas id="chartTime"></canvas>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="chartPps"></canvas>
+    </div>
+  </div>
+
+  <h2>Results</h2>
+  <table>
+    <thead><tr>
+      <th>Language</th><th>Variant</th><th>Scene</th><th>Size</th>
+      <th>Avg</th><th>Min</th><th>Max</th><th>Px/s</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>python</td><td>sequential</td><td>medium</td><td>60×30</td><td>4.949 s</td><td>4.949 s</td><td>4.949 s</td><td>364</td></tr>
+<tr><td>python</td><td>sequential</td><td>small</td><td>40×20</td><td>2.206 s</td><td>2.206 s</td><td>2.206 s</td><td>363</td></tr>
+<tr><td>python</td><td>sequential</td><td>tiny</td><td>20×10</td><td>527.7 ms</td><td>527.7 ms</td><td>527.7 ms</td><td>379</td></tr>
+<tr><td>ruby</td><td>no-yjit-parallel</td><td>medium</td><td>60×30</td><td>721.6 ms</td><td>721.6 ms</td><td>721.6 ms</td><td>2,494</td></tr>
+<tr><td>ruby</td><td>no-yjit-parallel</td><td>small</td><td>40×20</td><td>331.3 ms</td><td>331.3 ms</td><td>331.3 ms</td><td>2,415</td></tr>
+<tr><td>ruby</td><td>no-yjit-parallel</td><td>tiny</td><td>20×10</td><td>90.5 ms</td><td>90.5 ms</td><td>90.5 ms</td><td>2,210</td></tr>
+<tr><td>ruby</td><td>no-yjit-sequential</td><td>medium</td><td>60×30</td><td>693.4 ms</td><td>693.4 ms</td><td>693.4 ms</td><td>2,596</td></tr>
+<tr><td>ruby</td><td>no-yjit-sequential</td><td>small</td><td>40×20</td><td>308.5 ms</td><td>308.5 ms</td><td>308.5 ms</td><td>2,593</td></tr>
+<tr><td>ruby</td><td>no-yjit-sequential</td><td>tiny</td><td>20×10</td><td>80.3 ms</td><td>80.3 ms</td><td>80.3 ms</td><td>2,491</td></tr>
+<tr><td>ruby</td><td>yjit-parallel</td><td>medium</td><td>60×30</td><td>720.8 ms</td><td>720.8 ms</td><td>720.8 ms</td><td>2,497</td></tr>
+<tr><td>ruby</td><td>yjit-parallel</td><td>small</td><td>40×20</td><td>324.8 ms</td><td>324.8 ms</td><td>324.8 ms</td><td>2,463</td></tr>
+<tr><td>ruby</td><td>yjit-parallel</td><td>tiny</td><td>20×10</td><td>88.0 ms</td><td>88.0 ms</td><td>88.0 ms</td><td>2,273</td></tr>
+<tr><td>ruby</td><td>yjit-sequential</td><td>medium</td><td>60×30</td><td>747.0 ms</td><td>747.0 ms</td><td>747.0 ms</td><td>2,410</td></tr>
+<tr><td>ruby</td><td>yjit-sequential</td><td>small</td><td>40×20</td><td>311.9 ms</td><td>311.9 ms</td><td>311.9 ms</td><td>2,565</td></tr>
+<tr><td>ruby</td><td>yjit-sequential</td><td>tiny</td><td>20×10</td><td>79.2 ms</td><td>79.2 ms</td><td>79.2 ms</td><td>2,525</td></tr>
+    </tbody>
+  </table>
+
+  <h2>PPM Comparison (±1 tolerance per channel)</h2>
+  <table>
+    <thead><tr>
+      <th>Type</th><th>A</th><th>B</th><th>Scene</th>
+      <th>Match</th><th>Max diff</th><th>Mismatched px</th>
+    </tr></thead>
+    <tbody>
+      <tr><td>cross-language</td><td>python:sequential</td><td>ruby:no-yjit-parallel</td><td>tiny</td><td style='color:red'>✗</td><td>126</td><td>7 / 200</td></tr>
+<tr><td>within-language</td><td>ruby:no-yjit-parallel</td><td>ruby:no-yjit-sequential</td><td>tiny</td><td style='color:green'>✓</td><td>0</td><td>0 / 200</td></tr>
+<tr><td>within-language</td><td>ruby:no-yjit-parallel</td><td>ruby:yjit-parallel</td><td>tiny</td><td style='color:green'>✓</td><td>0</td><td>0 / 200</td></tr>
+<tr><td>within-language</td><td>ruby:no-yjit-parallel</td><td>ruby:yjit-sequential</td><td>tiny</td><td style='color:green'>✓</td><td>0</td><td>0 / 200</td></tr>
+<tr><td>cross-language</td><td>python:sequential</td><td>ruby:no-yjit-parallel</td><td>small</td><td style='color:red'>✗</td><td>144</td><td>43 / 800</td></tr>
+<tr><td>within-language</td><td>ruby:no-yjit-parallel</td><td>ruby:no-yjit-sequential</td><td>small</td><td style='color:green'>✓</td><td>0</td><td>0 / 800</td></tr>
+<tr><td>within-language</td><td>ruby:no-yjit-parallel</td><td>ruby:yjit-parallel</td><td>small</td><td style='color:green'>✓</td><td>0</td><td>0 / 800</td></tr>
+<tr><td>within-language</td><td>ruby:no-yjit-parallel</td><td>ruby:yjit-sequential</td><td>small</td><td style='color:green'>✓</td><td>0</td><td>0 / 800</td></tr>
+<tr><td>cross-language</td><td>python:sequential</td><td>ruby:no-yjit-parallel</td><td>medium</td><td style='color:red'>✗</td><td>129</td><td>119 / 1800</td></tr>
+<tr><td>within-language</td><td>ruby:no-yjit-parallel</td><td>ruby:no-yjit-sequential</td><td>medium</td><td style='color:green'>✓</td><td>0</td><td>0 / 1800</td></tr>
+<tr><td>within-language</td><td>ruby:no-yjit-parallel</td><td>ruby:yjit-parallel</td><td>medium</td><td style='color:green'>✓</td><td>0</td><td>0 / 1800</td></tr>
+<tr><td>within-language</td><td>ruby:no-yjit-parallel</td><td>ruby:yjit-sequential</td><td>medium</td><td style='color:green'>✓</td><td>0</td><td>0 / 1800</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    const labels = ["tiny","small","medium"];
+
+    new Chart(document.getElementById('chartTime'), {
+      type: 'bar',
+      data: { labels, datasets: [{"label":"python:sequential","data":[0.5277,2.2064,4.9489],"backgroundColor":"#4e79a7","borderColor":"#4e79a7","borderWidth":1},{"label":"ruby:no-yjit-parallel","data":[0.0905,0.3313,0.7216],"backgroundColor":"#f28e2b","borderColor":"#f28e2b","borderWidth":1},{"label":"ruby:no-yjit-sequential","data":[0.0803,0.3085,0.6934],"backgroundColor":"#e15759","borderColor":"#e15759","borderWidth":1},{"label":"ruby:yjit-parallel","data":[0.088,0.3248,0.7208],"backgroundColor":"#76b7b2","borderColor":"#76b7b2","borderWidth":1},{"label":"ruby:yjit-sequential","data":[0.0792,0.3119,0.747],"backgroundColor":"#59a14f","borderColor":"#59a14f","borderWidth":1}] },
+      options: {
+        plugins: { title: { display: true, text: 'Average render time (seconds, lower is better)' } },
+        scales:  { y: { beginAtZero: true, title: { display: true, text: 'seconds' } } }
+      }
+    });
+
+    new Chart(document.getElementById('chartPps'), {
+      type: 'bar',
+      data: { labels, datasets: [{"label":"python:sequential","data":[379,363,364],"backgroundColor":"#4e79a7","borderColor":"#4e79a7","borderWidth":1},{"label":"ruby:no-yjit-parallel","data":[2210,2415,2494],"backgroundColor":"#f28e2b","borderColor":"#f28e2b","borderWidth":1},{"label":"ruby:no-yjit-sequential","data":[2491,2593,2596],"backgroundColor":"#e15759","borderColor":"#e15759","borderWidth":1},{"label":"ruby:yjit-parallel","data":[2273,2463,2497],"backgroundColor":"#76b7b2","borderColor":"#76b7b2","borderWidth":1},{"label":"ruby:yjit-sequential","data":[2525,2565,2410],"backgroundColor":"#59a14f","borderColor":"#59a14f","borderWidth":1}] },
+      options: {
+        plugins: { title: { display: true, text: 'Throughput (pixels/second, higher is better)' } },
+        scales:  { y: { beginAtZero: true, title: { display: true, text: 'px/s' } } }
+      }
+    });
+  </script>
+</body>
+</html>

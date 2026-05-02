@@ -1,0 +1,424 @@
+{
+  "date": "2026-05-02T17:20:15",
+  "machine": {
+    "hostname": "craig-beelink",
+    "cpu_model": "AMD Ryzen 7 255 w/ Radeon 780M Graphics",
+    "cpu_cores": "16",
+    "memory_gb": "27",
+    "os": "Linux 6.17.0-22-generic x86_64"
+  },
+  "scene_description": "Checkers floor (reflective 0.3) + glass sphere + mirror sphere + matte sphere + green cylinder; 1 point light at (-10,10,-10)",
+  "scene_shapes": [
+    "Plane (checkers pattern)",
+    "Sphere (glass, transparency=0.9, reflective=0.9)",
+    "Sphere (mirror, reflective=0.8)",
+    "Sphere (matte, red)",
+    "Cylinder (green, closed, y=0..2)"
+  ],
+  "results": [
+    {
+      "language": "python",
+      "language_version": "Python 3.14.4",
+      "variant": "sequential",
+      "variant_desc": "Python sequential (single-threaded GIL)",
+      "scene": "medium",
+      "width": 60,
+      "height": 30,
+      "iterations": [
+        4.9489
+      ],
+      "avg_seconds": 4.9489,
+      "min_seconds": 4.9489,
+      "max_seconds": 4.9489,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 364,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/python-sequential-medium-iter1.ppm"
+    },
+    {
+      "language": "python",
+      "language_version": "Python 3.14.4",
+      "variant": "sequential",
+      "variant_desc": "Python sequential (single-threaded GIL)",
+      "scene": "small",
+      "width": 40,
+      "height": 20,
+      "iterations": [
+        2.2064
+      ],
+      "avg_seconds": 2.2064,
+      "min_seconds": 2.2064,
+      "max_seconds": 2.2064,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 363,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/python-sequential-small-iter1.ppm"
+    },
+    {
+      "language": "python",
+      "language_version": "Python 3.14.4",
+      "variant": "sequential",
+      "variant_desc": "Python sequential (single-threaded GIL)",
+      "scene": "tiny",
+      "width": 20,
+      "height": 10,
+      "iterations": [
+        0.5277
+      ],
+      "avg_seconds": 0.5277,
+      "min_seconds": 0.5277,
+      "max_seconds": 0.5277,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 379,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/python-sequential-tiny-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "no-yjit-parallel",
+      "variant_desc": "Ruby no YJIT + Thread parallelism",
+      "scene": "medium",
+      "width": 60,
+      "height": 30,
+      "iterations": [
+        0.7216
+      ],
+      "avg_seconds": 0.7216,
+      "min_seconds": 0.7216,
+      "max_seconds": 0.7216,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2494,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-no-yjit-parallel-medium-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "no-yjit-parallel",
+      "variant_desc": "Ruby no YJIT + Thread parallelism",
+      "scene": "small",
+      "width": 40,
+      "height": 20,
+      "iterations": [
+        0.3313
+      ],
+      "avg_seconds": 0.3313,
+      "min_seconds": 0.3313,
+      "max_seconds": 0.3313,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2415,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-no-yjit-parallel-small-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "no-yjit-parallel",
+      "variant_desc": "Ruby no YJIT + Thread parallelism",
+      "scene": "tiny",
+      "width": 20,
+      "height": 10,
+      "iterations": [
+        0.0905
+      ],
+      "avg_seconds": 0.0905,
+      "min_seconds": 0.0905,
+      "max_seconds": 0.0905,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2210,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-no-yjit-parallel-tiny-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "no-yjit-sequential",
+      "variant_desc": "Ruby no YJIT, single-threaded",
+      "scene": "medium",
+      "width": 60,
+      "height": 30,
+      "iterations": [
+        0.6934
+      ],
+      "avg_seconds": 0.6934,
+      "min_seconds": 0.6934,
+      "max_seconds": 0.6934,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2596,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-no-yjit-sequential-medium-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "no-yjit-sequential",
+      "variant_desc": "Ruby no YJIT, single-threaded",
+      "scene": "small",
+      "width": 40,
+      "height": 20,
+      "iterations": [
+        0.3085
+      ],
+      "avg_seconds": 0.3085,
+      "min_seconds": 0.3085,
+      "max_seconds": 0.3085,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2593,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-no-yjit-sequential-small-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "no-yjit-sequential",
+      "variant_desc": "Ruby no YJIT, single-threaded",
+      "scene": "tiny",
+      "width": 20,
+      "height": 10,
+      "iterations": [
+        0.0803
+      ],
+      "avg_seconds": 0.0803,
+      "min_seconds": 0.0803,
+      "max_seconds": 0.0803,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2491,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-no-yjit-sequential-tiny-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "yjit-parallel",
+      "variant_desc": "Ruby YJIT + Thread parallelism",
+      "scene": "medium",
+      "width": 60,
+      "height": 30,
+      "iterations": [
+        0.7208
+      ],
+      "avg_seconds": 0.7208,
+      "min_seconds": 0.7208,
+      "max_seconds": 0.7208,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2497,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-yjit-parallel-medium-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "yjit-parallel",
+      "variant_desc": "Ruby YJIT + Thread parallelism",
+      "scene": "small",
+      "width": 40,
+      "height": 20,
+      "iterations": [
+        0.3248
+      ],
+      "avg_seconds": 0.3248,
+      "min_seconds": 0.3248,
+      "max_seconds": 0.3248,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2463,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-yjit-parallel-small-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "yjit-parallel",
+      "variant_desc": "Ruby YJIT + Thread parallelism",
+      "scene": "tiny",
+      "width": 20,
+      "height": 10,
+      "iterations": [
+        0.088
+      ],
+      "avg_seconds": 0.088,
+      "min_seconds": 0.088,
+      "max_seconds": 0.088,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2273,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-yjit-parallel-tiny-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "yjit-sequential",
+      "variant_desc": "Ruby YJIT, single-threaded",
+      "scene": "medium",
+      "width": 60,
+      "height": 30,
+      "iterations": [
+        0.747
+      ],
+      "avg_seconds": 0.747,
+      "min_seconds": 0.747,
+      "max_seconds": 0.747,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2410,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-yjit-sequential-medium-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "yjit-sequential",
+      "variant_desc": "Ruby YJIT, single-threaded",
+      "scene": "small",
+      "width": 40,
+      "height": 20,
+      "iterations": [
+        0.3119
+      ],
+      "avg_seconds": 0.3119,
+      "min_seconds": 0.3119,
+      "max_seconds": 0.3119,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2565,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-yjit-sequential-small-iter1.ppm"
+    },
+    {
+      "language": "ruby",
+      "language_version": "ruby 4.0.2 (2026-03-17 revision d3da9fec82) +PRISM [x86_64-linux]",
+      "variant": "yjit-sequential",
+      "variant_desc": "Ruby YJIT, single-threaded",
+      "scene": "tiny",
+      "width": 20,
+      "height": 10,
+      "iterations": [
+        0.0792
+      ],
+      "avg_seconds": 0.0792,
+      "min_seconds": 0.0792,
+      "max_seconds": 0.0792,
+      "stddev_seconds": 0.0,
+      "pixels_per_second": 2525,
+      "ppm_path": "/tmp/tmp.JGipwXlabz/ruby-yjit-sequential-tiny-iter1.ppm"
+    }
+  ],
+  "ppm_comparison": [
+    {
+      "scene": "tiny",
+      "type": "cross-language",
+      "lang_a": "python:sequential",
+      "lang_b": "ruby:no-yjit-parallel",
+      "match": false,
+      "tolerance": 1,
+      "max_channel_diff": 126,
+      "mismatched_pixels": 7,
+      "total_pixels": 200
+    },
+    {
+      "scene": "tiny",
+      "type": "within-language",
+      "lang_a": "ruby:no-yjit-parallel",
+      "lang_b": "ruby:no-yjit-sequential",
+      "match": true,
+      "tolerance": 1,
+      "max_channel_diff": 0,
+      "mismatched_pixels": 0,
+      "total_pixels": 200
+    },
+    {
+      "scene": "tiny",
+      "type": "within-language",
+      "lang_a": "ruby:no-yjit-parallel",
+      "lang_b": "ruby:yjit-parallel",
+      "match": true,
+      "tolerance": 1,
+      "max_channel_diff": 0,
+      "mismatched_pixels": 0,
+      "total_pixels": 200
+    },
+    {
+      "scene": "tiny",
+      "type": "within-language",
+      "lang_a": "ruby:no-yjit-parallel",
+      "lang_b": "ruby:yjit-sequential",
+      "match": true,
+      "tolerance": 1,
+      "max_channel_diff": 0,
+      "mismatched_pixels": 0,
+      "total_pixels": 200
+    },
+    {
+      "scene": "small",
+      "type": "cross-language",
+      "lang_a": "python:sequential",
+      "lang_b": "ruby:no-yjit-parallel",
+      "match": false,
+      "tolerance": 1,
+      "max_channel_diff": 144,
+      "mismatched_pixels": 43,
+      "total_pixels": 800
+    },
+    {
+      "scene": "small",
+      "type": "within-language",
+      "lang_a": "ruby:no-yjit-parallel",
+      "lang_b": "ruby:no-yjit-sequential",
+      "match": true,
+      "tolerance": 1,
+      "max_channel_diff": 0,
+      "mismatched_pixels": 0,
+      "total_pixels": 800
+    },
+    {
+      "scene": "small",
+      "type": "within-language",
+      "lang_a": "ruby:no-yjit-parallel",
+      "lang_b": "ruby:yjit-parallel",
+      "match": true,
+      "tolerance": 1,
+      "max_channel_diff": 0,
+      "mismatched_pixels": 0,
+      "total_pixels": 800
+    },
+    {
+      "scene": "small",
+      "type": "within-language",
+      "lang_a": "ruby:no-yjit-parallel",
+      "lang_b": "ruby:yjit-sequential",
+      "match": true,
+      "tolerance": 1,
+      "max_channel_diff": 0,
+      "mismatched_pixels": 0,
+      "total_pixels": 800
+    },
+    {
+      "scene": "medium",
+      "type": "cross-language",
+      "lang_a": "python:sequential",
+      "lang_b": "ruby:no-yjit-parallel",
+      "match": false,
+      "tolerance": 1,
+      "max_channel_diff": 129,
+      "mismatched_pixels": 119,
+      "total_pixels": 1800
+    },
+    {
+      "scene": "medium",
+      "type": "within-language",
+      "lang_a": "ruby:no-yjit-parallel",
+      "lang_b": "ruby:no-yjit-sequential",
+      "match": true,
+      "tolerance": 1,
+      "max_channel_diff": 0,
+      "mismatched_pixels": 0,
+      "total_pixels": 1800
+    },
+    {
+      "scene": "medium",
+      "type": "within-language",
+      "lang_a": "ruby:no-yjit-parallel",
+      "lang_b": "ruby:yjit-parallel",
+      "match": true,
+      "tolerance": 1,
+      "max_channel_diff": 0,
+      "mismatched_pixels": 0,
+      "total_pixels": 1800
+    },
+    {
+      "scene": "medium",
+      "type": "within-language",
+      "lang_a": "ruby:no-yjit-parallel",
+      "lang_b": "ruby:yjit-sequential",
+      "match": true,
+      "tolerance": 1,
+      "max_channel_diff": 0,
+      "mismatched_pixels": 0,
+      "total_pixels": 1800
+    }
+  ]
+}
