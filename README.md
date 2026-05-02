@@ -19,6 +19,77 @@ rayz/
 
 ---
 
+# Benchmarking
+
+The benchmark runner measures rendering performance across all language implementations using an identical scene, then produces JSON, Markdown, and HTML reports saved to `benchmark/results/`.
+
+## Scene
+
+Checkers floor (reflective) + glass sphere + mirror sphere + matte sphere + green cylinder; one point light. Exercises reflection, refraction, patterns, and multiple shape types — the same scene is implemented identically in every language.
+
+Three sizes are tested: **tiny**, **small**, and **medium**. The run order is shuffled each time to eliminate thermal throttling bias.
+
+## Prerequisites
+
+[mise-en-place](https://mise.jdx.dev/) must be installed and the repo's `.mise.toml` files must be honoured so `mise exec` can find the right `ruby` and `uv` binaries in each language directory.
+
+## Running
+
+```bash
+# From the repo root
+
+# Preview the shuffled run queue (no rendering)
+bash benchmark/run.sh --dry-run
+
+# Run the full benchmark
+bash benchmark/run.sh
+
+# Override iteration count (default: 2)
+bash benchmark/run.sh --iterations 3
+```
+
+Reports are written to `benchmark/results/YYYY-MM-DDTHH-MM-SS.{json,md,html}`. PPM files are compared but not committed.
+
+## Switching to production sizes
+
+Test sizes (20×10, 40×20, 60×30) are active by default for fast iteration. When you're ready for real data, swap the commented block in each scene file:
+
+- `ruby/benchmark/scene.rb`
+- `python/benchmark/scene.py`
+
+Production sizes are 200×100, 400×200, 600×300.
+
+## Adding a new language
+
+Drop four files into `<lang>/benchmark/` and the orchestrator picks them up automatically on the next run — no changes to `run.sh` needed:
+
+| File | Purpose |
+|---|---|
+| `variants.conf` | One variant per line: `name\|description\|KEY=val KEY=val` |
+| `scene.<ext>` | Scene definition; prints one JSON timing line to stdout |
+| `run_scene.sh` | Thin shim: `cd ..` then `mise exec -- <runner> benchmark/scene.<ext> "$@"` |
+| `version.sh` | Prints the language version string |
+
+## Troubleshooting
+
+**YJIT warning** — `Ruby was built without YJIT support` means your Ruby was compiled without Rust. The `yjit-*` variants still run; they just don't JIT. See **Rebuilding Ruby with YJIT Support** in the Ruby Installation section below to enable it.
+
+**PPM mismatches between languages** — expect `✗ NO` on cross-language comparisons. Ruby and Python differ by up to ~130 per channel due to float precision differences in their respective math libraries (matrix inverse, clamping). This is tracked in the report as a baseline divergence, not a bug in the benchmark runner.
+
+**Within-language mismatches** — all Ruby variants (YJIT on/off, parallel on/off) should always produce pixel-identical output. A `✗ NO` here indicates a real implementation bug.
+
+**Testing a single scene directly:**
+
+```bash
+# Ruby
+cd ruby && mise exec -- ruby benchmark/scene.rb --scene tiny --output /tmp/test.ppm && echo OK
+
+# Python
+cd python && mise exec -- uv run benchmark/scene.py --scene tiny --output /tmp/test.ppm && echo OK
+```
+
+---
+
 # Ruby
 
 ## Installation
