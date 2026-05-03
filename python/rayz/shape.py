@@ -9,26 +9,33 @@ from rayz.tuple import Vector
 
 class Shape(ABC):
     def __init__(self) -> None:
-        self.transform = Matrix.identity(4)
+        self._transform = Matrix.identity(4)
+        self._transform_inverse = Matrix.identity(4)
+        self._transform_inverse_transpose = Matrix.identity(4)
         self.material = Material()
         self.parent = None
 
+    @property
+    def transform(self) -> Matrix:
+        return self._transform
+
     def set_transform(self, m: Matrix) -> None:
-        self.transform = m
+        self._transform = m
+        self._transform_inverse = m.inverse()
+        self._transform_inverse_transpose = m.inverse().transpose()
 
     def intersect(self, ray) -> list:
-        local_ray = ray.transform(self.transform.inverse())
+        local_ray = ray.transform(self._transform_inverse)
         return self.local_intersect(local_ray)
 
     def world_to_object(self, point):
         p = point
         if self.parent is not None:
             p = self.parent.world_to_object(p)
-        return self.transform.inverse() * p
+        return self._transform_inverse * p
 
     def normal_to_world(self, normal) -> Vector:
-        inv = self.transform.inverse()
-        n = inv.transpose() * normal
+        n = self._transform_inverse_transpose * normal
         n = Vector(n.x, n.y, n.z).normalize()
         if self.parent is not None:
             n = self.parent.normal_to_world(n)
