@@ -131,8 +131,14 @@ for lang in "${LANGUAGES[@]}"; do
     done < "${variants_file}"
 done
 
-# Shuffle to eliminate thermal/cache ordering bias
-mapfile -t SHUFFLED_QUEUE < <(printf '%s\n' "${RUN_QUEUE[@]}" | shuf)
+# Shuffle to eliminate thermal/cache ordering bias (Fisher-Yates; no shuf needed)
+SHUFFLED_QUEUE=("${RUN_QUEUE[@]}")
+for ((i = ${#SHUFFLED_QUEUE[@]} - 1; i > 0; i--)); do
+    j=$((RANDOM % (i + 1)))
+    tmp="${SHUFFLED_QUEUE[i]}"
+    SHUFFLED_QUEUE[i]="${SHUFFLED_QUEUE[j]}"
+    SHUFFLED_QUEUE[j]="${tmp}"
+done
 
 echo ""
 echo "Total runs: ${#SHUFFLED_QUEUE[@]}  (${#LANGUAGES[@]} language(s), ${ITERATIONS} iterations each)"
