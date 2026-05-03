@@ -8,6 +8,20 @@
 #   ./benchmark/run.sh              # run full benchmark
 #   ./benchmark/run.sh --dry-run    # print shuffled queue without rendering
 #   ./benchmark/run.sh --iterations N  # override iteration count (default: 2)
+
+# bash 4+ required (macOS ships 3.2). Re-exec with a newer bash if available.
+if [[ "${BASH_VERSINFO[0]}" -lt 4 ]]; then
+    for _bash in /opt/homebrew/bin/bash /usr/local/bin/bash; do
+        # shellcheck disable=SC2016  # single quotes intentional: evaluated by the new bash, not this one
+        if [[ -x "${_bash}" ]] && "${_bash}" -c '[[ "${BASH_VERSINFO[0]}" -ge 4 ]]' 2>/dev/null; then
+            exec "${_bash}" "$0" "$@"
+        fi
+    done
+    echo "ERROR: bash 4+ required (found bash ${BASH_VERSION})" >&2
+    echo "  Install with: brew install bash" >&2
+    exit 1
+fi
+
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"

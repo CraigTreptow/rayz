@@ -31,7 +31,13 @@ Three sizes are tested: **tiny**, **small**, and **medium**. The run order is sh
 
 ## Prerequisites
 
-[mise-en-place](https://mise.jdx.dev/) must be installed and the repo's `.mise.toml` files must be honoured so `mise exec` can find the right `ruby` and `uv` binaries in each language directory.
+**bash 4+** is required (macOS ships bash 3.2). Install via Homebrew:
+
+```bash
+brew install bash
+```
+
+[mise-en-place](https://mise.jdx.dev/) must also be installed and the repo's `.mise.toml` files must be honoured so `mise exec` can find the right `ruby` and `uv` binaries in each language directory.
 
 ## Running
 
