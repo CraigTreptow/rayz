@@ -8,6 +8,7 @@
 #   ruby report.rb --results results.ndjson --system system.json \
 #                  --timestamp 2026-05-02T16-00-00 --output-dir ./results
 
+require "cgi"
 require "json"
 require "optparse"
 
@@ -16,10 +17,10 @@ require "optparse"
 # ---------------------------------------------------------------------------
 options = {}
 OptionParser.new do |opts|
-  opts.on("--results PATH")     { |v| options[:results]    = v }
-  opts.on("--system PATH")      { |v| options[:system]     = v }
-  opts.on("--timestamp TS")     { |v| options[:timestamp]  = v }
-  opts.on("--output-dir PATH")  { |v| options[:output_dir] = v }
+  opts.on("--results PATH") { |v| options[:results] = v }
+  opts.on("--system PATH") { |v| options[:system] = v }
+  opts.on("--timestamp TS") { |v| options[:timestamp] = v }
+  opts.on("--output-dir PATH") { |v| options[:output_dir] = v }
 end.parse!
 
 %i[results system timestamp output_dir].each do |key|
@@ -34,15 +35,17 @@ raw_runs = File.readlines(options[:results], chomp: true)
   .map { |line| JSON.parse(line) }
 
 system_info = JSON.parse(File.read(options[:system]))
-timestamp   = options[:timestamp]
-output_dir  = options[:output_dir]
+timestamp = options[:timestamp]
+output_dir = options[:output_dir]
+
+def h(s) = CGI.escapeHTML(s.to_s)
 
 # ---------------------------------------------------------------------------
 # PPM comparison (option B: ±1 per-channel tolerance)
 # ---------------------------------------------------------------------------
 def parse_ppm_pixels(path)
   content = File.read(path)
-  lines   = content.split("\n").reject { |l| l.start_with?("#") }
+  lines = content.split("\n").reject { |l| l.start_with?("#") }
   raise "Not P3 PPM: #{path}" unless lines[0].strip == "P3"
 
   lines[3..].join(" ").split.map(&:to_i).each_slice(3).to_a
@@ -52,24 +55,24 @@ def compare_ppms(path_a, path_b, tolerance: 1)
   pixels_a = parse_ppm_pixels(path_a)
   pixels_b = parse_ppm_pixels(path_b)
 
-  return { match: false, reason: "pixel count mismatch (#{pixels_a.size} vs #{pixels_b.size})" } \
+  return {match: false, reason: "pixel count mismatch (#{pixels_a.size} vs #{pixels_b.size})"} \
     if pixels_a.size != pixels_b.size
 
-  max_diff     = 0
-  bad_pixels   = 0
+  max_diff = 0
+  bad_pixels = 0
 
   pixels_a.zip(pixels_b).each do |(r1, g1, b1), (r2, g2, b2)|
     diff = [(r1 - r2).abs, (g1 - g2).abs, (b1 - b2).abs].max
-    max_diff   = [max_diff, diff].max
+    max_diff = [max_diff, diff].max
     bad_pixels += 1 if diff > tolerance
   end
 
   {
-    match:             bad_pixels == 0,
-    tolerance:         tolerance,
-    max_channel_diff:  max_diff,
+    match: bad_pixels == 0,
+    tolerance: tolerance,
+    max_channel_diff: max_diff,
     mismatched_pixels: bad_pixels,
-    total_pixels:      pixels_a.size
+    total_pixels: pixels_a.size
   }
 end
 
@@ -84,27 +87,27 @@ raw_runs.each do |run|
 end
 
 aggregated = grouped.map do |(lang, variant, scene), runs|
-  times  = runs.map { |r| r["elapsed"] }
-  avg    = times.sum / times.size.to_f
+  times = runs.map { |r| r["elapsed"] }
+  avg = times.sum / times.size.to_f
   stddev = Math.sqrt(times.map { |t| (t - avg)**2 }.sum / times.size)
 
   first = runs.min_by { |r| r["iteration"] }
 
   {
-    language:          lang,
-    language_version:  first["language_version"],
-    variant:           variant,
-    variant_desc:      first["variant_desc"],
-    scene:             scene,
-    width:             first["width"],
-    height:            first["height"],
-    iterations:        times,
-    avg_seconds:       avg.round(4),
-    min_seconds:       times.min.round(4),
-    max_seconds:       times.max.round(4),
-    stddev_seconds:    stddev.round(4),
+    language: lang,
+    language_version: first["language_version"],
+    variant: variant,
+    variant_desc: first["variant_desc"],
+    scene: scene,
+    width: first["width"],
+    height: first["height"],
+    iterations: times,
+    avg_seconds: avg.round(4),
+    min_seconds: times.min.round(4),
+    max_seconds: times.max.round(4),
+    stddev_seconds: stddev.round(4),
     pixels_per_second: (first["width"] * first["height"] / avg).round(0),
-    ppm_path:          first["ppm_path"]
+    ppm_path: first["ppm_path"]
   }
 end.sort_by { |r| [r[:language], r[:variant], r[:scene]] }
 
@@ -131,14 +134,21 @@ scenes.each do |scene|
     rep_a = lang_representatives[lang_a]
     rep_b = lang_representatives[lang_b]
 
-    next unless File.exist?(rep_a[:ppm_path]) && File.exist?(rep_b[:ppm_path])
+    unless File.exist?(rep_a[:ppm_path]) && File.exist?(rep_b[:ppm_path])
+      ppm_comparisons << {
+        scene: scene, type: "cross-language",
+        lang_a: "#{lang_a}:#{rep_a[:variant]}", lang_b: "#{lang_b}:#{rep_b[:variant]}",
+        match: nil, reason: "PPM file(s) not found"
+      }
+      next
+    end
 
     result = compare_ppms(rep_a[:ppm_path], rep_b[:ppm_path])
     ppm_comparisons << {
-      scene:      scene,
-      type:       "cross-language",
-      lang_a:     "#{lang_a}:#{rep_a[:variant]}",
-      lang_b:     "#{lang_b}:#{rep_b[:variant]}",
+      scene: scene,
+      type: "cross-language",
+      lang_a: "#{lang_a}:#{rep_a[:variant]}",
+      lang_b: "#{lang_b}:#{rep_b[:variant]}",
       **result
     }
   end
@@ -149,14 +159,21 @@ scenes.each do |scene|
 
     ref = runs.min_by { |r| r[:variant] }
     runs.reject { |r| r[:variant] == ref[:variant] }.each do |other|
-      next unless File.exist?(ref[:ppm_path]) && File.exist?(other[:ppm_path])
+      unless File.exist?(ref[:ppm_path]) && File.exist?(other[:ppm_path])
+        ppm_comparisons << {
+          scene: scene, type: "within-language",
+          lang_a: "#{lang}:#{ref[:variant]}", lang_b: "#{lang}:#{other[:variant]}",
+          match: nil, reason: "PPM file(s) not found"
+        }
+        next
+      end
 
       result = compare_ppms(ref[:ppm_path], other[:ppm_path])
       ppm_comparisons << {
-        scene:    scene,
-        type:     "within-language",
-        lang_a:   "#{lang}:#{ref[:variant]}",
-        lang_b:   "#{lang}:#{other[:variant]}",
+        scene: scene,
+        type: "within-language",
+        lang_a: "#{lang}:#{ref[:variant]}",
+        lang_b: "#{lang}:#{other[:variant]}",
         **result
       }
     end
@@ -167,15 +184,15 @@ end
 # Full JSON report
 # ---------------------------------------------------------------------------
 report = {
-  date:    timestamp.sub(/T(\d{2})-(\d{2})-(\d{2})$/, "T\\1:\\2:\\3"),
+  date: timestamp.sub(/T(\d{2})-(\d{2})-(\d{2})$/, "T\\1:\\2:\\3"),
   machine: system_info,
   scene_description: "Checkers floor (reflective 0.3) + glass sphere + mirror sphere + " \
                      "matte sphere + green cylinder; 1 point light at (-10,10,-10)",
   scene_shapes: ["Plane (checkers pattern)", "Sphere (glass, transparency=0.9, reflective=0.9)",
-                 "Sphere (mirror, reflective=0.8)", "Sphere (matte, red)",
-                 "Cylinder (green, closed, y=0..2)"],
-  results:         aggregated,
-  ppm_comparison:  ppm_comparisons
+    "Sphere (mirror, reflective=0.8)", "Sphere (matte, red)",
+    "Cylinder (green, closed, y=0..2)"],
+  results: aggregated,
+  ppm_comparison: ppm_comparisons
 }
 
 ts = options[:timestamp]
@@ -187,7 +204,7 @@ puts "  Written: #{json_path}"
 # Markdown report
 # ---------------------------------------------------------------------------
 def fmt_seconds(s)
-  s < 1 ? "#{(s * 1000).round(1)} ms" : "#{s.round(3)} s"
+  (s < 1) ? "#{(s * 1000).round(1)} ms" : "#{s.round(3)} s"
 end
 
 md_lines = []
@@ -233,9 +250,14 @@ md_lines << "| Type | A | B | Scene | Match | Max diff | Mismatched px |"
 md_lines << "|---|---|---|---|---|---|---|"
 
 ppm_comparisons.each do |c|
-  match_str = c[:match] ? "✓ yes" : "✗ NO"
-  md_lines << "| #{c[:type]} | #{c[:lang_a]} | #{c[:lang_b]} | #{c[:scene]} " \
-              "| #{match_str} | #{c[:max_channel_diff]} | #{c[:mismatched_pixels]} / #{c[:total_pixels]} |"
+  if c[:match].nil?
+    md_lines << "| #{c[:type]} | #{c[:lang_a]} | #{c[:lang_b]} | #{c[:scene]} " \
+                "| — skipped | #{c[:reason]} | — |"
+  else
+    match_str = c[:match] ? "✓ yes" : "✗ NO"
+    md_lines << "| #{c[:type]} | #{c[:lang_a]} | #{c[:lang_b]} | #{c[:scene]} " \
+                "| #{match_str} | #{c[:max_channel_diff]} | #{c[:mismatched_pixels]} / #{c[:total_pixels]} |"
+  end
 end
 
 md_path = File.join(output_dir, "#{ts}.md")
@@ -245,13 +267,13 @@ puts "  Written: #{md_path}"
 # ---------------------------------------------------------------------------
 # HTML report (Chart.js)
 # ---------------------------------------------------------------------------
-scene_order  = %w[tiny small medium]
+scene_order = %w[tiny small medium]
 all_variants = aggregated.map { |r| "#{r[:language]}:#{r[:variant]}" }.uniq.sort
 
 # Build dataset series: one per language:variant, values indexed by scene
 def chart_dataset(label, data_by_scene, scenes, color)
   values = scenes.map { |s| data_by_scene[s]&.round(4) || 0 }
-  { label: label, data: values, backgroundColor: color, borderColor: color, borderWidth: 1 }
+  {label: label, data: values, backgroundColor: color, borderColor: color, borderWidth: 1}
 end
 
 COLORS = %w[
@@ -271,19 +293,24 @@ datasets_pps = all_variants.each_with_index.map do |var_key, idx|
   chart_dataset(var_key, by_scene, scene_order, COLORS[idx % COLORS.size])
 end
 
-scene_labels_json  = JSON.generate(scene_order)
+scene_labels_json = JSON.generate(scene_order)
 datasets_time_json = JSON.generate(datasets_time)
-datasets_pps_json  = JSON.generate(datasets_pps)
+datasets_pps_json = JSON.generate(datasets_pps)
 
 ppm_rows_html = ppm_comparisons.map do |c|
-  status = c[:match] ? "<td style='color:green'>✓</td>" : "<td style='color:red'>✗</td>"
-  "<tr><td>#{c[:type]}</td><td>#{c[:lang_a]}</td><td>#{c[:lang_b]}</td>" \
-  "<td>#{c[:scene]}</td>#{status}<td>#{c[:max_channel_diff]}</td>" \
-  "<td>#{c[:mismatched_pixels]} / #{c[:total_pixels]}</td></tr>"
+  if c[:match].nil?
+    "<tr><td>#{h(c[:type])}</td><td>#{h(c[:lang_a])}</td><td>#{h(c[:lang_b])}</td>" \
+    "<td>#{h(c[:scene])}</td><td>—</td><td colspan='2'>#{h(c[:reason])}</td></tr>"
+  else
+    status = c[:match] ? "<td style='color:green'>✓</td>" : "<td style='color:red'>✗</td>"
+    "<tr><td>#{h(c[:type])}</td><td>#{h(c[:lang_a])}</td><td>#{h(c[:lang_b])}</td>" \
+    "<td>#{h(c[:scene])}</td>#{status}<td>#{c[:max_channel_diff]}</td>" \
+    "<td>#{c[:mismatched_pixels]} / #{c[:total_pixels]}</td></tr>"
+  end
 end.join("\n")
 
 results_rows_html = aggregated.map do |r|
-  "<tr><td>#{r[:language]}</td><td>#{r[:variant]}</td><td>#{r[:scene]}</td>" \
+  "<tr><td>#{h(r[:language])}</td><td>#{h(r[:variant])}</td><td>#{h(r[:scene])}</td>" \
   "<td>#{r[:width]}×#{r[:height]}</td><td>#{fmt_seconds(r[:avg_seconds])}</td>" \
   "<td>#{fmt_seconds(r[:min_seconds])}</td><td>#{fmt_seconds(r[:max_seconds])}</td>" \
   "<td>#{r[:pixels_per_second].to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse}</td></tr>"
@@ -312,11 +339,11 @@ html = <<~HTML
 
     <h2>Machine</h2>
     <table>
-      <tr><th>Hostname</th><td>#{si["hostname"]}</td></tr>
-      <tr><th>CPU</th><td>#{si["cpu_model"]}</td></tr>
-      <tr><th>Cores</th><td>#{si["cpu_cores"]}</td></tr>
-      <tr><th>Memory</th><td>#{si["memory_gb"]} GB</td></tr>
-      <tr><th>OS</th><td>#{si["os"]}</td></tr>
+      <tr><th>Hostname</th><td>#{h(si["hostname"])}</td></tr>
+      <tr><th>CPU</th><td>#{h(si["cpu_model"])}</td></tr>
+      <tr><th>Cores</th><td>#{h(si["cpu_cores"])}</td></tr>
+      <tr><th>Memory</th><td>#{h(si["memory_gb"])} GB</td></tr>
+      <tr><th>OS</th><td>#{h(si["os"])}</td></tr>
     </table>
 
     <h2>Charts</h2>

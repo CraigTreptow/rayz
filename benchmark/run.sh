@@ -29,6 +29,11 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
+if ! [[ "${ITERATIONS}" =~ ^[1-9][0-9]*$ ]]; then
+    echo "ERROR: --iterations must be a positive integer, got: '${ITERATIONS}'" >&2
+    exit 1
+fi
+
 # ---------------------------------------------------------------------------
 # Helper: run a Ruby script via mise exec from ruby/ so the right version
 # and gems are used regardless of the caller's shell environment.
@@ -78,7 +83,13 @@ declare -A LANG_VERSIONS=()
 for lang in "${LANGUAGES[@]}"; do
     version_script="${REPO_ROOT}/${lang}/benchmark/version.sh"
     if [[ -x "${version_script}" ]]; then
-        LANG_VERSIONS["${lang}"]="$("${version_script}" 2>/dev/null | head -1 || echo "unknown")"
+        if version_out="$("${version_script}" 2>&1)"; then
+            LANG_VERSIONS["${lang}"]="$(echo "${version_out}" | head -1)"
+            [[ -z "${LANG_VERSIONS[${lang}]}" ]] && LANG_VERSIONS["${lang}"]="unknown"
+        else
+            echo "WARNING: version script for ${lang} failed — ${version_out}" >&2
+            LANG_VERSIONS["${lang}"]="unknown"
+        fi
     else
         LANG_VERSIONS["${lang}"]="unknown"
     fi
@@ -157,7 +168,7 @@ RUBY_EOF
 # ---------------------------------------------------------------------------
 # Execute runs
 # ---------------------------------------------------------------------------
-NDJSON_FILE="${TMP_DIR}/results.ndjson"
+NDJSON_FILE="${RESULTS_DIR}/${TIMESTAMP}.ndjson"
 touch "${NDJSON_FILE}"
 
 total="${#SHUFFLED_QUEUE[@]}"
@@ -183,19 +194,31 @@ for run in "${SHUFFLED_QUEUE[@]}"; do
 
     # Execute scene runner; render progress prints to stderr (visible), JSON to stdout
     timing_json="$(env "${run_env[@]+"${run_env[@]}"}" "${run_script}" \
-        --scene "${scene}" --output "${ppm_path}")"
+        --scene "${scene}" --output "${ppm_path}")" || {
+        echo "ERROR: renderer failed for ${lang}/${variant_name}/${scene} iter=${iter}" >&2
+        exit 1
+    }
+    if [[ -z "${timing_json}" ]]; then
+        echo "ERROR: ${lang}/${variant_name}/${scene} iter=${iter} produced no JSON on stdout" >&2
+        exit 1
+    fi
 
     printf "  => %s\n" "${timing_json}"
 
     # Enrich timing JSON with run metadata via env vars (no shell string injection)
-    BENCH_TIMING_JSON="${timing_json}" \
-    BENCH_LANG="${lang}" \
-    BENCH_LANG_VER="${lang_version}" \
-    BENCH_VARIANT="${variant_name}" \
-    BENCH_VARIANT_DESC="${variant_desc}" \
-    BENCH_ITER="${iter}" \
-    BENCH_PPM_PATH="${ppm_path}" \
-    ruby_exec "${ENRICH_SCRIPT}" >> "${NDJSON_FILE}"
+    enriched="$(BENCH_TIMING_JSON="${timing_json}" \
+        BENCH_LANG="${lang}" \
+        BENCH_LANG_VER="${lang_version}" \
+        BENCH_VARIANT="${variant_name}" \
+        BENCH_VARIANT_DESC="${variant_desc}" \
+        BENCH_ITER="${iter}" \
+        BENCH_PPM_PATH="${ppm_path}" \
+        ruby_exec "${ENRICH_SCRIPT}")" || {
+        echo "ERROR: failed to enrich timing data for ${lang}/${variant_name}/${scene} iter=${iter}" >&2
+        echo "  Raw timing JSON: ${timing_json}" >&2
+        exit 1
+    }
+    echo "${enriched}" >> "${NDJSON_FILE}"
 
     unset run_env
 done

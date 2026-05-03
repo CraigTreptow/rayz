@@ -9,6 +9,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.." || exit 1
 
+command -v mise &>/dev/null || { echo "ERROR: 'mise' is not installed or not on PATH" >&2; exit 1; }
+
 ruby_flags=()
 if [[ "${YJIT:-false}" == "true" ]]; then
     ruby_flags+=("--yjit")
