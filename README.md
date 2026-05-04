@@ -8,7 +8,7 @@ Implementations of a ray tracer based on ["The Ray Tracer Challenge"](https://pr
 rayz/
 ├── book_features/   # language-agnostic Gherkin specs from the book (starting point for new languages)
 ├── ruby/            # Ruby implementation
-└── python/          # Python implementation (coming soon)
+└── python/          # Python implementation
 ```
 
 ## Project Scope
@@ -31,13 +31,14 @@ Three sizes are tested: **tiny**, **small**, and **medium**. The run order is sh
 
 ## Prerequisites
 
-**bash 4+** is required (macOS ships bash 3.2). Install via Homebrew:
+| Tool | Why | Install |
+|---|---|---|
+| **bash 4+** | macOS ships bash 3.2; the runner requires associative arrays | `brew install bash` |
+| **[mise](https://mise.jdx.dev/)** | Manages per-language runtime versions; `mise exec` must resolve `ruby` and `uv` | `brew install mise` |
+| **Ruby** (via mise) | Runs `report.rb` to generate reports after each benchmark | `cd ruby && mise install` |
+| **Python + uv** (via mise) | Required for the Python variant | `cd python && mise install` |
 
-```bash
-brew install bash
-```
-
-[mise-en-place](https://mise.jdx.dev/) must also be installed and the repo's `.mise.toml` files must be honoured so `mise exec` can find the right `ruby` and `uv` binaries in each language directory.
+Once mise is installed, run `mise install` in each language directory before the first benchmark run so the correct runtime versions are available.
 
 ## Running
 
@@ -55,6 +56,58 @@ bash benchmark/run.sh --iterations 3
 ```
 
 Reports are written to `benchmark/results/YYYY-MM-DDTHH-MM-SS.{json,md,html}`. PPM files are compared but not committed.
+
+## Reviewing results
+
+Each run produces three report files in `benchmark/results/` named by timestamp:
+
+```bash
+# Open the most recent HTML report in your browser (charts + tables)
+open "$(ls -t benchmark/results/*.html | head -1)"
+
+# Read the most recent Markdown summary in the terminal
+cat "$(ls -t benchmark/results/*.md | head -1)"
+
+# Inspect the raw data programmatically
+jq '.results[] | {language, variant, scene, avg_seconds}' \
+  "$(ls -t benchmark/results/*.json | head -1)"
+```
+
+The HTML report contains bar charts for average render time and throughput (pixels/second), plus the same tables as the Markdown report. It loads Chart.js from a CDN, so an internet connection is needed to render the charts; the tables display fine offline.
+
+## Reading the report
+
+### Results table
+
+| Column | Meaning |
+|---|---|
+| Language | Implementation name and version (e.g. `ruby 4.0.2`, `Python 3.14.4`) |
+| Variant | Which configuration ran (e.g. `yjit-sequential`, `no-yjit-parallel`) |
+| Scene | Size: `tiny` (20×10), `small` (40×20), or `medium` (60×30) in test mode |
+| W×H | Exact pixel dimensions rendered |
+| Avg | Mean wall-clock render time across all iterations |
+| Min / Max | Fastest and slowest individual iterations |
+| Std Dev | Standard deviation across iterations — high values indicate thermal throttling or background load |
+| Px/s | Throughput: `width × height / avg_seconds`. Higher is faster. Use this to compare across scene sizes |
+
+A **low Std Dev** (under ~5% of Avg) means timing is stable and the result is trustworthy. A high Std Dev suggests running more iterations or reducing background activity.
+
+### PPM comparison table
+
+After each run the orchestrator compares rendered images across languages and variants:
+
+| Column | Meaning |
+|---|---|
+| Type | `cross-language` (Ruby vs Python) or `within-language` (variant A vs variant B of the same language) |
+| A / B | The two configurations being compared (`lang:variant`) |
+| Scene | Which scene size was compared |
+| Match | `✓ yes` = pixel-identical within tolerance; `✗ NO` = divergence detected |
+| Max diff | Largest per-channel absolute difference found across all pixels (0–255 scale) |
+| Mismatched px | Count of pixels that exceeded the ±1 tolerance, out of total pixels |
+
+**Cross-language `✗ NO` is expected** — Ruby and Python use different floating-point math libraries for matrix inversion, leading to accumulated rounding differences of up to ~130 per channel. This is tracked as a baseline divergence, not a bug.
+
+**Within-language `✗ NO` is a bug** — all variants of the same language must produce bit-for-bit identical images. YJIT and parallel execution must not change any pixel values, only render time.
 
 ## Switching to production sizes
 
