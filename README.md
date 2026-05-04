@@ -58,6 +58,9 @@ bash benchmark/run.sh --dry-run
 bash benchmark/run.sh --iterations 3
 ```
 
+> **Iterations and accuracy:** The default of 2 iterations gives a rough min/max but the standard deviation is not meaningful at that sample size. For results you can trust, use `--iterations 5` or higher — the run order is reshuffled each time so thermal throttling bias averages out across iterations.
+
+
 Reports are written to `benchmark/results/YYYY-MM-DDTHH-MM-SS.{json,md,html}`. PPM files are compared but not committed.
 
 ## Reviewing results
