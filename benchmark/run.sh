@@ -201,6 +201,12 @@ for run in "${SHUFFLED_QUEUE[@]}"; do
     ppm_path="${TMP_DIR}/${lang}-${variant_name}-${scene}-iter${iter}.ppm"
     run_script="${REPO_ROOT}/${lang}/benchmark/run_scene.sh"
 
+    if [[ ! -x "${run_script}" ]]; then
+        echo "ERROR: run_scene.sh not found or not executable for language '${lang}'" >&2
+        echo "  Expected: ${run_script}" >&2
+        exit 1
+    fi
+
     printf "[%d/%d] %-8s %-22s scene=%-6s iter=%s\n" \
         "${current}" "${total}" "${lang}" "${variant_name}" "${scene}" "${iter}"
 

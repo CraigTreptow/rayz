@@ -32,7 +32,15 @@ end
 # ---------------------------------------------------------------------------
 raw_runs = File.readlines(options[:results], chomp: true)
   .reject(&:empty?)
-  .map { |line| JSON.parse(line) }
+  .filter_map.with_index(1) do |line, lineno|
+    JSON.parse(line)
+rescue JSON::ParserError => e
+  warn "WARNING: Skipping malformed NDJSON line #{lineno}: #{e.message}"
+  warn "  Content: #{line[0, 120]}"
+  nil
+  end
+
+abort "ERROR: No valid result lines found in #{options[:results]}" if raw_runs.empty?
 
 system_info = JSON.parse(File.read(options[:system]))
 timestamp = options[:timestamp]
@@ -46,9 +54,14 @@ def h(s) = CGI.escapeHTML(s.to_s)
 def parse_ppm_pixels(path)
   content = File.read(path)
   lines = content.split("\n").reject { |l| l.start_with?("#") }
+  raise "Empty or comment-only file: #{path}" if lines.empty?
   raise "Not P3 PPM: #{path}" unless lines[0].strip == "P3"
+  raise "PPM header too short (#{lines.size} lines): #{path}" if lines.size < 4
 
-  lines[3..].join(" ").split.map(&:to_i).each_slice(3).to_a
+  pixels = lines[3..].join(" ").split.map(&:to_i).each_slice(3).to_a
+  raise "PPM contains no pixel data: #{path}" if pixels.empty?
+
+  pixels
 end
 
 def compare_ppms(path_a, path_b, tolerance: 1)
@@ -143,7 +156,11 @@ scenes.each do |scene|
       next
     end
 
-    result = compare_ppms(rep_a[:ppm_path], rep_b[:ppm_path])
+    result = begin
+      compare_ppms(rep_a[:ppm_path], rep_b[:ppm_path])
+    rescue => e
+      {match: nil, reason: "PPM parse error: #{e.message}"}
+    end
     ppm_comparisons << {
       scene: scene,
       type: "cross-language",
@@ -168,7 +185,11 @@ scenes.each do |scene|
         next
       end
 
-      result = compare_ppms(ref[:ppm_path], other[:ppm_path])
+      result = begin
+        compare_ppms(ref[:ppm_path], other[:ppm_path])
+      rescue => e
+        {match: nil, reason: "PPM parse error: #{e.message}"}
+      end
       ppm_comparisons << {
         scene: scene,
         type: "within-language",
