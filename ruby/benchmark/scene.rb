@@ -6,18 +6,19 @@ require "json"
 require "benchmark"
 require_relative "../lib/rayz"
 
-# TEST SIZES — when verified working, swap to the PRODUCTION SIZES block below
-SCENES = {
+DEV_SCENES = {
   "tiny" => {width: 20, height: 10},
   "small" => {width: 40, height: 20},
   "medium" => {width: 60, height: 30}
 }.freeze
-# PRODUCTION SIZES:
-# SCENES = {
-#   "tiny"   => { width: 200, height: 100 },
-#   "small"  => { width: 400, height: 200 },
-#   "medium" => { width: 600, height: 300 }
-# }.freeze
+
+PROD_SCENES = {
+  "tiny" => {width: 200, height: 100},
+  "small" => {width: 400, height: 200},
+  "medium" => {width: 600, height: 300}
+}.freeze
+
+SCENES = (ENV["DEV_MODE"] == "true") ? DEV_SCENES : PROD_SCENES
 
 options = {parallel: false}
 OptionParser.new do |opts|

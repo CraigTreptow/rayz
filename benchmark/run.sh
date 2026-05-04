@@ -5,7 +5,8 @@
 # and generates JSON + Markdown + HTML reports in benchmark/results/.
 #
 # Usage:
-#   ./benchmark/run.sh              # run full benchmark
+#   ./benchmark/run.sh              # run full benchmark (production sizes)
+#   ./benchmark/run.sh --dev        # run with small dev sizes for fast iteration
 #   ./benchmark/run.sh --dry-run    # print shuffled queue without rendering
 #   ./benchmark/run.sh --iterations N  # override iteration count (default: 2)
 
@@ -29,6 +30,7 @@ BENCHMARK_DIR="${REPO_ROOT}/benchmark"
 RESULTS_DIR="${BENCHMARK_DIR}/results"
 ITERATIONS=2
 DRY_RUN=false
+DEV_MODE=false
 TIMESTAMP="$(date -u +"%Y-%m-%dT%H-%M-%S")"
 
 # ---------------------------------------------------------------------------
@@ -37,6 +39,7 @@ TIMESTAMP="$(date -u +"%Y-%m-%dT%H-%M-%S")"
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --dry-run)    DRY_RUN=true ;;
+        --dev)        DEV_MODE=true ;;
         --iterations) ITERATIONS="$2"; shift ;;
         *)            echo "Unknown option: $1" >&2; exit 1 ;;
     esac
@@ -89,6 +92,11 @@ if [[ ${#LANGUAGES[@]} -eq 0 ]]; then
 fi
 
 echo "Discovered languages: ${LANGUAGES[*]}"
+if [[ "${DEV_MODE}" == "true" ]]; then
+    echo "Mode: DEV (tiny scene sizes for fast iteration)"
+else
+    echo "Mode: PRODUCTION (full scene sizes)"
+fi
 
 # ---------------------------------------------------------------------------
 # Get language versions
@@ -219,7 +227,7 @@ for run in "${SHUFFLED_QUEUE[@]}"; do
     lang_version="${LANG_VERSIONS[${lang}]:-unknown}"
 
     # Execute scene runner; render progress prints to stderr (visible), JSON to stdout
-    timing_json="$(env "${run_env[@]+"${run_env[@]}"}" "${run_script}" \
+    timing_json="$(DEV_MODE="${DEV_MODE}" env "${run_env[@]+"${run_env[@]}"}" "${run_script}" \
         --scene "${scene}" --output "${ppm_path}")" || {
         echo "ERROR: renderer failed for ${lang}/${variant_name}/${scene} iter=${iter}" >&2
         exit 1

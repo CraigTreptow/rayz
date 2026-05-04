@@ -45,11 +45,14 @@ Once mise is installed, run `mise install` in each language directory before the
 ```bash
 # From the repo root
 
+# Run the full benchmark (production sizes: 200×100, 400×200, 600×300)
+bash benchmark/run.sh
+
+# Run with small dev sizes (20×10, 40×20, 60×30) for fast structural iteration
+bash benchmark/run.sh --dev
+
 # Preview the shuffled run queue (no rendering)
 bash benchmark/run.sh --dry-run
-
-# Run the full benchmark
-bash benchmark/run.sh
 
 # Override iteration count (default: 2)
 bash benchmark/run.sh --iterations 3
@@ -83,7 +86,7 @@ The HTML report contains bar charts for average render time and throughput (pixe
 |---|---|
 | Language | Implementation name and version (e.g. `ruby 4.0.2`, `Python 3.14.4`) |
 | Variant | Which configuration ran (e.g. `yjit-sequential`, `no-yjit-parallel`) |
-| Scene | Size: `tiny` (20×10), `small` (40×20), or `medium` (60×30) in test mode |
+| Scene | Size: `tiny`, `small`, or `medium` — production sizes by default; pass `--dev` for small sizes |
 | W×H | Exact pixel dimensions rendered |
 | Avg | Mean wall-clock render time across all iterations |
 | Min / Max | Fastest and slowest individual iterations |
@@ -108,15 +111,6 @@ After each run the orchestrator compares rendered images across languages and va
 **Cross-language `✗ NO` is expected** — Ruby and Python use different floating-point math libraries for matrix inversion, leading to accumulated rounding differences of up to ~130 per channel. This is tracked as a baseline divergence, not a bug.
 
 **Within-language `✗ NO` is a bug** — all variants of the same language must produce bit-for-bit identical images. YJIT and parallel execution must not change any pixel values, only render time.
-
-## Switching to production sizes
-
-Test sizes (20×10, 40×20, 60×30) are active by default for fast iteration. When you're ready for real data, swap the commented block in each scene file:
-
-- `ruby/benchmark/scene.rb`
-- `python/benchmark/scene.py`
-
-Production sizes are 200×100, 400×200, 600×300.
 
 ## Adding a new language
 

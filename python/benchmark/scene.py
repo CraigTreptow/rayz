@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 import time
 
@@ -25,18 +26,17 @@ from rayz.transformations import scaling, translation, view_transform
 from rayz.tuple import Point, Vector
 from rayz.world import World
 
-# TEST SIZES — when verified working, swap to the PRODUCTION SIZES block below
-SCENES: dict[str, tuple[int, int]] = {
+_DEV_SCENES: dict[str, tuple[int, int]] = {
     "tiny": (20, 10),
     "small": (40, 20),
     "medium": (60, 30),
 }
-# PRODUCTION SIZES:
-# SCENES: dict[str, tuple[int, int]] = {
-#     "tiny":   (200, 100),
-#     "small":  (400, 200),
-#     "medium": (600, 300),
-# }
+_PROD_SCENES: dict[str, tuple[int, int]] = {
+    "tiny": (200, 100),
+    "small": (400, 200),
+    "medium": (600, 300),
+}
+SCENES = _DEV_SCENES if os.environ.get("DEV_MODE") == "true" else _PROD_SCENES
 
 
 def build_world() -> World:
