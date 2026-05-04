@@ -8,7 +8,7 @@ Implementations of a ray tracer based on ["The Ray Tracer Challenge"](https://pr
 rayz/
 ├── book_features/   # language-agnostic Gherkin specs from the book (starting point for new languages)
 ├── ruby/            # Ruby implementation
-└── python/          # Python implementation (coming soon)
+└── python/          # Python implementation
 ```
 
 ## Project Scope
@@ -16,6 +16,133 @@ rayz/
 **Book Chapters (1-17):** ✅ Complete implementation of all chapters from "The Ray Tracer Challenge" book, covering the fundamentals of ray tracing from projectile physics through smooth triangle rendering.
 
 **Custom Extensions:** Additional features implemented beyond the book's scope, including OBJ file loading, advanced hierarchical transformations, bounding box optimization, and advanced rendering techniques (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
+
+---
+
+# Benchmarking
+
+The benchmark runner measures rendering performance across all language implementations using an identical scene, then produces JSON, Markdown, and HTML reports saved to `benchmark/results/`.
+
+## Scene
+
+Checkers floor (reflective) + glass sphere + mirror sphere + matte sphere + green cylinder; one point light. Exercises reflection, refraction, patterns, and multiple shape types — the same scene is implemented identically in every language.
+
+Three sizes are tested: **tiny**, **small**, and **medium**. The run order is shuffled each time to eliminate thermal throttling bias.
+
+## Prerequisites
+
+| Tool | Why | Install |
+|---|---|---|
+| **bash 4+** | macOS ships bash 3.2; the runner requires associative arrays | `brew install bash` |
+| **[mise](https://mise.jdx.dev/)** | Manages per-language runtime versions; `mise exec` must resolve `ruby` and `uv` | `brew install mise` |
+| **Ruby** (via mise) | Runs `report.rb` to generate reports after each benchmark | `cd ruby && mise install` |
+| **Python + uv** (via mise) | Required for the Python variant | `cd python && mise install` |
+
+Once mise is installed, run `mise install` in each language directory before the first benchmark run so the correct runtime versions are available.
+
+## Running
+
+```bash
+# From the repo root
+
+# Run the full benchmark (production sizes: 200×100, 400×200, 600×300)
+bash benchmark/run.sh
+
+# Run with small dev sizes (20×10, 40×20, 60×30) for fast structural iteration
+bash benchmark/run.sh --dev
+
+# Preview the shuffled run queue (no rendering)
+bash benchmark/run.sh --dry-run
+
+# Override iteration count (default: 2)
+bash benchmark/run.sh --iterations 3
+```
+
+> **Iterations and accuracy:** The default of 2 iterations gives a rough min/max but the standard deviation is not meaningful at that sample size. For results you can trust, use `--iterations 5` or higher — the run order is reshuffled each time so thermal throttling bias averages out across iterations.
+
+
+Reports are written to `benchmark/results/YYYY-MM-DDTHH-MM-SS.{json,md,html}`. PPM files are compared but not committed.
+
+## Reviewing results
+
+Each run produces three report files in `benchmark/results/` named by timestamp:
+
+```bash
+# Open the most recent HTML report in your browser (charts + tables)
+open "$(ls -t benchmark/results/*.html | head -1)"
+
+# Read the most recent Markdown summary in the terminal
+cat "$(ls -t benchmark/results/*.md | head -1)"
+
+# Inspect the raw data programmatically
+jq '.results[] | {language, variant, scene, avg_seconds}' \
+  "$(ls -t benchmark/results/*.json | head -1)"
+```
+
+The HTML report contains bar charts for average render time and throughput (pixels/second), plus the same tables as the Markdown report. It loads Chart.js from a CDN, so an internet connection is needed to render the charts; the tables display fine offline.
+
+## Reading the report
+
+### Results table
+
+| Column | Meaning |
+|---|---|
+| Language | Implementation name and version (e.g. `ruby 4.0.2`, `Python 3.14.4`) |
+| Variant | Which configuration ran (e.g. `yjit-sequential`, `no-yjit-parallel`) |
+| Scene | Size: `tiny`, `small`, or `medium` — production sizes by default; pass `--dev` for small sizes |
+| W×H | Exact pixel dimensions rendered |
+| Avg | Mean wall-clock render time across all iterations |
+| Min / Max | Fastest and slowest individual iterations |
+| Std Dev | Standard deviation across iterations — high values indicate thermal throttling or background load |
+| Px/s | Throughput: `width × height / avg_seconds`. Higher is faster. Use this to compare across scene sizes |
+
+A **low Std Dev** (under ~5% of Avg) means timing is stable and the result is trustworthy. A high Std Dev suggests running more iterations or reducing background activity.
+
+### PPM comparison table
+
+After each run the orchestrator compares rendered images across languages and variants:
+
+| Column | Meaning |
+|---|---|
+| Type | `cross-language` (Ruby vs Python) or `within-language` (variant A vs variant B of the same language) |
+| A / B | The two configurations being compared (`lang:variant`) |
+| Scene | Which scene size was compared |
+| Match | `✓ yes` = pixel-identical within tolerance; `✗ NO` = divergence detected |
+| Max diff | Largest per-channel absolute difference found across all pixels (0–255 scale) |
+| Mismatched px | Count of pixels that exceeded the ±1 tolerance, out of total pixels |
+
+**Cross-language `✗ NO` is expected** — Ruby and Python use different floating-point math libraries for matrix inversion, leading to accumulated rounding differences of up to ~130 per channel. This is tracked as a baseline divergence, not a bug.
+
+**Within-language `✗ NO` is a bug** — all variants of the same language must produce bit-for-bit identical images. YJIT and parallel execution must not change any pixel values, only render time.
+
+## Adding a new language
+
+Drop four files into `<lang>/benchmark/` and the orchestrator picks them up automatically on the next run — no changes to `run.sh` needed:
+
+| File | Purpose |
+|---|---|
+| `variants.conf` | One variant per line: `name\|description\|KEY=val KEY=val` |
+| `scene.<ext>` | Scene definition; prints one JSON timing line to stdout |
+| `run_scene.sh` | Thin shim: `cd ..` then `mise exec -- <runner> benchmark/scene.<ext> "$@"` |
+| `version.sh` | Prints the language version string |
+
+## Troubleshooting
+
+**YJIT warning** — `Ruby was built without YJIT support` means your Ruby was compiled without Rust. The `yjit-*` variants still run; they just don't JIT. See **Rebuilding Ruby with YJIT Support** in the Ruby Installation section below to enable it.
+
+**PPM mismatches between languages** — expect `✗ NO` on cross-language comparisons. Ruby and Python differ by up to ~130 per channel due to float precision differences in their respective math libraries (matrix inverse, clamping). This is tracked in the report as a baseline divergence, not a bug in the benchmark runner.
+
+**Within-language mismatches** — all Ruby variants (YJIT on/off, parallel on/off) should always produce pixel-identical output. A `✗ NO` here indicates a real implementation bug.
+
+**Testing a single scene directly:**
+
+```bash
+# Ruby
+cd ruby && mise exec -- ruby benchmark/scene.rb --scene tiny --output /tmp/test.ppm && echo OK
+
+# Python
+cd python && mise exec -- uv run benchmark/scene.py --scene tiny --output /tmp/test.ppm && echo OK
+```
 
 ---
 

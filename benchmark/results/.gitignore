@@ -1,0 +1,4 @@
+# PPM files are large and reproducible — don't commit them
+*.ppm
+# Raw timing data — reports (JSON/MD/HTML) are the committed artifacts
+*.ndjson
