@@ -103,8 +103,9 @@ def main() -> None:
     camera = Camera(width, height, math.pi / 3)
     camera.transform = view_transform(Point(0, 1.5, -5), Point(0, 1, 0), Vector(0, 1, 0))
 
+    parallel = os.environ.get("PARALLEL", "false").lower() == "true"
     start = time.perf_counter()
-    canvas = camera.render(world)
+    canvas = camera.render_parallel(world) if parallel else camera.render(world)
     with open(args.output, "w") as f:
         f.write(canvas.to_ppm())
     elapsed = time.perf_counter() - start
