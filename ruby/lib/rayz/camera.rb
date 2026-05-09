@@ -3,20 +3,24 @@ require "etc"
 
 module Rayz
   class Camera
-    attr_accessor :hsize, :vsize, :field_of_view, :transform, :samples_per_pixel, :aperture_size, :focal_distance, :motion_blur
-    attr_reader :pixel_size, :half_width, :half_height
+    attr_accessor :hsize, :vsize, :field_of_view, :samples_per_pixel, :aperture_size, :focal_distance, :motion_blur
+    attr_reader :pixel_size, :half_width, :half_height, :transform
 
     def initialize(hsize:, vsize:, field_of_view:, samples_per_pixel: 1, aperture_size: 0.0, focal_distance: 1.0, motion_blur: false)
       @hsize = hsize
       @vsize = vsize
       @field_of_view = field_of_view
-      @transform = Matrix.identity(4)
-      @samples_per_pixel = samples_per_pixel  # For anti-aliasing (supersampling)
-      @aperture_size = aperture_size  # For focal blur (depth of field)
-      @focal_distance = focal_distance  # Distance to focal plane
-      @motion_blur = motion_blur  # Enable motion blur (rays get random time values)
-
+      @samples_per_pixel = samples_per_pixel
+      @aperture_size = aperture_size
+      @focal_distance = focal_distance
+      @motion_blur = motion_blur
+      self.transform = Matrix.identity(4)
       calculate_pixel_size
+    end
+
+    def transform=(matrix)
+      @transform = matrix
+      @transform_inverse = matrix.inverse
     end
 
     def calculate_pixel_size
@@ -45,9 +49,7 @@ module Rayz
       world_x = @half_width - xoffset
       world_y = @half_height - yoffset
 
-      # Using the camera matrix, transform the canvas point and the origin,
-      # and then compute the ray's direction vector
-      inverse = @transform.inverse
+      inverse = @transform_inverse
 
       # For focal blur, the canvas should be at the focal distance, not at z=-1
       canvas_z = -@focal_distance
@@ -68,10 +70,10 @@ module Rayz
     end
 
     def render(world, parallel: true)
-      if parallel
-        render_parallel(world)
-      else
-        render_sequential(world)
+      case parallel
+      when :ractor then render_ractor(world)
+      when true then render_parallel(world)
+      else render_sequential(world)
       end
     end
 
@@ -149,6 +151,105 @@ module Rayz
       puts "\nDone!"
       puts "Rendering took #{total_time.round(2)} seconds (#{cpu_count} threads)"
       puts "Time per row: #{(time_per_row * 1000).round(2)} ms"
+
+      image
+    end
+
+    def render_ractor(world)
+      image = Canvas.new(width: @hsize, height: @vsize)
+      cpu_count = Etc.nprocessors
+      start_time = Time.now
+
+      puts "Rendering with #{cpu_count} CPU cores (Ractor-based parallelism):"
+      puts "Progress (each dot = completed chunk):"
+
+      # Deep-freeze the scene graph so all Ractors share it without Marshal copying
+      shareable_world = Ractor.make_shareable(world)
+
+      # Copy camera rendering state into a shareable hash (avoids freezing self)
+      cam = Ractor.make_shareable({
+        hsize: @hsize,
+        vsize: @vsize,
+        pixel_size: @pixel_size,
+        half_width: @half_width,
+        half_height: @half_height,
+        transform_inverse: @transform_inverse,
+        samples_per_pixel: @samples_per_pixel,
+        aperture_size: @aperture_size,
+        focal_distance: @focal_distance,
+        motion_blur: @motion_blur
+      })
+
+      chunk_size = [(@vsize.to_f / cpu_count).ceil, 1].max
+
+      ractors = (0...@vsize).step(chunk_size).map do |y_start|
+        y_end = [y_start + chunk_size, @vsize].min
+
+        Ractor.new(y_start, y_end, shareable_world, cam) do |ys, ye, w, c|
+          inv = c[:transform_inverse]
+          width = c[:hsize]
+          ps = c[:pixel_size]
+          hw = c[:half_width]
+          hh = c[:half_height]
+          fd = c[:focal_distance]
+
+          # Precompute camera origin (constant when aperture_size == 0)
+          om = inv * Rayz::Point.new(x: 0.0, y: 0.0, z: 0.0).to_matrix
+          cam_origin = Rayz::Point.new(x: om[0, 0], y: om[1, 0], z: om[2, 0])
+
+          chunk = []
+          (ys...ye).each do |y|
+            (0...width).each do |x|
+              r, g, b = if c[:samples_per_pixel] == 1 && c[:aperture_size] == 0.0 && !c[:motion_blur]
+                xoffset = (x + 0.5) * ps
+                yoffset = (y + 0.5) * ps
+                pm = inv * Rayz::Point.new(x: hw - xoffset, y: hh - yoffset, z: -fd).to_matrix
+                pixel = Rayz::Point.new(x: pm[0, 0], y: pm[1, 0], z: pm[2, 0])
+                direction = (pixel - cam_origin).normalize
+                ray = Rayz::Ray.new(origin: cam_origin, direction: direction, time: 0.0)
+                col = w.color_at(ray)
+                [col.red, col.green, col.blue]
+              else
+                total_r = total_g = total_b = 0.0
+                c[:samples_per_pixel].times do
+                  xo = (x + rand) * ps
+                  yo = (y + rand) * ps
+                  ax = (c[:aperture_size] > 0) ? (rand * 2 - 1) * c[:aperture_size] : 0.0
+                  ay = (c[:aperture_size] > 0) ? (rand * 2 - 1) * c[:aperture_size] : 0.0
+                  t = c[:motion_blur] ? rand : 0.0
+                  pm = inv * Rayz::Point.new(x: hw - xo, y: hh - yo, z: -fd).to_matrix
+                  pixel = Rayz::Point.new(x: pm[0, 0], y: pm[1, 0], z: pm[2, 0])
+                  om2 = inv * Rayz::Point.new(x: ax, y: ay, z: 0.0).to_matrix
+                  orig = Rayz::Point.new(x: om2[0, 0], y: om2[1, 0], z: om2[2, 0])
+                  dir = (pixel - orig).normalize
+                  ray = Rayz::Ray.new(origin: orig, direction: dir, time: t)
+                  col = w.color_at(ray)
+                  total_r += col.red
+                  total_g += col.green
+                  total_b += col.blue
+                end
+                div = c[:samples_per_pixel].to_f
+                [total_r / div, total_g / div, total_b / div]
+              end
+              chunk << [x, y, r, g, b]
+            end
+          end
+          chunk
+        end
+      end
+
+      ractors.each do |ractor|
+        ractor.value.each do |x, y, r, g, b|
+          image.write_pixel(row: @vsize - 1 - y, col: x,
+            color: Rayz::Color.new(red: r, green: g, blue: b))
+        end
+        print "."
+      end
+
+      total_time = Time.now - start_time
+      puts "\nDone!"
+      puts "Rendering took #{total_time.round(2)} seconds (#{cpu_count} Ractors)"
+      puts "Time per row: #{(total_time / @vsize * 1000).round(2)} ms"
 
       image
     end

@@ -6,7 +6,7 @@ require_relative "../lib/rayz"
 class PerformanceBenchmark
   RESULTS_FILE = "performance_results.json"
 
-  def self.run(label:, iterations: 2)
+  def self.run(label:, iterations: 2, render_mode: true)
     puts "\n" + "=" * 60
     puts "BENCHMARK: #{label}"
     puts "=" * 60
@@ -26,7 +26,7 @@ class PerformanceBenchmark
       iterations.times do |i|
         print "  Iteration #{i + 1}/#{iterations}..."
         time = Benchmark.realtime do
-          camera.render(world)
+          camera.render(world, parallel: render_mode)
         end
         times << time
         puts " #{time.round(2)}s"
@@ -221,6 +221,11 @@ end
 # Run if executed directly
 if __FILE__ == $0
   label = ARGV[0] || "baseline"
-  puts "Running benchmark: #{label}"
-  PerformanceBenchmark.run(label: label)
+  mode = case ARGV[1]
+  when "ractor" then :ractor
+  when "sequential" then false
+  else true
+  end
+  puts "Running benchmark: #{label} (render_mode: #{mode})"
+  PerformanceBenchmark.run(label: label, render_mode: mode)
 end
