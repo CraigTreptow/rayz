@@ -24,7 +24,13 @@ options = {parallel: false}
 OptionParser.new do |opts|
   opts.on("--scene SCENE") { |v| options[:scene] = v }
   opts.on("--output PATH") { |v| options[:output] = v }
-  opts.on("--parallel BOOL") { |v| options[:parallel] = (v == "true") }
+  opts.on("--parallel VALUE") do |v|
+    options[:parallel] = case v
+    when "ractor" then :ractor
+    when "true" then true
+    else false
+    end
+  end
 end.parse!
 
 scene_name = options[:scene] || abort("--scene required")

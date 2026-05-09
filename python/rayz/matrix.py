@@ -97,9 +97,10 @@ class Matrix:
         return abs(self.determinant()) > EPSILON
 
     def inverse(self) -> Matrix:
-        if not self.is_invertible():
+        try:
+            return Matrix(np.linalg.inv(self._data))
+        except np.linalg.LinAlgError:
             raise ValueError("Matrix is not invertible")
-        return Matrix(np.linalg.inv(self._data))
 
     # ------------------------------------------------------------------
     # Factory
