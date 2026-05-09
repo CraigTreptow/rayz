@@ -33,7 +33,7 @@ module Rayz
 
       # Transform the ray by the inverse of the shape's transformation
       local_ray = ray.transform(effective_transform_inverse)
-      @saved_ray = local_ray # For test_shape debugging
+      @saved_ray = local_ray unless frozen? # For test_shape debugging
       local_intersect(local_ray)
     end
 
