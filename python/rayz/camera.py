@@ -16,6 +16,7 @@ def _render_chunk(args: tuple) -> list[tuple[int, int, object]]:
 
     results = []
     inv = camera._transform_inverse
+    origin_m = inv * Point(0, 0, 0)
     for y in rows:
         for x in range(camera.hsize):
             xoffset = (x + 0.5) * camera.pixel_size
@@ -23,7 +24,6 @@ def _render_chunk(args: tuple) -> list[tuple[int, int, object]]:
             world_x = camera._half_width - xoffset
             world_y = camera._half_height - yoffset
             pixel_m = inv * Point(world_x, world_y, -1)
-            origin_m = inv * Point(0, 0, 0)
             direction = (pixel_m - origin_m).normalize()
             ray = Ray(origin_m, direction)
             color = world.color_at(ray)
