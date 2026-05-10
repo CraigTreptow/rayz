@@ -4,6 +4,8 @@ from rayz.constants import EPSILON
 
 
 class Intersection:
+    __slots__ = ("t", "object", "u", "v")
+
     def __init__(self, t: float, obj, u: float | None = None, v: float | None = None) -> None:
         self.t = t
         self.object = obj

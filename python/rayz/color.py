@@ -4,6 +4,8 @@ from __future__ import annotations
 class Color:
     """An RGB color with floating-point components."""
 
+    __slots__ = ("red", "green", "blue")
+
     def __init__(self, red: float, green: float, blue: float) -> None:
         self.red = float(red)
         self.green = float(green)

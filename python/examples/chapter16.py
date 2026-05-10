@@ -110,7 +110,7 @@ def run() -> None:
     camera.transform = view_transform(Point(0, 2, -8), Point(0, 1, 0), Vector(0, 1, 0))
 
     print("Rendering 200x150 CSG scene (carved cube, lens, hollow sphere, die, rounded cyl, wedge sphere)...")
-    canvas = camera.render(world)
+    canvas = camera.render_parallel(world)
 
     out_path = os.path.join(os.path.dirname(__file__), "chapter16.ppm")
     print(f"Writing {out_path}...", end="", flush=True)

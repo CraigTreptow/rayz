@@ -8,6 +8,8 @@ from rayz.constants import EPSILON
 class Tuple:
     """A 4D homogeneous coordinate (x, y, z, w)."""
 
+    __slots__ = ("x", "y", "z", "w")
+
     def __init__(self, x: float, y: float, z: float, w: float) -> None:
         self.x = float(x)
         self.y = float(y)
@@ -67,6 +69,8 @@ class Tuple:
 class Point(Tuple):
     """A point in 3D space (w=1.0)."""
 
+    __slots__ = ()
+
     def __init__(self, x: float, y: float, z: float) -> None:
         super().__init__(x, y, z, 1.0)
 
@@ -76,6 +80,8 @@ class Point(Tuple):
 
 class Vector(Tuple):
     """A direction/displacement in 3D space (w=0.0)."""
+
+    __slots__ = ()
 
     def __init__(self, x: float, y: float, z: float) -> None:
         super().__init__(x, y, z, 0.0)
