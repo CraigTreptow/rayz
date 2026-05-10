@@ -41,14 +41,18 @@ module Rayz
       sphere1.material.normal_perturbation = NormalPerturbations.sine_wave(frequency: 10, amplitude: 0.15)
       w.objects << sphere1
 
-      # Torus primitive
-      torus = Torus.new(major_radius: 0.6, minor_radius: 0.2)
-      torus.transform = Transformations.translation(x: 0, y: 1.2, z: 0) *
-        Transformations.rotation_x(radians: Math::PI / 2)
-      torus.material.color = Color.new(red: 0.3, green: 1, blue: 0.3)
-      torus.material.specular = 0.8
-      torus.material.reflective = 0.4
-      w.objects << torus
+      # Glass sphere demonstrating transparency and refraction
+      glass_ball = Sphere.new
+      glass_ball.transform = Transformations.translation(x: 0, y: 1, z: 0)
+      glass_ball.material.color = Color.new(red: 0.9, green: 1, blue: 0.9)
+      glass_ball.material.ambient = 0.0
+      glass_ball.material.diffuse = 0.1
+      glass_ball.material.specular = 1.0
+      glass_ball.material.shininess = 300
+      glass_ball.material.reflective = 0.9
+      glass_ball.material.transparency = 0.9
+      glass_ball.material.refractive_index = 1.5
+      w.objects << glass_ball
 
       # Sphere with quilted normal perturbation
       sphere2 = Sphere.new
@@ -79,7 +83,7 @@ module Rayz
       puts "    Saved to examples/advanced_features_demo.ppm"
       puts
       puts "  Features demonstrated:"
-      puts "    - Torus primitive (green donut)"
+      puts "    - Glass sphere (transparency + refraction, center)"
       puts "    - Normal perturbation (wavy red sphere, quilted blue sphere)"
       puts "    - Reflective materials"
       puts "    - Checkerboard floor pattern"
