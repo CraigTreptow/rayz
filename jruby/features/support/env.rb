@@ -2,11 +2,15 @@ require "minitest"
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "..", "lib", "rayz"))
 
-classes = %w[util tuple point vector color canvas environment projectile transformations]
+classes = %w[util tuple point vector color canvas environment projectile transformations
+             ray intersection material point_light lighting
+             pattern stripe_pattern gradient_pattern ring_pattern checkers_pattern test_pattern
+             shape test_shape sphere plane cube cylinder cone
+             triangle smooth_triangle group bounds csg obj_parser
+             area_light spotlight texture_map normal_perturbations torus
+             world camera]
 
-classes.each do |class_file_name|
-  require class_file_name
-end
+classes.each { |c| require c }
 
 World(Minitest::Assertions)
 
