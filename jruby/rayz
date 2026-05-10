@@ -1,0 +1,3 @@
+#!/bin/bash
+# Run the rayz examples under JRuby (real OS threads, no YJIT)
+exec ruby "$(dirname "$0")/examples/run" "$@"

@@ -2,6 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Repository Hosting
+
+**Primary remote:** GitLab — `https://gitlab.com/CraigTreptow/rayz.git` (remote name: `origin`)
+**Mirror:** GitHub — `https://github.com/CraigTreptow/rayz.git` (remote name: `github`)
+
+Use `glab` CLI for merge requests, issues, and CI. Push to `origin` (GitLab). GitHub is read-only mirror.
+
 ## Project Overview
 
 This is a multi-language repository. `book_features/` at the root contains language-agnostic Gherkin specs from the book — the starting point for any new language implementation. Each language lives in its own subdirectory (e.g., `ruby/`, `python/`).
