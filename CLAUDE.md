@@ -60,6 +60,29 @@ bundle exec standardrb       # Check code style
 bundle exec standardrb --fix # Auto-fix formatting issues
 ```
 
+### JRuby Setup
+```bash
+cd jruby
+mise install      # Install JRuby 10.1 + OpenJDK 25 from jruby/mise.toml
+bundle install    # Install gem dependencies
+```
+
+### JRuby Running
+```bash
+cd jruby
+./rayz                             # Execute all chapters (1-17) and demos
+./rayz 4                           # Run only chapter 4
+ruby examples/run advanced_features # Run advanced features demo
+```
+
+**Note:** JRuby uses JVM JIT (not YJIT). Thread-based parallelism is genuine (no GIL). Expect ~1-2s JVM startup overhead on first run.
+
+### JRuby Testing
+```bash
+cd jruby
+bundle exec cucumber   # Run all 370 scenarios
+```
+
 ## Architecture
 
 ### Core Mathematical Foundation
@@ -240,6 +263,9 @@ open performance_results.html                 # View graphs in browser
 - `/ruby/lib/rayz/` - Core ray tracer library (mathematical foundations, primitives, rendering engine)
 - `/ruby/examples/` - Chapter demonstration scripts and their output files
 - `/ruby/features/` - Cucumber BDD tests for the Ruby implementation
+- `/jruby/lib/rayz/` - JRuby port of the ray tracer library (JVM, real OS threads, no GIL)
+- `/jruby/examples/` - Chapter demonstration scripts for JRuby
+- `/jruby/features/` - Cucumber BDD tests for the JRuby implementation (370 scenarios)
 - `/book/` - Reference book in epub format
 
 ## Output Files
@@ -298,8 +324,20 @@ Additional features implemented beyond the book's scope (these are demonstration
 - **Bounding Boxes Demo**: Axis-aligned bounding box optimization for Groups, dramatically reduces intersection tests by skipping groups when rays miss their bounds, includes bounds transformation, merging, and hierarchical bounding box calculation
 - **Advanced Features Demo**: Torus primitive with quartic equation solving, area lights with soft shadows via grid sampling, spotlights with directional beams, anti-aliasing via supersampling, focal blur/depth of field, motion blur with time-based transformations, texture mapping with UV coordinates, normal perturbation for bump/displacement effects
 
+### JRuby Implementation - ✅ Complete
+Full port of the Ruby implementation to JRuby (JVM). All 370 scenarios pass. Key differences from MRI Ruby:
+
+- **Thread parallelism**: `camera.rb` uses a thread pool (one thread per CPU core, round-robin row distribution). JRuby has no GIL so threads provide genuine CPU-level speedup.
+- **No YJIT**: JVM handles JIT compilation automatically; `--yjit` flag is not present in runner scripts.
+- **No `async` gem**: Replaced with synchronous loop + `Mutex` for thread-safe canvas writes.
+- **No Ractor**: `render_ractor` aliased to `render_parallel` (JVM threads are equivalent).
+- **Matrix caching**: Same as Ruby — `shape.rb` caches `@transform_inverse` and `@transform_inverse_transpose` in the `transform=` setter.
+- **Location**: `jruby/` directory with identical structure to `ruby/`.
+- **Benchmark**: `jruby/benchmark/` with `parallel` and `sequential` variants; auto-discovered by `benchmark/run.sh`.
+
 ### Test Coverage
 - 295 scenarios passing (346 total scenarios in ruby/features/, 51 undefined for additional edge cases)
+- 370 scenarios passing in jruby/features/ (identical feature files, JRuby-compatible step definitions)
 - 23 feature files in `/ruby/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic

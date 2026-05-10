@@ -7,8 +7,9 @@ Implementations of a ray tracer based on ["The Ray Tracer Challenge"](https://pr
 ```
 rayz/
 ├── book_features/   # language-agnostic Gherkin specs from the book (starting point for new languages)
-├── ruby/            # Ruby implementation
-└── python/          # Python implementation
+├── ruby/            # Ruby implementation (MRI, YJIT, Ractor)
+├── python/          # Python implementation (CPython, multiprocessing)
+└── jruby/           # JRuby implementation (JVM, real OS threads, no GIL)
 ```
 
 ## Project Scope
@@ -16,6 +17,27 @@ rayz/
 **Book Chapters (1-17):** ✅ Complete implementation of all chapters from "The Ray Tracer Challenge" book, covering the fundamentals of ray tracing from projectile physics through smooth triangle rendering.
 
 **Custom Extensions:** Additional features implemented beyond the book's scope, including OBJ file loading, advanced hierarchical transformations, bounding box optimization, and advanced rendering techniques (torus primitives, area lights, spotlights, anti-aliasing, focal blur, motion blur, texture mapping, normal perturbation).
+
+---
+
+## Performance at a Glance
+
+_Last updated: 2026-05-10 · MacBook Pro M-series (arm64) · macOS Darwin 25.4.0 · Best single-threaded or multi-threaded variant per language_
+
+| Language | Version | Tiny (200×100) | Small (400×200) | Medium (600×300) | Composite | vs. previous |
+|---|---|---|---|---|---|---|
+| Ruby (YJIT) | ruby 4.0.2 | 4.3 s | 17.2 s | 38.4 s | **59.9 s** | — |
+| JRuby (JVM) | jruby 10.1.0.0 / JDK 25 | 5.7 s | 18.5 s | 37.0 s | **61.2 s** | +2% |
+| Python (multiprocessing) | Python 3.14.4 | 6.0 s | 23.9 s | 55.2 s | **85.2 s** | +39% |
+| Ruby (no YJIT) | ruby 4.0.2 | 6.8 s | 27.7 s | 61.4 s | **95.9 s** | +13% |
+
+**Why each runtime performs as it does:**
+- **Ruby (YJIT):** YJIT JIT-compiles hot paths at runtime, eliminating most interpreter overhead for the numeric-heavy render loop. ~1.6× faster than the same Ruby without YJIT.
+- **JRuby (JVM):** JVM JIT handles compilation automatically and reaches near-YJIT throughput on larger scenes (medium is actually faster than Ruby YJIT). Real OS threads with no GIL, but scene sizes are too small for Thread speedup to overcome JVM startup and warmup overhead on tiny scenes.
+- **Python (multiprocessing):** `ProcessPoolExecutor` sidesteps the GIL for true CPU parallelism (~6× vs sequential Python). Python's dynamic dispatch and lack of a JIT still adds overhead compared to JIT-compiled runtimes.
+- **Ruby (no YJIT):** Pure interpreter, no JIT. GIL blocks meaningful Thread-level CPU parallelism for compute-bound work. Useful as the baseline showing YJIT's 1.6× impact.
+
+_Run `bash benchmark/run.sh` to regenerate with fresh numbers on your machine._
 
 ---
 
@@ -37,6 +59,7 @@ Three sizes are tested: **tiny**, **small**, and **medium**. The run order is sh
 | **[mise](https://mise.jdx.dev/)** | Manages per-language runtime versions; `mise exec` must resolve `ruby` and `uv` | `brew install mise` |
 | **Ruby** (via mise) | Runs `report.rb` to generate reports after each benchmark | `cd ruby && mise install` |
 | **Python + uv** (via mise) | Required for the Python variant | `cd python && mise install` |
+| **JRuby + Java** (via mise) | Required for the JRuby variant (JVM auto-provisioned) | `cd jruby && mise install` |
 
 Once mise is installed, run `mise install` in each language directory before the first benchmark run so the correct runtime versions are available.
 
@@ -142,7 +165,64 @@ cd ruby && mise exec -- ruby benchmark/scene.rb --scene tiny --output /tmp/test.
 
 # Python
 cd python && mise exec -- uv run benchmark/scene.py --scene tiny --output /tmp/test.ppm && echo OK
+
+# JRuby
+cd jruby && mise exec -- ruby benchmark/scene.rb --scene tiny --output /tmp/test.ppm && echo OK
 ```
+
+---
+
+# JRuby
+
+## Installation
+
+This project uses [mise-en-place](https://mise.jdx.dev/) to manage JRuby and Java versions.
+
+**Install mise** (if not already installed):
+```bash
+brew install mise
+```
+
+**Install JRuby, Java, and dependencies:**
+```bash
+cd jruby
+mise install   # installs JRuby 10.1 + OpenJDK 25 from jruby/mise.toml
+bundle install
+```
+
+## Running
+
+Run chapter demonstrations from the `jruby/` directory (generates PPM image files in `jruby/examples/`):
+
+```bash
+cd jruby
+./rayz                             # Run all chapters (1-17) and demos
+./rayz all                         # Explicitly run all chapters and demos
+./rayz 4                           # Run only chapter 4
+ruby examples/run 7                # Alternative: run examples directly
+ruby examples/run advanced_features # Run advanced features demo
+```
+
+**Note:** JRuby uses the JVM for JIT compilation rather than Ruby's YJIT. Thread-based parallelism is enabled by default and provides genuine CPU-level speedup (JRuby has no GIL).
+
+## Testing
+
+```bash
+cd jruby
+bundle exec cucumber                          # Run all tests (370 scenarios)
+bundle exec cucumber features/               # Run working features only
+bundle exec cucumber features/tuples.feature  # Run specific feature
+```
+
+## Key Differences from MRI Ruby
+
+| Feature | MRI Ruby | JRuby |
+|---|---|---|
+| JIT compiler | YJIT (requires Rust) | JVM JIT (always active) |
+| Thread parallelism | Limited by GIL | Full OS threads, no GIL |
+| Ractor parallelism | Supported | Aliased to Thread-based |
+| `async` gem | Supported | Removed (MRI-only) |
+| Startup time | Fast | Slower (JVM warmup ~1-2s) |
 
 ---
 
