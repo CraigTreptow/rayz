@@ -1,6 +1,13 @@
 stages:
+  - validate
   - lint
   - test
+
+pipeline-check:
+  stage: validate
+  image: alpine:latest
+  script:
+    - echo "Pipeline OK for $CI_COMMIT_BRANCH"
 
 # ── Ruby ──────────────────────────────────────────────────────────────────────
 
@@ -23,7 +30,9 @@ lint-ruby:
     - bundle exec standardrb
   rules:
     - changes:
-        - ruby/**/*
+        paths:
+          - ruby/**/*
+        compare_to: master
 
 test-ruby:
   extends: .ruby-base
@@ -32,7 +41,9 @@ test-ruby:
     - bundle exec cucumber
   rules:
     - changes:
-        - ruby/**/*
+        paths:
+          - ruby/**/*
+        compare_to: master
 
 # ── Python ────────────────────────────────────────────────────────────────────
 
@@ -59,7 +70,9 @@ lint-python:
     - uv run ruff format --check .
   rules:
     - changes:
-        - python/**/*
+        paths:
+          - python/**/*
+        compare_to: master
 
 test-python:
   extends: .python-base
@@ -68,7 +81,9 @@ test-python:
     - uv run behave features/
   rules:
     - changes:
-        - python/**/*
+        paths:
+          - python/**/*
+        compare_to: master
 
 # ── Shell ─────────────────────────────────────────────────────────────────────
 
@@ -81,4 +96,6 @@ lint-shell:
     - find . -name '*.sh' -print0 | xargs -0 shellcheck
   rules:
     - changes:
-        - "**/*.sh"
+        paths:
+          - "**/*.sh"
+        compare_to: master

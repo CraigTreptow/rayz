@@ -1,0 +1,67 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/rayz"
+
+module Rayz
+  class ExamplesRunner
+    CHAPTERS = {}
+    DEMOS = {}
+
+    def self.run_all
+      CHAPTERS.keys.sort.each { |n| CHAPTERS[n].run }
+      DEMOS.keys.sort.each { |n| DEMOS[n].run }
+    end
+
+    def self.run_chapter(num)
+      chapter = CHAPTERS[num]
+      if chapter
+        chapter.run
+      else
+        puts "Error: Chapter #{num} does not exist."
+        puts "Available chapters: 1-#{CHAPTERS.keys.max}"
+        exit 1
+      end
+    end
+
+    def self.run_demo(name)
+      demo = DEMOS[name]
+      if demo
+        demo.run
+      else
+        puts "Error: Demo '#{name}' does not exist."
+        puts "Available demos: #{DEMOS.keys.sort.join(", ")}"
+        exit 1
+      end
+    end
+
+    def self.usage
+      puts "Usage: ruby examples/run [all|<chapter_number>|<demo_name>]"
+      puts ""
+      puts "Examples:"
+      puts "  ruby examples/run all              # Run all chapters and demos"
+      puts "  ruby examples/run 4                # Run only chapter 4"
+      puts "  ruby examples/run obj_parser       # Run OBJ parser demo"
+      puts "  ruby examples/run                  # Run all chapters and demos (default)"
+      puts ""
+      puts "Available chapters: 1-#{CHAPTERS.keys.max || "none yet"}"
+      puts "Available demos: #{DEMOS.keys.sort.join(", ")}"
+    end
+
+    def self.parse_and_run(args)
+      if args.empty? || args.first == "all"
+        run_all
+      elsif /^\d+$/.match?(args.first)
+        run_chapter(args.first.to_i)
+      elsif DEMOS.key?(args.first)
+        run_demo(args.first)
+      else
+        usage
+        exit 1
+      end
+    end
+  end
+end
+
+if __FILE__ == $0
+  Rayz::ExamplesRunner.parse_and_run(ARGV)
+end
