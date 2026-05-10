@@ -62,7 +62,7 @@ def run() -> None:
     camera.transform = view_transform(Point(0, 1.5, -5), Point(0, 1, 0), Vector(0, 1, 0))
 
     print("Rendering 200x100 scene with patterns on planes...")
-    canvas = camera.render(world)
+    canvas = camera.render_parallel(world)
 
     out_path = os.path.join(os.path.dirname(__file__), "chapter8.ppm")
     print(f"Writing {out_path}...", end="", flush=True)

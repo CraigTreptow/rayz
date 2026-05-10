@@ -18,7 +18,7 @@ module Rayz
     def transform=(matrix)
       @transform = matrix
       @transform_inverse = matrix.inverse
-      @transform_inverse_transpose = matrix.inverse.transpose
+      @transform_inverse_transpose = @transform_inverse.transpose
     end
 
     def intersect(ray, time = 0.0)

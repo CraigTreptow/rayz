@@ -74,7 +74,7 @@ def run() -> None:
     n_tris = _count_triangles(model)
     print(f"Loaded model: {n_verts} vertices, {n_tris} triangles")
     print("Rendering 200x133 scene...")
-    canvas = camera.render(world)
+    canvas = camera.render_parallel(world)
 
     out_path = os.path.join(os.path.dirname(__file__), "obj_parser_demo.ppm")
     print(f"Writing {out_path}...", end="", flush=True)
