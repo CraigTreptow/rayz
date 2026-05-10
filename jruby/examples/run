@@ -5,6 +5,23 @@ require_relative "chapter1"
 require_relative "chapter2"
 require_relative "chapter3"
 require_relative "chapter4"
+require_relative "chapter5"
+require_relative "chapter6"
+require_relative "chapter7"
+require_relative "chapter8"
+require_relative "chapter9"
+require_relative "chapter10"
+require_relative "chapter11"
+require_relative "chapter12"
+require_relative "chapter13"
+require_relative "chapter14"
+require_relative "chapter15"
+require_relative "chapter16"
+require_relative "chapter17"
+require_relative "obj_parser_demo"
+require_relative "nested_groups_demo"
+require_relative "bounding_boxes_demo"
+require_relative "advanced_features_demo"
 
 module Rayz
   class ExamplesRunner
@@ -12,9 +29,28 @@ module Rayz
       1 => Chapter1,
       2 => Chapter2,
       3 => Chapter3,
-      4 => Chapter4
+      4 => Chapter4,
+      5 => Chapter5,
+      6 => Chapter6,
+      7 => Chapter7,
+      8 => Chapter8,
+      9 => Chapter9,
+      10 => Chapter10,
+      11 => Chapter11,
+      12 => Chapter12,
+      13 => Chapter13,
+      14 => Chapter14,
+      15 => Chapter15,
+      16 => Chapter16,
+      17 => Chapter17
     }
-    DEMOS = {}
+
+    DEMOS = {
+      "obj_parser" => ObjParserDemo,
+      "nested_groups" => NestedGroupsDemo,
+      "bounding_boxes" => BoundingBoxesDemo,
+      "advanced_features" => AdvancedFeaturesDemo
+    }
 
     def self.run_all
       CHAPTERS.keys.sort.each { |n| CHAPTERS[n].run }
@@ -52,7 +88,7 @@ module Rayz
       puts "  ruby examples/run obj_parser       # Run OBJ parser demo"
       puts "  ruby examples/run                  # Run all chapters and demos (default)"
       puts ""
-      puts "Available chapters: 1-#{CHAPTERS.keys.max || "none yet"}"
+      puts "Available chapters: 1-#{CHAPTERS.keys.max}"
       puts "Available demos: #{DEMOS.keys.sort.join(", ")}"
     end
 
