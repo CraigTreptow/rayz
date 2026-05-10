@@ -1,6 +1,8 @@
 require "matrix"
 require "etc"
 
+$stdout.sync = true
+
 module Rayz
   class Camera
     attr_accessor :hsize, :vsize, :field_of_view, :samples_per_pixel, :aperture_size, :focal_distance, :motion_blur
