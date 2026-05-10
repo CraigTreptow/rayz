@@ -8,3 +8,4 @@
 /sorbet/rbi/hidden-definitions/
 /sorbet/rbi/todo.rbi
 book
+.worktrees/
