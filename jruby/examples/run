@@ -2,11 +2,17 @@
 
 require_relative "../lib/rayz"
 require_relative "chapter1"
+require_relative "chapter2"
+require_relative "chapter3"
+require_relative "chapter4"
 
 module Rayz
   class ExamplesRunner
     CHAPTERS = {
-      1 => Chapter1
+      1 => Chapter1,
+      2 => Chapter2,
+      3 => Chapter3,
+      4 => Chapter4
     }
     DEMOS = {}
 
