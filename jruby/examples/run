@@ -1,10 +1,13 @@
 #!/usr/bin/env ruby
 
 require_relative "../lib/rayz"
+require_relative "chapter1"
 
 module Rayz
   class ExamplesRunner
-    CHAPTERS = {}
+    CHAPTERS = {
+      1 => Chapter1
+    }
     DEMOS = {}
 
     def self.run_all
