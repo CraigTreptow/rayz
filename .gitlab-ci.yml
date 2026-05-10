@@ -1,6 +1,13 @@
 stages:
+  - validate
   - lint
   - test
+
+pipeline-check:
+  stage: validate
+  image: alpine:latest
+  script:
+    - echo "Pipeline OK for $CI_COMMIT_BRANCH"
 
 # ── Ruby ──────────────────────────────────────────────────────────────────────
 
