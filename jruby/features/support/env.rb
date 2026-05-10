@@ -2,7 +2,7 @@ require "minitest"
 
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), "..", "..", "lib", "rayz"))
 
-classes = %w[util tuple point vector color canvas environment projectile]
+classes = %w[util tuple point vector color canvas environment projectile transformations]
 
 classes.each do |class_file_name|
   require class_file_name

@@ -6,6 +6,7 @@ require_relative "rayz/color"
 require_relative "rayz/canvas"
 require_relative "rayz/environment"
 require_relative "rayz/projectile"
+require_relative "rayz/transformations"
 
 module Rayz
 end
