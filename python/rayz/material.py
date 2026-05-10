@@ -5,7 +5,10 @@ from rayz.constants import EPSILON
 
 
 class Material:
-    __slots__ = ("color", "ambient", "diffuse", "specular", "shininess", "reflective", "transparency", "refractive_index", "pattern")
+    __slots__ = (
+        "color", "ambient", "diffuse", "specular", "shininess",
+        "reflective", "transparency", "refractive_index", "pattern",
+    )
 
     def __init__(
         self,
