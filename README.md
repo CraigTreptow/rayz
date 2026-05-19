@@ -8,7 +8,7 @@ Implementations of a ray tracer based on ["The Ray Tracer Challenge"](https://pr
 rayz/
 ├── book_features/   # language-agnostic Gherkin specs from the book (starting point for new languages)
 ├── ruby/            # Ruby implementation (MRI, YJIT, Ractor)
-├── python/          # Python implementation (CPython, multiprocessing)
+├── python/          # Python implementation (CPython, multiprocessing, NumPy matrices)
 └── jruby/           # JRuby implementation (JVM, real OS threads, no GIL)
 ```
 
@@ -32,7 +32,7 @@ _Last updated: 2026-05-19 · craig-beelink · AMD Ryzen 7 255 · 16 cores · Lin
 | Ruby no-YJIT | Ractor parallel | ruby 4.0.2 | 1.94 s | 7.63 s | 17.48 s | 35.15 s | **9,105** |
 
 **Why each runtime performs as it does:**
-- **Python (multiprocessing):** `ProcessPoolExecutor` sidesteps the GIL for true CPU parallelism across all 16 cores. On a high-core-count machine this outpaces JIT-compiled single-threaded runtimes. Python's dynamic dispatch adds overhead, but parallelism more than compensates at this core count.
+- **Python (multiprocessing):** Matrix operations use NumPy (BLAS/LAPACK in C), which is the single biggest performance factor — every ray-object intersection bottoms out in a matrix multiply or invert. `ProcessPoolExecutor` then spreads work across all 16 cores with no GIL. The pixel-level differences vs Ruby/JRuby in the PPM comparison table are a side-effect of NumPy using a different matrix inversion algorithm.
 - **JRuby (parallel):** JVM JIT compiles hot paths automatically and real OS threads (no GIL) spread work across all cores. Reaches ~57% of Python throughput; JVM startup and warmup add ~2–3 s of overhead visible on tiny scenes.
 - **Ruby (YJIT + Ractor):** YJIT JIT-compiles the numeric-heavy render loop for ~1.4× speedup over no-YJIT. Ractor parallelism adds genuine CPU concurrency. GIL still limits `Thread`-based variants.
 - **Ruby (no YJIT + Ractor):** Pure interpreter with Ractor parallelism. Useful as the baseline showing YJIT's ~1.4× impact on this machine.
