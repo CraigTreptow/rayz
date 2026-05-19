@@ -30,11 +30,13 @@ _DEV_SCENES: dict[str, tuple[int, int]] = {
     "tiny": (20, 10),
     "small": (40, 20),
     "medium": (60, 30),
+    "large": (100, 50),
 }
 _PROD_SCENES: dict[str, tuple[int, int]] = {
     "tiny": (200, 100),
     "small": (400, 200),
     "medium": (600, 300),
+    "large": (800, 400),
 }
 SCENES = _DEV_SCENES if os.environ.get("DEV_MODE") == "true" else _PROD_SCENES
 

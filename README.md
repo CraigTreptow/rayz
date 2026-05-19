@@ -49,7 +49,7 @@ The benchmark runner measures rendering performance across all language implemen
 
 Checkers floor (reflective) + glass sphere + mirror sphere + matte sphere + green cylinder; one point light. Exercises reflection, refraction, patterns, and multiple shape types — the same scene is implemented identically in every language.
 
-Three sizes are tested: **tiny**, **small**, and **medium**. The run order is shuffled each time to eliminate thermal throttling bias.
+Four sizes are tested: **tiny**, **small**, **medium**, and **large**. The run order is shuffled each time to eliminate thermal throttling bias.
 
 ## Prerequisites
 
@@ -68,10 +68,10 @@ Once mise is installed, run `mise install` in each language directory before the
 ```bash
 # From the repo root
 
-# Run the full benchmark (production sizes: 200×100, 400×200, 600×300)
+# Run the full benchmark (production sizes: 200×100, 400×200, 600×300, 800×400)
 bash benchmark/run.sh
 
-# Run with small dev sizes (20×10, 40×20, 60×30) for fast structural iteration
+# Run with small dev sizes (20×10, 40×20, 60×30, 100×50) for fast structural iteration
 bash benchmark/run.sh --dev
 
 # Preview the shuffled run queue (no rendering)
@@ -112,7 +112,7 @@ The HTML report contains bar charts for average render time and throughput (pixe
 |---|---|
 | Language | Implementation name and version (e.g. `ruby 4.0.2`, `Python 3.14.4`) |
 | Variant | Which configuration ran (e.g. `yjit-sequential`, `no-yjit-parallel`) |
-| Scene | Size: `tiny`, `small`, or `medium` — production sizes by default; pass `--dev` for small sizes |
+| Scene | Size: `tiny`, `small`, `medium`, or `large` — production sizes by default; pass `--dev` for small sizes |
 | W×H | Exact pixel dimensions rendered |
 | Avg | Mean wall-clock render time across all iterations |
 | Min / Max | Fastest and slowest individual iterations |

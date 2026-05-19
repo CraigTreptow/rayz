@@ -13,4 +13,8 @@ cd "$(dirname "$0")/.." || exit 1
 
 command -v mise &>/dev/null || { echo "ERROR: 'mise' is not installed or not on PATH" >&2; exit 1; }
 
-exec mise exec -- ruby benchmark/scene.rb "$@" --parallel "${PARALLEL:-false}"
+exec mise exec -- ruby \
+    -J-server \
+    -J-XX:+UseG1GC \
+    -J-Xss4m \
+    benchmark/scene.rb "$@" --parallel "${PARALLEL:-false}"

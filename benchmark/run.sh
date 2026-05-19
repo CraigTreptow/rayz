@@ -122,7 +122,7 @@ done
 # Build run queue: lang|variant_name|variant_desc|variant_env|scene|iteration
 # ---------------------------------------------------------------------------
 declare -a RUN_QUEUE=()
-SCENES=("tiny" "small" "medium")
+SCENES=("tiny" "small" "medium" "large")
 
 for lang in "${LANGUAGES[@]}"; do
     variants_file="${REPO_ROOT}/${lang}/benchmark/variants.conf"
