@@ -122,7 +122,7 @@ done
 # Build run queue: lang|variant_name|variant_desc|variant_env|scene|iteration
 # ---------------------------------------------------------------------------
 declare -a RUN_QUEUE=()
-SCENES=("tiny" "small" "medium")
+SCENES=("tiny" "small" "medium" "large")
 
 for lang in "${LANGUAGES[@]}"; do
     variants_file="${REPO_ROOT}/${lang}/benchmark/variants.conf"
@@ -215,8 +215,11 @@ for run in "${SHUFFLED_QUEUE[@]}"; do
         exit 1
     fi
 
+    echo ""
+    echo "──────────────────────────────────────────────────────────────"
     printf "[%d/%d] %-8s %-22s scene=%-6s iter=%s\n" \
         "${current}" "${total}" "${lang}" "${variant_name}" "${scene}" "${iter}"
+    echo "──────────────────────────────────────────────────────────────"
 
     # Build env array from variant-specific vars (e.g. YJIT=true PARALLEL=false)
     declare -a run_env=()
@@ -237,7 +240,9 @@ for run in "${SHUFFLED_QUEUE[@]}"; do
         exit 1
     fi
 
-    printf "  => %s\n" "${timing_json}"
+    elapsed_val="$(grep -o '"elapsed":[0-9.]*' <<< "${timing_json}" | cut -d: -f2)"
+    pxs_val="$(grep -o '"pixels_per_second":[0-9]*' <<< "${timing_json}" | cut -d: -f2)"
+    printf "  => %ss  (%s px/s)\n" "${elapsed_val}" "${pxs_val}"
 
     # Enrich timing JSON with run metadata via env vars (no shell string injection)
     enriched="$(BENCH_TIMING_JSON="${timing_json}" \

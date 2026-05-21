@@ -9,13 +9,15 @@ require_relative "../lib/rayz"
 DEV_SCENES = {
   "tiny" => {width: 20, height: 10},
   "small" => {width: 40, height: 20},
-  "medium" => {width: 60, height: 30}
+  "medium" => {width: 60, height: 30},
+  "large" => {width: 100, height: 50}
 }.freeze
 
 PROD_SCENES = {
   "tiny" => {width: 200, height: 100},
   "small" => {width: 400, height: 200},
-  "medium" => {width: 600, height: 300}
+  "medium" => {width: 600, height: 300},
+  "large" => {width: 800, height: 400}
 }.freeze
 
 SCENES = (ENV["DEV_MODE"] == "true") ? DEV_SCENES : PROD_SCENES
