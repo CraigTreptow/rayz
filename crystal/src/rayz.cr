@@ -1,0 +1,5 @@
+require "./rayz/util"
+require "./rayz/tuple"
+require "./rayz/point"
+require "./rayz/vector"
+require "./rayz/color"
