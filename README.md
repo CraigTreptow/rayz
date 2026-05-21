@@ -8,7 +8,7 @@ Implementations of a ray tracer based on ["The Ray Tracer Challenge"](https://pr
 rayz/
 ├── book_features/   # language-agnostic Gherkin specs from the book (starting point for new languages)
 ├── ruby/            # Ruby implementation (MRI, YJIT, Ractor)
-├── python/          # Python implementation (CPython, multiprocessing)
+├── python/          # Python implementation (CPython, multiprocessing, NumPy matrices)
 └── jruby/           # JRuby implementation (JVM, real OS threads, no GIL)
 ```
 
@@ -22,20 +22,20 @@ rayz/
 
 ## Performance at a Glance
 
-_Last updated: 2026-05-10 · MacBook Pro M-series (arm64) · macOS Darwin 25.4.0 · Best single-threaded or multi-threaded variant per language_
+_Last updated: 2026-05-19 · craig-beelink · AMD Ryzen 7 255 · 16 cores · Linux · Best variant per language · px/s measured on large (800×400) scene_
 
-| Language | Version | Tiny (200×100) | Small (400×200) | Medium (600×300) | Composite | vs. previous |
-|---|---|---|---|---|---|---|
-| Ruby (YJIT) | ruby 4.0.2 | 4.3 s | 17.2 s | 38.4 s | **59.9 s** | — |
-| JRuby (JVM) | jruby 10.1.0.0 / JDK 25 | 5.7 s | 18.5 s | 37.0 s | **61.2 s** | +2% |
-| Python (multiprocessing) | Python 3.14.4 | 6.0 s | 23.9 s | 55.2 s | **85.2 s** | +39% |
-| Ruby (no YJIT) | ruby 4.0.2 | 6.8 s | 27.7 s | 61.4 s | **95.9 s** | +13% |
+| Language | Variant | Version | Tiny (200×100) | Small (400×200) | Medium (600×300) | Large (800×400) | px/s |
+|---|---|---|---|---|---|---|---|
+| Python | multiprocessing | Python 3.14.4 | 0.53 s | 1.81 s | 3.98 s | 6.82 s | **46,931** |
+| JRuby | parallel threads | jruby 10.1.0.0 | 3.02 s | 5.35 s | 8.33 s | 11.90 s | **26,887** |
+| Ruby YJIT | Ractor parallel | ruby 4.0.2 | 1.48 s | 5.21 s | 12.22 s | 25.34 s | **12,628** |
+| Ruby no-YJIT | Ractor parallel | ruby 4.0.2 | 1.94 s | 7.63 s | 17.48 s | 35.15 s | **9,105** |
 
 **Why each runtime performs as it does:**
-- **Ruby (YJIT):** YJIT JIT-compiles hot paths at runtime, eliminating most interpreter overhead for the numeric-heavy render loop. ~1.6× faster than the same Ruby without YJIT.
-- **JRuby (JVM):** JVM JIT handles compilation automatically and reaches near-YJIT throughput on larger scenes (medium is actually faster than Ruby YJIT). Real OS threads with no GIL, but scene sizes are too small for Thread speedup to overcome JVM startup and warmup overhead on tiny scenes.
-- **Python (multiprocessing):** `ProcessPoolExecutor` sidesteps the GIL for true CPU parallelism (~6× vs sequential Python). Python's dynamic dispatch and lack of a JIT still adds overhead compared to JIT-compiled runtimes.
-- **Ruby (no YJIT):** Pure interpreter, no JIT. GIL blocks meaningful Thread-level CPU parallelism for compute-bound work. Useful as the baseline showing YJIT's 1.6× impact.
+- **Python (multiprocessing):** Matrix operations use NumPy (BLAS/LAPACK in C), which is the single biggest performance factor — every ray-object intersection bottoms out in a matrix multiply or invert. `ProcessPoolExecutor` then spreads work across all 16 cores with no GIL. The pixel-level differences vs Ruby/JRuby in the PPM comparison table are a side-effect of NumPy using a different matrix inversion algorithm.
+- **JRuby (parallel):** JVM JIT compiles hot paths automatically and real OS threads (no GIL) spread work across all cores. Reaches ~57% of Python throughput; JVM startup and warmup add ~2–3 s of overhead visible on tiny scenes.
+- **Ruby (YJIT + Ractor):** YJIT JIT-compiles the numeric-heavy render loop for ~1.4× speedup over no-YJIT. Ractor parallelism adds genuine CPU concurrency. GIL still limits `Thread`-based variants.
+- **Ruby (no YJIT + Ractor):** Pure interpreter with Ractor parallelism. Useful as the baseline showing YJIT's ~1.4× impact on this machine.
 
 _Run `bash benchmark/run.sh` to regenerate with fresh numbers on your machine._
 
@@ -49,7 +49,7 @@ The benchmark runner measures rendering performance across all language implemen
 
 Checkers floor (reflective) + glass sphere + mirror sphere + matte sphere + green cylinder; one point light. Exercises reflection, refraction, patterns, and multiple shape types — the same scene is implemented identically in every language.
 
-Three sizes are tested: **tiny**, **small**, and **medium**. The run order is shuffled each time to eliminate thermal throttling bias.
+Four sizes are tested: **tiny**, **small**, **medium**, and **large**. The run order is shuffled each time to eliminate thermal throttling bias.
 
 ## Prerequisites
 
@@ -68,10 +68,10 @@ Once mise is installed, run `mise install` in each language directory before the
 ```bash
 # From the repo root
 
-# Run the full benchmark (production sizes: 200×100, 400×200, 600×300)
+# Run the full benchmark (production sizes: 200×100, 400×200, 600×300, 800×400)
 bash benchmark/run.sh
 
-# Run with small dev sizes (20×10, 40×20, 60×30) for fast structural iteration
+# Run with small dev sizes (20×10, 40×20, 60×30, 100×50) for fast structural iteration
 bash benchmark/run.sh --dev
 
 # Preview the shuffled run queue (no rendering)
@@ -112,7 +112,7 @@ The HTML report contains bar charts for average render time and throughput (pixe
 |---|---|
 | Language | Implementation name and version (e.g. `ruby 4.0.2`, `Python 3.14.4`) |
 | Variant | Which configuration ran (e.g. `yjit-sequential`, `no-yjit-parallel`) |
-| Scene | Size: `tiny`, `small`, or `medium` — production sizes by default; pass `--dev` for small sizes |
+| Scene | Size: `tiny`, `small`, `medium`, or `large` — production sizes by default; pass `--dev` for small sizes |
 | W×H | Exact pixel dimensions rendered |
 | Avg | Mean wall-clock render time across all iterations |
 | Min / Max | Fastest and slowest individual iterations |
