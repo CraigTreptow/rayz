@@ -85,6 +85,35 @@ test-python:
           - python/**/*
         compare_to: master
 
+# ── Crystal ───────────────────────────────────────────────────────────────────
+
+.crystal-base:
+  image: crystallang/crystal:1.20.2
+  before_script:
+    - cd crystal
+
+lint-crystal:
+  extends: .crystal-base
+  stage: lint
+  script:
+    - crystal tool format --check
+  rules:
+    - changes:
+        paths:
+          - crystal/**/*
+        compare_to: master
+
+test-crystal:
+  extends: .crystal-base
+  stage: test
+  script:
+    - crystal spec
+  rules:
+    - changes:
+        paths:
+          - crystal/**/*
+        compare_to: master
+
 # ── Shell ─────────────────────────────────────────────────────────────────────
 
 lint-shell:

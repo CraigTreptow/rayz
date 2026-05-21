@@ -1,0 +1,13 @@
+name: rayz
+version: 0.1.0
+
+authors:
+  - Craig Treptow <craig.treptow@gmail.com>
+
+description: |
+  A ray tracer based on "The Ray Tracer Challenge" by Jamis Buck.
+  Crystal implementation.
+
+crystal: ">= 1.20.2"
+
+license: MIT
