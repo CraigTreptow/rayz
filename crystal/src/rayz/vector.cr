@@ -7,6 +7,11 @@ module Rayz
       @w = 0.0
     end
 
+    def *(scalar : Float64 | Int32) : Vector
+      s = scalar.to_f
+      Vector.new(@x * s, @y * s, @z * s)
+    end
+
     def cross(other : Vector) : Vector
       Vector.new(
         @y * other.z - @z * other.y,
