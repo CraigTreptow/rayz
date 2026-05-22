@@ -25,9 +25,10 @@ def tick(env : Environment, proj : Projectile) : Projectile
   )
 end
 
+norm = Rayz::Vector.new(1.0, 1.8, 0.0).normalize
 p = Projectile.new(
   Rayz::Point.new(0.0, 1.0, 0.0),
-  Rayz::Vector.new(1.0, 1.8, 0.0).normalize * 11.25
+  Rayz::Vector.new(norm.x * 11.25, norm.y * 11.25, norm.z * 11.25)
 )
 
 e = Environment.new(
