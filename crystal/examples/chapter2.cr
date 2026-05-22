@@ -17,40 +17,43 @@ struct Environment
 end
 
 def tick(env : Environment, proj : Projectile) : Projectile
-  position = proj.position + proj.velocity
-  vel = proj.velocity + env.gravity + env.wind
+  new_pos = proj.position + proj.velocity
+  new_vel = proj.velocity + env.gravity + env.wind
   Projectile.new(
-    Rayz::Point.new(position.x, position.y, position.z),
-    Rayz::Vector.new(vel.x, vel.y, vel.z)
+    Rayz::Point.new(new_pos.x, new_pos.y, new_pos.z),
+    Rayz::Vector.new(new_vel.x, new_vel.y, new_vel.z)
   )
 end
 
-start = Rayz::Point.new(0.0, 1.0, 0.0)
-velocity = Rayz::Vector.new(1.0, 1.8, 0.0).normalize * 11.25
-p = Projectile.new(start, velocity)
+norm = Rayz::Vector.new(1.0, 1.8, 0.0).normalize
+p = Projectile.new(
+  Rayz::Point.new(0.0, 1.0, 0.0),
+  Rayz::Vector.new(norm.x * 11.25, norm.y * 11.25, norm.z * 11.25)
+)
 
-gravity = Rayz::Vector.new(0.0, -0.1, 0.0)
-wind = Rayz::Vector.new(-0.01, 0.0, 0.0)
-e = Environment.new(gravity, wind)
+e = Environment.new(
+  Rayz::Vector.new(0.0, -0.1, 0.0),
+  Rayz::Vector.new(-0.01, 0.0, 0.0)
+)
 
 canvas = Rayz::Canvas.new(900, 550)
 red = Rayz::Color.new(1.0, 0.0, 0.0)
 
+print "Calculating projectile trajectory..."
 tick_count = 0
+
 while p.position.y > 0
   col = p.position.x.round.to_i
   row = p.position.y.round.to_i
-  if col.in?(0...canvas.width) && row.in?(0...canvas.height)
-    canvas.write_pixel(col, row, red)
-  end
+  canvas.write_pixel(col, row, red) if col >= 0 && col < canvas.width && row >= 0 && row < canvas.height
   p = tick(e, p)
   tick_count += 1
 end
+puts "done (#{tick_count} ticks)"
 
-print "Projectile hit the ground after #{tick_count} ticks. Writing PPM..."
+file_name = "examples/chapter2.ppm"
+print "Writing PPM to #{file_name}..."
+File.write(file_name, canvas.to_ppm)
+puts "done"
 
-ppm_path = File.join(__DIR__, "chapter2.ppm")
-File.write(ppm_path, canvas.to_ppm)
-
-puts " Done → #{ppm_path}"
 puts "\n" + "=" * 60 + "\n"
