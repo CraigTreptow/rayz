@@ -2,4 +2,4 @@
 lib/
 bin/
 *.dwarf
-rayz
+/rayz
