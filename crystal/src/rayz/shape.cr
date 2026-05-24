@@ -1,4 +1,40 @@
 module Rayz
   abstract class Shape
+    property material : Material
+    getter transform : Matrix
+
+    def initialize
+      @transform = Matrix.identity
+      @transform_inverse = Matrix.identity
+      @transform_inverse_transpose = Matrix.identity
+      @material = Material.new
+    end
+
+    def transform=(m : Matrix)
+      @transform = m
+      @transform_inverse = m.inverse
+      @transform_inverse_transpose = @transform_inverse.transpose
+    end
+
+    def intersect(ray : Ray) : Array(Intersection)
+      local_intersect(ray.transform(@transform_inverse))
+    end
+
+    def normal_at(world_point : Point) : Vector
+      normal_to_world(local_normal_at(world_to_object(world_point)))
+    end
+
+    abstract def local_intersect(local_ray : Ray) : Array(Intersection)
+    abstract def local_normal_at(local_point : Point) : Tuple
+
+    private def world_to_object(point : Point) : Point
+      result = @transform_inverse * point
+      Point.new(result.x, result.y, result.z)
+    end
+
+    private def normal_to_world(normal : Tuple) : Vector
+      result = @transform_inverse_transpose * normal
+      Vector.new(result.x, result.y, result.z).normalize
+    end
   end
 end
