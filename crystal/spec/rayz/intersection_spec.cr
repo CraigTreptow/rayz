@@ -1,6 +1,13 @@
 require "../spec_helper"
 
 class TestShape < Rayz::Shape
+  def local_intersect(local_ray : Rayz::Ray) : Array(Rayz::Intersection)
+    [] of Rayz::Intersection
+  end
+
+  def local_normal_at(local_point : Rayz::Point) : Rayz::Tuple
+    Rayz::Vector.new(0.0, 0.0, 0.0)
+  end
 end
 
 describe "Intersection" do
