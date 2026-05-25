@@ -4,10 +4,14 @@ module Rayz
 
     getter t : Float64
     getter object : Shape
+    getter u : Float64?
+    getter v : Float64?
 
-    def initialize(t : Float64 | Int32, object : Shape)
+    def initialize(t : Float64 | Int32, object : Shape, u : Float64? = nil, v : Float64? = nil)
       @t = t.to_f
       @object = object
+      @u = u
+      @v = v
     end
 
     def <=>(other : Intersection) : Int32
@@ -21,7 +25,7 @@ module Rayz
       neg_dir = -ray.direction
       eyev = Vector.new(neg_dir.x, neg_dir.y, neg_dir.z)
 
-      normalv = @object.normal_at(point)
+      normalv = @object.normal_at(point, self)
       inside = normalv.dot(eyev) < 0
 
       if inside
