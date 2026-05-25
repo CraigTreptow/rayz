@@ -17,7 +17,7 @@ module Rayz
     end
 
     def includes?(shape : Shape) : Bool
-      @children.any? { |c| c.same?(shape) }
+      @children.any? { |c| c.includes?(shape) }
     end
 
     def local_intersect(local_ray : Ray) : Array(Intersection)
