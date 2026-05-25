@@ -34,19 +34,57 @@ module Rayz
       all.sort
     end
 
-    def shade_hit(comps : Computations) : Color
+    def shade_hit(comps : Computations, remaining : Int32 = 3) : Color
       l = @light
       return Color.new(0.0, 0.0, 0.0) unless l
       shadowed = is_shadowed?(comps.over_point)
-      Rayz.lighting(comps.object.material, l, comps.point, comps.eyev, comps.normalv, shadowed, comps.object)
+      surface = Rayz.lighting(comps.object.material, l, comps.point, comps.eyev, comps.normalv, shadowed, comps.object)
+
+      reflected = reflected_color(comps, remaining)
+      refracted = refracted_color(comps, remaining)
+
+      material = comps.object.material
+      if material.reflective > 0.0 && material.transparency > 0.0
+        reflectance = Rayz.schlick(comps)
+        surface + reflected * reflectance + refracted * (1.0 - reflectance)
+      else
+        surface + reflected + refracted
+      end
     end
 
-    def color_at(ray : Ray) : Color
+    def color_at(ray : Ray, remaining : Int32 = 3) : Color
       xs = intersect(ray)
       hit = Rayz.hit(xs)
       return Color.new(0.0, 0.0, 0.0) unless hit
-      comps = hit.prepare_computations(ray)
-      shade_hit(comps)
+      comps = hit.prepare_computations(ray, xs)
+      shade_hit(comps, remaining)
+    end
+
+    def reflected_color(comps : Computations, remaining : Int32 = 3) : Color
+      return Color.new(0.0, 0.0, 0.0) if remaining <= 0
+      return Color.new(0.0, 0.0, 0.0) if comps.object.material.reflective == 0.0
+
+      reflect_ray = Ray.new(comps.over_point, comps.reflectv)
+      color = color_at(reflect_ray, remaining - 1)
+      color * comps.object.material.reflective
+    end
+
+    def refracted_color(comps : Computations, remaining : Int32 = 3) : Color
+      return Color.new(0.0, 0.0, 0.0) if remaining <= 0
+      return Color.new(0.0, 0.0, 0.0) if comps.object.material.transparency == 0.0
+
+      n_ratio = comps.n1 / comps.n2
+      cos_i = comps.eyev.dot(comps.normalv)
+      sin2_t = n_ratio * n_ratio * (1.0 - cos_i * cos_i)
+
+      return Color.new(0.0, 0.0, 0.0) if sin2_t > 1.0
+
+      cos_t = Math.sqrt(1.0 - sin2_t)
+      dir_t = comps.normalv * (n_ratio * cos_i - cos_t) - comps.eyev * n_ratio
+      direction = Vector.new(dir_t.x, dir_t.y, dir_t.z)
+
+      refract_ray = Ray.new(comps.under_point, direction)
+      color_at(refract_ray, remaining - 1) * comps.object.material.transparency
     end
 
     def is_shadowed?(point : Point) : Bool
