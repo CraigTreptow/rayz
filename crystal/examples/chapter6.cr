@@ -36,7 +36,7 @@ print "Rendering shaded sphere..."
     eyev = Rayz::Vector.new(-ray.direction.x, -ray.direction.y, -ray.direction.z)
 
     color = Rayz.lighting(hit.object.material, light, point, eyev, normal)
-    canvas.write_pixel(x, y, color)
+    canvas.write_pixel(x, canvas_size - 1 - y, color)
   end
 end
 puts "done"

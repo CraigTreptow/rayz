@@ -8,6 +8,7 @@ module Rayz
     property reflective : Float64
     property transparency : Float64
     property refractive_index : Float64
+    property pattern : Pattern?
 
     def initialize
       @color = Color.new(1.0, 1.0, 1.0)
@@ -18,6 +19,7 @@ module Rayz
       @reflective = 0.0
       @transparency = 0.0
       @refractive_index = 1.0
+      @pattern = nil
     end
 
     def ==(other : Material) : Bool

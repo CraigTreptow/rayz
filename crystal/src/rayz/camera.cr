@@ -59,7 +59,7 @@ module Rayz
         (0...@hsize).each do |x|
           ray = ray_for_pixel(x, y)
           color = world.color_at(ray)
-          image.write_pixel(x, y, color)
+          image.write_pixel(x, @vsize - 1 - y, color)
         end
       end
       image
