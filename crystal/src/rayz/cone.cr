@@ -63,6 +63,11 @@ module Rayz
       Vector.new(local_point.x, dist, local_point.z)
     end
 
+    def bounds : Bounds
+      limit = {@minimum.abs, @maximum.abs}.max
+      Bounds.new(min: Point.new(-limit, @minimum, -limit), max: Point.new(limit, @maximum, limit))
+    end
+
     private def check_cap(ray : Ray, t : Float64, y : Float64) : Bool
       x = ray.origin.x + t * ray.direction.x
       z = ray.origin.z + t * ray.direction.z
