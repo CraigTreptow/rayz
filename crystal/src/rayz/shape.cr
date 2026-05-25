@@ -23,7 +23,7 @@ module Rayz
       local_intersect(ray.transform(@transform_inverse))
     end
 
-    def normal_at(world_point : Point) : Vector
+    def normal_at(world_point : Point, hit : Intersection? = nil) : Vector
       normal_to_world(local_normal_at(world_to_object(world_point)))
     end
 
