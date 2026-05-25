@@ -8,17 +8,17 @@ floor.material.specular = 0.0
 left_wall = Rayz::Sphere.new
 left_wall.transform =
   Rayz::Transformations.translation(0.0, 0.0, 5.0) *
-  Rayz::Transformations.rotation_y(-Math::PI / 4.0) *
-  Rayz::Transformations.rotation_x(Math::PI / 2.0) *
-  Rayz::Transformations.scaling(10.0, 0.01, 10.0)
+    Rayz::Transformations.rotation_y(-Math::PI / 4.0) *
+    Rayz::Transformations.rotation_x(Math::PI / 2.0) *
+    Rayz::Transformations.scaling(10.0, 0.01, 10.0)
 left_wall.material = floor.material
 
 right_wall = Rayz::Sphere.new
 right_wall.transform =
   Rayz::Transformations.translation(0.0, 0.0, 5.0) *
-  Rayz::Transformations.rotation_y(Math::PI / 4.0) *
-  Rayz::Transformations.rotation_x(Math::PI / 2.0) *
-  Rayz::Transformations.scaling(10.0, 0.01, 10.0)
+    Rayz::Transformations.rotation_y(Math::PI / 4.0) *
+    Rayz::Transformations.rotation_x(Math::PI / 2.0) *
+    Rayz::Transformations.scaling(10.0, 0.01, 10.0)
 right_wall.material = floor.material
 
 middle = Rayz::Sphere.new
@@ -30,7 +30,7 @@ middle.material.specular = 0.3
 right = Rayz::Sphere.new
 right.transform =
   Rayz::Transformations.translation(1.5, 0.5, -0.5) *
-  Rayz::Transformations.scaling(0.5, 0.5, 0.5)
+    Rayz::Transformations.scaling(0.5, 0.5, 0.5)
 right.material.color = Rayz::Color.new(0.5, 1.0, 0.1)
 right.material.diffuse = 0.7
 right.material.specular = 0.3
@@ -38,7 +38,7 @@ right.material.specular = 0.3
 left = Rayz::Sphere.new
 left.transform =
   Rayz::Transformations.translation(-1.5, 0.33, -0.75) *
-  Rayz::Transformations.scaling(0.33, 0.33, 0.33)
+    Rayz::Transformations.scaling(0.33, 0.33, 0.33)
 left.material.color = Rayz::Color.new(1.0, 0.8, 0.1)
 left.material.diffuse = 0.7
 left.material.specular = 0.3
