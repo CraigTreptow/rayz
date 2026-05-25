@@ -61,4 +61,45 @@ describe "Intersection" do
     xs = Rayz.intersections(i1, i2, i3, i4)
     Rayz.hit(xs).should eq(i4)
   end
+
+  it "Precomputing the state of an intersection" do
+    r = Rayz::Ray.new(Rayz::Point.new(0.0, 0.0, -5.0), Rayz::Vector.new(0.0, 0.0, 1.0))
+    shape = Rayz::Sphere.new
+    i = Rayz::Intersection.new(4.0, shape)
+    comps = i.prepare_computations(r)
+    comps.t.should eq(i.t)
+    comps.object.should eq(i.object)
+    comps.point.should eq(Rayz::Point.new(0.0, 0.0, -1.0))
+    comps.eyev.should eq(Rayz::Vector.new(0.0, 0.0, -1.0))
+    comps.normalv.should eq(Rayz::Vector.new(0.0, 0.0, -1.0))
+  end
+
+  it "The hit, when an intersection occurs on the outside" do
+    r = Rayz::Ray.new(Rayz::Point.new(0.0, 0.0, -5.0), Rayz::Vector.new(0.0, 0.0, 1.0))
+    shape = Rayz::Sphere.new
+    i = Rayz::Intersection.new(4.0, shape)
+    comps = i.prepare_computations(r)
+    comps.inside.should be_false
+  end
+
+  it "The hit, when an intersection occurs on the inside" do
+    r = Rayz::Ray.new(Rayz::Point.new(0.0, 0.0, 0.0), Rayz::Vector.new(0.0, 0.0, 1.0))
+    shape = Rayz::Sphere.new
+    i = Rayz::Intersection.new(1.0, shape)
+    comps = i.prepare_computations(r)
+    comps.point.should eq(Rayz::Point.new(0.0, 0.0, 1.0))
+    comps.eyev.should eq(Rayz::Vector.new(0.0, 0.0, -1.0))
+    comps.inside.should be_true
+    comps.normalv.should eq(Rayz::Vector.new(0.0, 0.0, -1.0))
+  end
+
+  it "The hit should offset the point" do
+    r = Rayz::Ray.new(Rayz::Point.new(0.0, 0.0, -5.0), Rayz::Vector.new(0.0, 0.0, 1.0))
+    shape = Rayz::Sphere.new
+    shape.transform = Rayz::Transformations.translation(0.0, 0.0, 1.0)
+    i = Rayz::Intersection.new(5.0, shape)
+    comps = i.prepare_computations(r)
+    (comps.over_point.z < -Rayz::Util::EPSILON / 2).should be_true
+    (comps.point.z > comps.over_point.z).should be_true
+  end
 end
