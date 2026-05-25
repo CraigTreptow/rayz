@@ -17,6 +17,10 @@ module Rayz
     def local_normal_at(local_point : Point) : Tuple
       local_point - Point.new(0.0, 0.0, 0.0)
     end
+
+    def bounds : Bounds
+      Bounds.new(min: Point.new(-1.0, -1.0, -1.0), max: Point.new(1.0, 1.0, 1.0))
+    end
   end
 
   def self.glass_sphere : Sphere

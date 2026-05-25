@@ -28,6 +28,10 @@ module Rayz
       end
     end
 
+    def bounds : Bounds
+      Bounds.new(min: Point.new(-1.0, -1.0, -1.0), max: Point.new(1.0, 1.0, 1.0))
+    end
+
     private def check_axis(origin : Float64, direction : Float64) : {Float64, Float64}
       tmin_num = -1.0 - origin
       tmax_num = 1.0 - origin

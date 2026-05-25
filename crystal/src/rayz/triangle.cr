@@ -43,5 +43,12 @@ module Rayz
     def local_normal_at(local_point : Point) : Tuple
       @normal
     end
+
+    def bounds : Bounds
+      Bounds.new(
+        min: Point.new({@p1.x, @p2.x, @p3.x}.min, {@p1.y, @p2.y, @p3.y}.min, {@p1.z, @p2.z, @p3.z}.min),
+        max: Point.new({@p1.x, @p2.x, @p3.x}.max, {@p1.y, @p2.y, @p3.y}.max, {@p1.z, @p2.z, @p3.z}.max)
+      )
+    end
   end
 end

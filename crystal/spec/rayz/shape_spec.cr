@@ -17,6 +17,10 @@ module Rayz
     def local_normal_at(local_point : Point) : Tuple
       Vector.new(local_point.x, local_point.y, local_point.z)
     end
+
+    def bounds : Bounds
+      Bounds.new(min: Point.new(-1.0, -1.0, -1.0), max: Point.new(1.0, 1.0, 1.0))
+    end
   end
 
   describe Shape do

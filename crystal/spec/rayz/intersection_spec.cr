@@ -8,6 +8,10 @@ class TestShape < Rayz::Shape
   def local_normal_at(local_point : Rayz::Point) : Rayz::Tuple
     Rayz::Vector.new(0.0, 0.0, 0.0)
   end
+
+  def bounds : Rayz::Bounds
+    Rayz::Bounds.new(min: Rayz::Point.new(-1.0, -1.0, -1.0), max: Rayz::Point.new(1.0, 1.0, 1.0))
+  end
 end
 
 describe "Intersection" do

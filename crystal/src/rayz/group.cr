@@ -20,7 +20,17 @@ module Rayz
       same?(shape) || @children.any? { |c| c.includes?(shape) }
     end
 
+    def bounds : Bounds
+      result = Bounds.new
+      @children.each do |child|
+        result = result.merge(child.bounds.transform(child.transform))
+      end
+      result
+    end
+
     def local_intersect(local_ray : Ray) : Array(Intersection)
+      return [] of Intersection unless bounds.intersects?(local_ray)
+
       xs = [] of Intersection
       @children.each { |child| xs.concat(child.intersect(local_ray)) }
       xs.sort
