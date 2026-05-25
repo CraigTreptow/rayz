@@ -49,6 +49,12 @@ module Rayz
       filter_intersections(xs)
     end
 
+    def bounds : Bounds
+      @left.bounds.transform(@left.transform).merge(
+        @right.bounds.transform(@right.transform)
+      )
+    end
+
     def local_normal_at(local_point : Point) : Tuple
       raise "CSG#local_normal_at should never be called directly"
     end

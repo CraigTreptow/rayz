@@ -29,6 +29,7 @@ module Rayz
 
     abstract def local_intersect(local_ray : Ray) : Array(Intersection)
     abstract def local_normal_at(local_point : Point) : Tuple
+    abstract def bounds : Bounds
 
     def includes?(shape : Shape) : Bool
       same?(shape)
