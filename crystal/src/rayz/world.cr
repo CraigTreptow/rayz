@@ -38,7 +38,7 @@ module Rayz
       l = @light
       return Color.new(0.0, 0.0, 0.0) unless l
       shadowed = is_shadowed?(comps.over_point)
-      Rayz.lighting(comps.object.material, l, comps.point, comps.eyev, comps.normalv, shadowed)
+      Rayz.lighting(comps.object.material, l, comps.point, comps.eyev, comps.normalv, shadowed, comps.object)
     end
 
     def color_at(ray : Ray) : Color

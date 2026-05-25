@@ -2,6 +2,7 @@ module Rayz
   abstract class Shape
     property material : Material
     getter transform : Matrix
+    getter transform_inverse : Matrix
 
     def initialize
       @transform = Matrix.identity
