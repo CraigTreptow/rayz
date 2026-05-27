@@ -76,7 +76,7 @@ describe "Material" do
     eyev = Rayz::Vector.new(0.0, 0.0, -1.0)
     normalv = Rayz::Vector.new(0.0, 0.0, -1.0)
     light = Rayz::PointLight.new(Rayz::Point.new(0.0, 0.0, -10.0), Rayz::Color.new(1.0, 1.0, 1.0))
-    result = Rayz.lighting(m, light, position, eyev, normalv, true)
+    result = Rayz.lighting(m, light, position, eyev, normalv, 0.0)
     result.should eq(Rayz::Color.new(0.1, 0.1, 0.1))
   end
 end
