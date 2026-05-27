@@ -9,6 +9,7 @@ module Rayz
     property transparency : Float64
     property refractive_index : Float64
     property pattern : Pattern?
+    property normal_perturbation : Proc(Point, Vector)?
 
     def initialize
       @color = Color.new(1.0, 1.0, 1.0)
@@ -20,6 +21,7 @@ module Rayz
       @transparency = 0.0
       @refractive_index = 1.0
       @pattern = nil
+      @normal_perturbation = nil
     end
 
     def ==(other : Material) : Bool

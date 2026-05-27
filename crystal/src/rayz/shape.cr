@@ -24,7 +24,16 @@ module Rayz
     end
 
     def normal_at(world_point : Point, hit : Intersection? = nil) : Vector
-      normal_to_world(local_normal_at(world_to_object(world_point)))
+      local_point = world_to_object(world_point)
+      local_normal = local_normal_at(local_point)
+
+      if perturb = @material.normal_perturbation
+        delta = perturb.call(local_point)
+        sum = local_normal + delta
+        local_normal = Vector.new(sum.x, sum.y, sum.z).normalize
+      end
+
+      normal_to_world(local_normal)
     end
 
     abstract def local_intersect(local_ray : Ray) : Array(Intersection)
