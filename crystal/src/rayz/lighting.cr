@@ -1,5 +1,5 @@
 module Rayz
-  def self.lighting(material : Material, light : PointLight | AreaLight, point : Point, eyev : Tuple, normalv : Tuple, intensity : Float64 = 1.0, shape : Shape? = nil) : Color
+  def self.lighting(material : Material, light : PointLight | AreaLight | Spotlight, point : Point, eyev : Tuple, normalv : Tuple, intensity : Float64 = 1.0, shape : Shape? = nil) : Color
     base_color = if p = material.pattern
                    if s = shape
                      p.pattern_at_shape(s.transform_inverse, point)
