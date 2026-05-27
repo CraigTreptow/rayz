@@ -1,7 +1,7 @@
 module Rayz
   class World
     property objects : Array(Shape)
-    property light : (PointLight | AreaLight)?
+    property light : (PointLight | AreaLight | Spotlight)?
 
     def initialize
       @objects = [] of Shape
@@ -40,6 +40,7 @@ module Rayz
       intensity = case l
                   in PointLight then is_shadowed?(comps.over_point) ? 0.0 : 1.0
                   in AreaLight  then l.intensity_at(comps.over_point, self)
+                  in Spotlight  then l.intensity_at(comps.over_point, self)
                   end
       surface = Rayz.lighting(comps.object.material, l, comps.point, comps.eyev, comps.normalv, intensity, comps.object)
 
@@ -96,6 +97,7 @@ module Rayz
       case l
       in PointLight then is_shadowed_from?(point, l.position)
       in AreaLight  then l.intensity_at(point, self) < 1.0
+      in Spotlight  then l.intensity_at(point, self) < 1.0
       end
     end
 
