@@ -1,7 +1,7 @@
 module Rayz
   class World
     property objects : Array(Shape)
-    property light : PointLight?
+    property light : (PointLight | AreaLight)?
 
     def initialize
       @objects = [] of Shape
@@ -37,8 +37,11 @@ module Rayz
     def shade_hit(comps : Computations, remaining : Int32 = 3) : Color
       l = @light
       return Color.new(0.0, 0.0, 0.0) unless l
-      shadowed = is_shadowed?(comps.over_point)
-      surface = Rayz.lighting(comps.object.material, l, comps.point, comps.eyev, comps.normalv, shadowed, comps.object)
+      intensity = case l
+                  in PointLight then is_shadowed?(comps.over_point) ? 0.0 : 1.0
+                  in AreaLight  then l.intensity_at(comps.over_point, self)
+                  end
+      surface = Rayz.lighting(comps.object.material, l, comps.point, comps.eyev, comps.normalv, intensity, comps.object)
 
       reflected = reflected_color(comps, remaining)
       refracted = refracted_color(comps, remaining)
@@ -90,17 +93,26 @@ module Rayz
     def is_shadowed?(point : Point) : Bool
       l = @light
       return false unless l
+      case l
+      in PointLight then is_shadowed_from?(point, l.position)
+      in AreaLight  then l.intensity_at(point, self) < 1.0
+      end
+    end
 
-      v = l.position - point
+    def is_shadowed_from?(point : Point, light_position : Point) : Bool
+      v = light_position - point
       distance = v.magnitude
       direction_t = v.normalize
       direction = Vector.new(direction_t.x, direction_t.y, direction_t.z)
 
       shadow_ray = Ray.new(point, direction)
-      xs = intersect(shadow_ray)
-      hit = Rayz.hit(xs)
+      @objects.each do |obj|
+        obj.intersect(shadow_ray).each do |i|
+          return true if i.t > 0 && i.t < distance
+        end
+      end
 
-      !hit.nil? && hit.t < distance
+      false
     end
   end
 end
