@@ -2,10 +2,12 @@ module Rayz
   class Ray
     getter origin : Point
     getter direction : Vector
+    getter time : Float64
 
-    def initialize(origin : Point, direction : Vector)
+    def initialize(origin : Point, direction : Vector, time : Float64 = 0.0)
       @origin = origin
       @direction = direction
+      @time = time
     end
 
     def position(t : Float64 | Int32) : Tuple
@@ -17,7 +19,8 @@ module Rayz
       new_d = matrix * @direction
       Ray.new(
         Point.new(new_o.x, new_o.y, new_o.z),
-        Vector.new(new_d.x, new_d.y, new_d.z)
+        Vector.new(new_d.x, new_d.y, new_d.z),
+        @time
       )
     end
   end

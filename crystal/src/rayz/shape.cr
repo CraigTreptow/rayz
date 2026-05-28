@@ -2,6 +2,7 @@ module Rayz
   abstract class Shape
     property material : Material
     property parent : Shape?
+    property motion_transform : Proc(Float64, Matrix)?
     getter transform : Matrix
     getter transform_inverse : Matrix
 
@@ -11,6 +12,7 @@ module Rayz
       @transform_inverse_transpose = Matrix.identity
       @material = Material.new
       @parent = nil
+      @motion_transform = nil
     end
 
     def transform=(m : Matrix)
@@ -20,7 +22,12 @@ module Rayz
     end
 
     def intersect(ray : Ray) : Array(Intersection)
-      local_intersect(ray.transform(@transform_inverse))
+      inv = if mt = @motion_transform
+              (mt.call(ray.time) * @transform).inverse
+            else
+              @transform_inverse
+            end
+      local_intersect(ray.transform(inv))
     end
 
     def normal_at(world_point : Point, hit : Intersection? = nil) : Vector

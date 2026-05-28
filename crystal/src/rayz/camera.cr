@@ -10,16 +10,18 @@ module Rayz
     property samples_per_pixel : Int32
     property aperture_size : Float64
     property focal_distance : Float64
+    property motion_blur : Bool
 
     def initialize(hsize : Int32, vsize : Int32, field_of_view : Float64,
                    samples_per_pixel : Int32 = 1, aperture_size : Float64 = 0.0,
-                   focal_distance : Float64 = 1.0)
+                   focal_distance : Float64 = 1.0, motion_blur : Bool = false)
       @hsize = hsize
       @vsize = vsize
       @field_of_view = field_of_view
       @samples_per_pixel = samples_per_pixel
       @aperture_size = aperture_size
       @focal_distance = focal_distance
+      @motion_blur = motion_blur
       @transform = Matrix.identity
       @transform_inverse = Matrix.identity
 
@@ -44,7 +46,8 @@ module Rayz
 
     def ray_for_pixel(px : Int32, py : Int32,
                       pixel_offset_x : Float64 = 0.5, pixel_offset_y : Float64 = 0.5,
-                      aperture_offset_x : Float64 = 0.0, aperture_offset_y : Float64 = 0.0) : Ray
+                      aperture_offset_x : Float64 = 0.0, aperture_offset_y : Float64 = 0.0,
+                      time : Float64 = 0.0) : Ray
       xoffset = (px + pixel_offset_x) * @pixel_size
       yoffset = (py + pixel_offset_y) * @pixel_size
 
@@ -62,7 +65,7 @@ module Rayz
       dir_t = (pixel - origin).normalize
       direction = Vector.new(dir_t.x, dir_t.y, dir_t.z)
 
-      Ray.new(origin, direction)
+      Ray.new(origin, direction, time)
     end
 
     def render(world : World) : Canvas
@@ -77,7 +80,7 @@ module Rayz
     end
 
     private def render_pixel(px : Int32, py : Int32, world : World) : Color
-      return world.color_at(ray_for_pixel(px, py)) if @samples_per_pixel == 1 && @aperture_size == 0.0
+      return world.color_at(ray_for_pixel(px, py)) if @samples_per_pixel == 1 && @aperture_size == 0.0 && !@motion_blur
 
       total_r = 0.0
       total_g = 0.0
@@ -88,8 +91,9 @@ module Rayz
         poy = rand
         aox = @aperture_size > 0.0 ? rand * 2.0 - 1.0 : 0.0
         aoy = @aperture_size > 0.0 ? rand * 2.0 - 1.0 : 0.0
+        t = @motion_blur ? rand : 0.0
 
-        ray = ray_for_pixel(px, py, pox, poy, aox, aoy)
+        ray = ray_for_pixel(px, py, pox, poy, aox, aoy, t)
         color = world.color_at(ray)
         total_r += color.red
         total_g += color.green
