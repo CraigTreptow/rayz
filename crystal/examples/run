@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Run Crystal ray tracer examples.
+#
+# Usage:
+#   ./examples/run            # run all chapters and demos
+#   ./examples/run all        # same
+#   ./examples/run 7          # run only chapter 7
+#   ./examples/run texture_map  # run a specific demo
+
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+CHAPTERS=(1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17)
+DEMOS=(obj_parser bounding_boxes area_lights spotlight normal_perturbations torus motion_blur aa_focal_blur texture_map)
+
+run_one() {
+    local name="$1"
+    local file="examples/${name}.cr"
+    if [[ ! -f "${file}" ]]; then
+        echo "ERROR: ${file} not found" >&2
+        exit 1
+    fi
+    echo ""
+    echo "── ${name} ──────────────────────────────────────"
+    mise exec -- crystal run "${file}"
+}
+
+usage() {
+    echo "Usage: ./examples/run [all|<chapter_number>|<demo_name>]"
+    echo ""
+    echo "Available chapters: 1-17"
+    echo "Available demos:    ${DEMOS[*]}"
+    exit 1
+}
+
+case "${1:-all}" in
+    all)
+        for ch in "${CHAPTERS[@]}"; do run_one "chapter${ch}"; done
+        for demo in "${DEMOS[@]}"; do run_one "${demo}"; done
+        ;;
+    [0-9] | [0-9][0-9])
+        run_one "chapter$1"
+        ;;
+    obj_parser | bounding_boxes | area_lights | spotlight | normal_perturbations | torus | motion_blur | aa_focal_blur | texture_map)
+        run_one "$1"
+        ;;
+    --help | -h)
+        usage
+        ;;
+    *)
+        echo "ERROR: unknown argument '$1'" >&2
+        usage
+        ;;
+esac
