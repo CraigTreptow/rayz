@@ -41,7 +41,7 @@ ruby examples/run bounding_boxes   # Run bounding boxes demo
 ruby examples/run advanced_features # Run advanced features demo
 ```
 
-**Note:** YJIT is enabled by default in all scripts for 4-5x performance improvement. Ruby 3.4+ with YJIT support is required (see Installation section).
+**Note:** YJIT is enabled by default in all scripts for 4-5x performance improvement. Ruby 4.0+ with YJIT support is required (see Setup section above).
 
 **Output Formatting:** Each chapter and demo script outputs a visual separator line (`puts "\n" + ("=" * 60) + "\n"`) after completion for better readability when running multiple examples sequentially.
 
@@ -81,6 +81,53 @@ ruby examples/run advanced_features # Run advanced features demo
 ```bash
 cd jruby
 bundle exec cucumber   # Run all 370 scenarios
+```
+
+### Python Setup
+```bash
+cd python
+mise install      # Install Python 3.14.4 + uv
+uv sync           # Install dependencies
+```
+
+### Python Running
+```bash
+cd python
+uv run examples/run.py          # Run all chapters (1-17)
+uv run examples/run.py 7        # Run only chapter 7
+```
+
+### Python Testing
+```bash
+cd python
+uv run behave     # Run all feature tests
+```
+
+### Python Code Quality
+```bash
+cd python
+uv run ruff check .       # Check code style
+uv run ruff check --fix . # Auto-fix formatting issues
+```
+
+### Crystal Setup
+```bash
+cd crystal
+# No external shards required; Crystal stdlib only
+```
+
+### Crystal Running
+```bash
+cd crystal
+./examples/run              # Run all chapters and demos
+./examples/run 7            # Run only chapter 7
+./examples/run texture_map  # Run a specific demo
+```
+
+### Crystal Testing
+```bash
+cd crystal
+crystal spec    # Run all specs
 ```
 
 ## Architecture
@@ -199,7 +246,7 @@ open performance_results.html                 # View graphs in browser
 
 ## Testing Strategy
 
-### Behavior-Driven Development with Cucumbe
+### Behavior-Driven Development with Cucumber
 - Primary testing uses Cucumber with Gherkin syntax
 - Working tests in `/ruby/features/` directory
 - Reference tests from the book in `/book_features/` at the repo root (language-agnostic, used as starting point for new language implementations)
@@ -217,6 +264,7 @@ open performance_results.html                 # View graphs in browser
 - `lights.feature` - Point light source creation
 - `materials.feature` - Material properties and Phong lighting model
 - `world.feature` - World and camera for scene rendering
+- `camera.feature` - Camera rendering, anti-aliasing, focal blur, and motion blur
 - `patterns.feature` - Surface patterns (stripe, gradient, ring, checkers)
 - `planes.feature` - Infinite plane intersections and normals
 - `reflections.feature` - Reflection, refraction, and Fresnel effects
@@ -233,7 +281,7 @@ open performance_results.html                 # View graphs in browser
 
 ### Ruby Style
 - Uses StandardRB for consistent formatting
-- Ruby 3.4.5 with Prism parser
+- Ruby 4.0.2 with Prism parser
 - Object-oriented design with clear inheritance hierarchies
 - **Named parameters**: All class constructors use named parameters for clarity (e.g., `Point.new(x: 0, y: 1, z: 2)`, `Camera.new(hsize: 400, vsize: 200, field_of_view: Math::PI / 3)`)
 
@@ -266,6 +314,12 @@ open performance_results.html                 # View graphs in browser
 - `/jruby/lib/rayz/` - JRuby port of the ray tracer library (JVM, real OS threads, no GIL)
 - `/jruby/examples/` - Chapter demonstration scripts for JRuby
 - `/jruby/features/` - Cucumber BDD tests for the JRuby implementation (370 scenarios)
+- `/python/rayz/` - Python port of the ray tracer library
+- `/python/examples/` - Chapter demonstration scripts for Python
+- `/python/features/` - Behave BDD tests for the Python implementation (22 feature files)
+- `/crystal/src/` - Crystal port of the ray tracer library
+- `/crystal/examples/` - Chapter demonstration scripts for Crystal
+- `/crystal/spec/` - Crystal spec tests (31 spec files)
 - `/book/` - Reference book in epub format
 
 ## Output Files
@@ -338,7 +392,7 @@ Full port of the Ruby implementation to JRuby (JVM). All 370 scenarios pass. Key
 ### Test Coverage
 - 295 scenarios passing (346 total scenarios in ruby/features/, 51 undefined for additional edge cases)
 - 370 scenarios passing in jruby/features/ (identical feature files, JRuby-compatible step definitions)
-- 23 feature files in `/ruby/features/` directory:
+- 25 feature files in `/ruby/features/` directory:
   - `tuples.feature` - Core mathematical operations including vector reflection
   - `colors.feature` - Color arithmetic
   - `canvas.feature` - Pixel operations and PPM export
@@ -350,6 +404,7 @@ Full port of the Ruby implementation to JRuby (JVM). All 370 scenarios pass. Key
   - `lights.feature` - Point light sources
   - `materials.feature` - Material properties and Phong lighting
   - `world.feature` - World and camera for scene rendering
+  - `camera.feature` - Camera rendering, anti-aliasing, focal blur, and motion blur
   - `patterns.feature` - Surface patterns (stripe, gradient, ring, checkers)
   - `planes.feature` - Infinite plane intersections and normals
   - `reflections.feature` - Reflection, refraction, and Fresnel effects
@@ -364,6 +419,22 @@ Full port of the Ruby implementation to JRuby (JVM). All 370 scenarios pass. Key
   - `bounding_boxes.feature` - Bounding box optimization with bounds creation, transformation, merging, intersection testing, and group optimization
   - `shapes.feature` - Abstract shape tests for world_to_object and normal_to_world transformations
 - Reference tests from the book in `/book_features/` at the repo root (language-agnostic)
+
+### Python Implementation - ✅ Complete
+Full port of the Ruby implementation to Python 3.14. Chapters 1-17 all implemented. Key differences from Ruby:
+
+- **Testing**: Uses `behave` (BDD with Gherkin) matching the book's feature files; 22 feature files in `python/features/`
+- **Parallelism**: `render_parallel` in `camera.py` uses `concurrent.futures.ThreadPoolExecutor`
+- **Dependencies**: `numpy`, `behave`, `pytest`; managed with `uv`
+- **Location**: `python/` directory; run scripts via `uv run examples/run.py`
+
+### Crystal Implementation - ✅ Complete
+Full port of the Ruby implementation to Crystal. Chapters 1-17 all implemented plus demos (torus, area lights, spotlights, motion blur, texture mapping, normal perturbations, OBJ parser). Key differences from Ruby:
+
+- **Testing**: Uses Crystal's built-in `crystal spec`; 31 spec files in `crystal/spec/rayz/`
+- **No GIL**: Crystal has true thread parallelism, similar to JRuby
+- **Compiled**: `crystal build` produces a native binary for maximum performance
+- **Location**: `crystal/` directory; runner at `crystal/examples/run`
 
 ### Assertions and Testing
 - Use Minitest assertions (`assert`, `assert_equal`, `assert_in_delta`, `assert_nil`, `refute_nil`) not RSpec's `expect`
