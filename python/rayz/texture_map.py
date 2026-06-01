@@ -6,7 +6,6 @@ from typing import Callable
 
 from rayz.color import Color
 from rayz.pattern import Pattern
-from rayz.tuple import Point, Vector
 
 
 class PPMImage:

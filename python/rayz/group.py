@@ -26,10 +26,7 @@ class Group(Shape):
 
     def bounds(self):
         from rayz.bounds import Bounds
-        from rayz.tuple import Point
-        if not self.children:
-            return Bounds(Point(0, 0, 0), Point(0, 0, 0))
-        b = Bounds(Point(float("inf"), float("inf"), float("inf")), Point(float("-inf"), float("-inf"), float("-inf")))
+        b = Bounds()
         for child in self.children:
             child_bounds = child.bounds().transform(child.transform)
             b = b.merge(child_bounds)

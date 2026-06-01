@@ -12,6 +12,8 @@ Usage (from python/):
 
 import sys
 
+from examples.advanced_features_demo import run as af_demo
+from examples.bounding_boxes_demo import run as bb_demo
 from examples.chapter1 import run as ch1
 from examples.chapter2 import run as ch2
 from examples.chapter3 import run as ch3
@@ -29,10 +31,8 @@ from examples.chapter14 import run as ch14
 from examples.chapter15 import run as ch15
 from examples.chapter16 import run as ch16
 from examples.chapter17 import run as ch17
-from examples.obj_parser_demo import run as obj_demo
-from examples.bounding_boxes_demo import run as bb_demo
 from examples.nested_groups_demo import run as ng_demo
-from examples.advanced_features_demo import run as af_demo
+from examples.obj_parser_demo import run as obj_demo
 
 CHAPTERS: dict[int, tuple[str, object]] = {
     1:  ("Projectile physics", ch1),
@@ -80,7 +80,8 @@ def main() -> None:
                 if a in NAMES:
                     targets.append(NAMES[a])
                 else:
-                    print(f"Unknown chapter: {a!r}  (valid integers: {sorted(CHAPTERS)}, names: {sorted(NAMES)})")
+                    valid = f"integers: {sorted(CHAPTERS)}, names: {sorted(NAMES)}"
+                    print(f"Unknown chapter: {a!r}  (valid {valid})")
                     sys.exit(1)
 
     for n in targets:

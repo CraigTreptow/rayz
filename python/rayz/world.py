@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from rayz.color import Color
-from rayz.intersection import hit, intersect, prepare_computations
+from rayz.intersection import hit, prepare_computations
 from rayz.lighting import lighting
 from rayz.point_light import PointLight
 from rayz.sphere import Sphere

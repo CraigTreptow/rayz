@@ -54,7 +54,10 @@ class Torus(Shape):
     def _solve_quartic(self, a: float, b: float, c: float, d: float, e: float) -> list[float]:
         if a == 0:
             return []
-        b /= a; c /= a; d /= a; e /= a
+        b /= a
+        c /= a
+        d /= a
+        e /= a
 
         z1 = complex(1, 1)
         z2 = complex(-1, 1)
