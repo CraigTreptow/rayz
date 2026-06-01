@@ -58,7 +58,6 @@ class Cone(Shape):
         return Vector(point.x, y, point.z)
 
     def bounds(self):
-        import math
         from rayz.bounds import Bounds
         from rayz.tuple import Point
         radius = max(abs(self.minimum), abs(self.maximum))
