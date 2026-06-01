@@ -20,28 +20,18 @@ class Torus(Shape):
         dx, dy, dz = ray.direction.x, ray.direction.y, ray.direction.z
 
         R, r = self.major_radius, self.minor_radius
-        # Torus equation: (x²+y²+z²+R²-r²)² = 4R²(x²+z²)
-        # Substitute ray point: origin + t*direction, expand and collect by t power.
-        A = dx * dx + dy * dy + dz * dz        # |direction|²
-        B = ox * dx + oy * dy + oz * dz        # origin · direction
-        C = ox * ox + oy * oy + oz * oz        # |origin|²
-        K = R * R - r * r
-        P = C + K                              # |origin|² + R² - r²
-
-        # XZ-plane projection terms (ring lies in XZ plane, Y is torus axis)
-        d_xz = dx * dx + dz * dz
-        b_xz = ox * dx + oz * dz
-        c_xz = ox * ox + oz * oz
-
+        sum_d_sq = dx * dx + dy * dy + dz * dz
+        e = ox * ox + oy * oy + oz * oz - R * R - r * r
+        f = ox * dx + oy * dy + oz * dz
         four_R_sq = 4.0 * R * R
 
-        a = A * A
-        b = 4.0 * A * B
-        c = 4.0 * B * B + 2.0 * A * P - four_R_sq * d_xz
-        d_coef = 4.0 * B * P - 2.0 * four_R_sq * b_xz
-        e_coef = P * P - four_R_sq * c_xz
+        a = sum_d_sq * sum_d_sq
+        b = 4.0 * sum_d_sq * f
+        c = 2.0 * sum_d_sq * e + 4.0 * f * f + four_R_sq * (dz * dz)
+        d = 4.0 * f * e + 2.0 * four_R_sq * oz * dz
+        e_coef = e * e - four_R_sq * (r * r - oz * oz)
 
-        roots = self._solve_quartic(a, b, c, d_coef, e_coef)
+        roots = self._solve_quartic(a, b, c, d, e_coef)
         return [Intersection(t, self) for t in roots if t > 0]
 
     def local_normal_at(self, local_point, hit=None) -> Vector:
