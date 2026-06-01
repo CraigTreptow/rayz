@@ -1,3 +1,4 @@
+# python/rayz/world.py
 from __future__ import annotations
 
 from rayz.color import Color
@@ -12,48 +13,52 @@ from rayz.tuple import Point
 class World:
     def __init__(self) -> None:
         self.objects: list = []
-        self.light: PointLight | None = None
+        self.light = None
 
     @classmethod
     def default_world(cls) -> World:
         w = cls()
         w.light = PointLight(Point(-10, 10, -10), Color(1, 1, 1))
-
         s1 = Sphere()
         s1.material.color = Color(0.8, 1.0, 0.6)
         s1.material.diffuse = 0.7
         s1.material.specular = 0.2
-
         s2 = Sphere()
         s2.set_transform(scaling(0.5, 0.5, 0.5))
-
         w.objects = [s1, s2]
         return w
 
     def intersect_world(self, ray) -> list:
         xs = []
         for obj in self.objects:
-            xs.extend(intersect(obj, ray))
+            xs.extend(obj.intersect(ray))
         return sorted(xs, key=lambda i: i.t)
+
+    def is_shadowed_from(self, point, light_position) -> bool:
+        from rayz.ray import Ray
+        v = light_position - point
+        distance = v.magnitude()
+        direction = v.normalize()
+        shadow_ray = Ray(point, direction)
+        for obj in self.objects:
+            for i in obj.intersect(shadow_ray):
+                if 0 < i.t < distance:
+                    return True
+        return False
 
     def is_shadowed(self, point) -> bool:
         if self.light is None:
             return False
-        v = self.light.position - point
-        distance = v.magnitude()
-        direction = v.normalize()
-        from rayz.ray import Ray
-
-        shadow_ray = Ray(point, direction)
-        xs = self.intersect_world(shadow_ray)
-        h = hit(xs)
-        return h is not None and h.t < distance
+        if isinstance(self.light, PointLight):
+            return self.is_shadowed_from(point, self.light.position)
+        if hasattr(self.light, "intensity_at"):
+            return self.light.intensity_at(point, self) < 1.0
+        return False
 
     def reflected_color(self, comps, remaining: int = 3) -> Color:
         if remaining <= 0 or comps.object.material.reflective == 0:
             return Color(0, 0, 0)
         from rayz.ray import Ray
-
         reflect_ray = Ray(comps.over_point, comps.reflectv)
         return self.color_at(reflect_ray, remaining - 1) * comps.object.material.reflective
 
@@ -61,29 +66,34 @@ class World:
         if remaining <= 0 or comps.object.material.transparency == 0:
             return Color(0, 0, 0)
         import math
-
         n_ratio = comps.n1 / comps.n2
         cos_i = comps.eyev.dot(comps.normalv)
         sin2_t = n_ratio * n_ratio * (1 - cos_i * cos_i)
         if sin2_t > 1.0:
             return Color(0, 0, 0)
-
         cos_t = math.sqrt(1.0 - sin2_t)
         direction = comps.normalv * (n_ratio * cos_i - cos_t) - comps.eyev * n_ratio
         from rayz.ray import Ray
-
         refract_ray = Ray(comps.under_point, direction)
         return self.color_at(refract_ray, remaining - 1) * comps.object.material.transparency
 
     def shade_hit(self, comps, remaining: int = 3) -> Color:
-        shadowed = self.is_shadowed(comps.over_point)
+        if self.light is None:
+            intensity = 0.0
+        elif isinstance(self.light, PointLight):
+            intensity = 0.0 if self.is_shadowed_from(comps.over_point, self.light.position) else 1.0
+        elif hasattr(self.light, "intensity_at"):
+            intensity = self.light.intensity_at(comps.over_point, self)
+        else:
+            intensity = 1.0
+
         surface = lighting(
             comps.object.material,
             self.light,
             comps.point,
             comps.eyev,
             comps.normalv,
-            shadowed,
+            intensity,
             comps.object,
         )
         reflected = self.reflected_color(comps, remaining)
@@ -109,7 +119,6 @@ def default_world() -> World:
 
 def schlick(comps) -> float:
     import math
-
     cos = comps.eyev.dot(comps.normalv)
     if comps.n1 > comps.n2:
         n = comps.n1 / comps.n2
