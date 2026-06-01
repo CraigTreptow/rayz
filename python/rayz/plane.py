@@ -15,3 +15,9 @@ class Plane(Shape):
 
     def local_normal_at(self, point, hit=None) -> Vector:
         return Vector(0, 1, 0)
+
+    def bounds(self):
+        import math
+        from rayz.bounds import Bounds
+        from rayz.tuple import Point
+        return Bounds(Point(-math.inf, 0, -math.inf), Point(math.inf, 0, math.inf))

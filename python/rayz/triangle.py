@@ -43,6 +43,17 @@ class Triangle(Shape):
     def local_normal_at(self, point, hit=None) -> Vector:
         return self.normal
 
+    def bounds(self):
+        from rayz.bounds import Bounds
+        from rayz.tuple import Point
+        min_x = min(self.p1.x, self.p2.x, self.p3.x)
+        min_y = min(self.p1.y, self.p2.y, self.p3.y)
+        min_z = min(self.p1.z, self.p2.z, self.p3.z)
+        max_x = max(self.p1.x, self.p2.x, self.p3.x)
+        max_y = max(self.p1.y, self.p2.y, self.p3.y)
+        max_z = max(self.p1.z, self.p2.z, self.p3.z)
+        return Bounds(Point(min_x, min_y, min_z), Point(max_x, max_y, max_z))
+
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Triangle):
             return NotImplemented

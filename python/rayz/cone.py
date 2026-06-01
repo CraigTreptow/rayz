@@ -57,6 +57,13 @@ class Cone(Shape):
             y = -y
         return Vector(point.x, y, point.z)
 
+    def bounds(self):
+        import math
+        from rayz.bounds import Bounds
+        from rayz.tuple import Point
+        radius = max(abs(self.minimum), abs(self.maximum))
+        return Bounds(Point(-radius, self.minimum, -radius), Point(radius, self.maximum, radius))
+
     def _check_cap(self, ray, t: float, y: float) -> bool:
         x = ray.origin.x + t * ray.direction.x
         z = ray.origin.z + t * ray.direction.z

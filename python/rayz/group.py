@@ -21,3 +21,14 @@ class Group(Shape):
 
     def local_normal_at(self, point, hit=None) -> Vector:
         raise RuntimeError("Groups have no surface normals")
+
+    def bounds(self):
+        from rayz.bounds import Bounds
+        from rayz.tuple import Point
+        if not self.children:
+            return Bounds(Point(0, 0, 0), Point(0, 0, 0))
+        b = Bounds(Point(float("inf"), float("inf"), float("inf")), Point(float("-inf"), float("-inf"), float("-inf")))
+        for child in self.children:
+            child_bounds = child.bounds().transform(child.transform)
+            b = b.merge(child_bounds)
+        return b

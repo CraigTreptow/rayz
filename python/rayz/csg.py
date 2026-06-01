@@ -25,6 +25,11 @@ class CSG(Shape):
     def local_normal_at(self, point, hit=None) -> Vector:
         raise RuntimeError("CSG shapes have no surface normal")
 
+    def bounds(self):
+        l_bounds = self.left.bounds().transform(self.left.transform)
+        r_bounds = self.right.bounds().transform(self.right.transform)
+        return l_bounds.merge(r_bounds)
+
 
 def _includes(shape, target) -> bool:
     if hasattr(shape, "includes"):
