@@ -47,6 +47,12 @@ class Cylinder(Shape):
             return Vector(0, -1, 0)
         return Vector(point.x, 0, point.z)
 
+    def bounds(self):
+        from rayz.bounds import Bounds
+        from rayz.tuple import Point
+
+        return Bounds(Point(-1, self.minimum, -1), Point(1, self.maximum, 1))
+
     def _check_cap(self, ray, t: float) -> bool:
         x = ray.origin.x + t * ray.direction.x
         z = ray.origin.z + t * ray.direction.z
