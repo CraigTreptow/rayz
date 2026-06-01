@@ -28,6 +28,12 @@ class Cube(Shape):
             return Vector(0, point.y, 0)
         return Vector(0, 0, point.z)
 
+    def bounds(self):
+        from rayz.bounds import Bounds
+        from rayz.tuple import Point
+
+        return Bounds(Point(-1, -1, -1), Point(1, 1, 1))
+
 
 def _check_axis(origin: float, direction: float) -> tuple[float, float]:
     tmin_num = -1 - origin

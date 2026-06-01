@@ -14,6 +14,8 @@ class Group(Shape):
         shape.parent = self
 
     def local_intersect(self, ray) -> list:
+        if self.children and not self.bounds().intersects(ray):
+            return []
         xs = []
         for child in self.children:
             xs.extend(child.intersect(ray))
@@ -21,3 +23,12 @@ class Group(Shape):
 
     def local_normal_at(self, point, hit=None) -> Vector:
         raise RuntimeError("Groups have no surface normals")
+
+    def bounds(self):
+        from rayz.bounds import Bounds
+
+        b = Bounds()
+        for child in self.children:
+            child_bounds = child.bounds().transform(child.transform)
+            b = b.merge(child_bounds)
+        return b

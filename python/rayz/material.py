@@ -15,6 +15,7 @@ class Material:
         "transparency",
         "refractive_index",
         "pattern",
+        "normal_perturbation",
     )
 
     def __init__(
@@ -37,6 +38,7 @@ class Material:
         self.transparency = transparency
         self.refractive_index = refractive_index
         self.pattern = None
+        self.normal_perturbation = None
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, Material):

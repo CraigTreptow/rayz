@@ -23,6 +23,11 @@ class Sphere(Shape):
     def local_normal_at(self, point, hit=None) -> Vector:
         return point - Point(0, 0, 0)
 
+    def bounds(self):
+        from rayz.bounds import Bounds
+
+        return Bounds(Point(-1, -1, -1), Point(1, 1, 1))
+
 
 def glass_sphere() -> Sphere:
     s = Sphere()
