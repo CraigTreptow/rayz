@@ -50,6 +50,7 @@ class Cylinder(Shape):
     def bounds(self):
         from rayz.bounds import Bounds
         from rayz.tuple import Point
+
         return Bounds(Point(-1, self.minimum, -1), Point(1, self.maximum, 1))
 
     def _check_cap(self, ray, t: float) -> bool:

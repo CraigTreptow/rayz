@@ -35,15 +35,15 @@ from examples.nested_groups_demo import run as ng_demo
 from examples.obj_parser_demo import run as obj_demo
 
 CHAPTERS: dict[int, tuple[str, object]] = {
-    1:  ("Projectile physics", ch1),
-    2:  ("Canvas & PPM export", ch2),
-    3:  ("Matrices", ch3),
-    4:  ("Transformations", ch4),
-    5:  ("Ray-sphere intersections", ch5),
-    6:  ("Light and Shading", ch6),
-    7:  ("Making a Scene", ch7),
-    8:  ("Patterns and Planes", ch8),
-    9:  ("Planes", ch9),
+    1: ("Projectile physics", ch1),
+    2: ("Canvas & PPM export", ch2),
+    3: ("Matrices", ch3),
+    4: ("Transformations", ch4),
+    5: ("Ray-sphere intersections", ch5),
+    6: ("Light and Shading", ch6),
+    7: ("Making a Scene", ch7),
+    8: ("Patterns and Planes", ch8),
+    9: ("Planes", ch9),
     10: ("Reflection and Refraction", ch10),
     11: ("Cubes", ch11),
     12: ("Cylinders", ch12),
@@ -59,9 +59,9 @@ CHAPTERS: dict[int, tuple[str, object]] = {
 }
 
 NAMES: dict[str, int] = {
-    "obj_parser":        18,
-    "bounding_boxes":    19,
-    "nested_groups":     20,
+    "obj_parser": 18,
+    "bounding_boxes": 19,
+    "nested_groups": 20,
     "advanced_features": 21,
 }
 

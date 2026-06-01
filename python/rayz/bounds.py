@@ -74,6 +74,7 @@ class Bounds:
 
     def _check_axis(self, origin: float, direction: float, min_val: float, max_val: float):
         from rayz.constants import EPSILON
+
         if abs(direction) >= EPSILON:
             tmin = (min_val - origin) / direction
             tmax = (max_val - origin) / direction

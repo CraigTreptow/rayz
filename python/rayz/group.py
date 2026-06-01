@@ -26,6 +26,7 @@ class Group(Shape):
 
     def bounds(self):
         from rayz.bounds import Bounds
+
         b = Bounds()
         for child in self.children:
             child_bounds = child.bounds().transform(child.transform)

@@ -66,16 +66,20 @@ class Torus(Shape):
 
         tolerance = 1e-10
         for _ in range(100):
-            p1 = z1**4 + b*z1**3 + c*z1**2 + d*z1 + e
-            p2 = z2**4 + b*z2**3 + c*z2**2 + d*z2 + e
-            p3 = z3**4 + b*z3**3 + c*z3**2 + d*z3 + e
-            p4 = z4**4 + b*z4**3 + c*z4**2 + d*z4 + e
-            nz1 = z1 - p1 / ((z1-z2) * (z1-z3) * (z1-z4))
-            nz2 = z2 - p2 / ((z2-z1) * (z2-z3) * (z2-z4))
-            nz3 = z3 - p3 / ((z3-z1) * (z3-z2) * (z3-z4))
-            nz4 = z4 - p4 / ((z4-z1) * (z4-z2) * (z4-z3))
-            if (abs(nz1-z1) < tolerance and abs(nz2-z2) < tolerance
-                    and abs(nz3-z3) < tolerance and abs(nz4-z4) < tolerance):
+            p1 = z1**4 + b * z1**3 + c * z1**2 + d * z1 + e
+            p2 = z2**4 + b * z2**3 + c * z2**2 + d * z2 + e
+            p3 = z3**4 + b * z3**3 + c * z3**2 + d * z3 + e
+            p4 = z4**4 + b * z4**3 + c * z4**2 + d * z4 + e
+            nz1 = z1 - p1 / ((z1 - z2) * (z1 - z3) * (z1 - z4))
+            nz2 = z2 - p2 / ((z2 - z1) * (z2 - z3) * (z2 - z4))
+            nz3 = z3 - p3 / ((z3 - z1) * (z3 - z2) * (z3 - z4))
+            nz4 = z4 - p4 / ((z4 - z1) * (z4 - z2) * (z4 - z3))
+            if (
+                abs(nz1 - z1) < tolerance
+                and abs(nz2 - z2) < tolerance
+                and abs(nz3 - z3) < tolerance
+                and abs(nz4 - z4) < tolerance
+            ):
                 break
             z1, z2, z3, z4 = nz1, nz2, nz3, nz4
 

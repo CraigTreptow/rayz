@@ -25,11 +25,7 @@ def lighting(material, light, point, eyev, normalv, intensity=1.0, obj=None) -> 
 
     # Direction to light — area lights use their center point
     if hasattr(light, "corner"):
-        light_center = (
-            light.corner
-            + light.uvec * (light.usteps / 2.0)
-            + light.vvec * (light.vsteps / 2.0)
-        )
+        light_center = light.corner + light.uvec * (light.usteps / 2.0) + light.vvec * (light.vsteps / 2.0)
         lightv = (light_center - point).normalize()
     else:
         lightv = (light.position - point).normalize()
@@ -47,6 +43,6 @@ def lighting(material, light, point, eyev, normalv, intensity=1.0, obj=None) -> 
     if reflect_dot_eye <= 0:
         return ambient + diffuse
 
-    factor = reflect_dot_eye ** material.shininess
+    factor = reflect_dot_eye**material.shininess
     specular = light.intensity * material.specular * factor * intensity
     return ambient + diffuse + specular

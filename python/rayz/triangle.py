@@ -46,6 +46,7 @@ class Triangle(Shape):
     def bounds(self):
         from rayz.bounds import Bounds
         from rayz.tuple import Point
+
         min_x = min(self.p1.x, self.p2.x, self.p3.x)
         min_y = min(self.p1.y, self.p2.y, self.p3.y)
         min_z = min(self.p1.z, self.p2.z, self.p3.z)

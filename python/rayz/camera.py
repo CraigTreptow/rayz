@@ -137,7 +137,8 @@ class Camera:
             ay = (random.random() * 2 - 1) if self.aperture_size > 0 else 0.0
             t = random.random() if self.motion_blur else 0.0
             ray = self.ray_for_pixel(
-                x, y,
+                x,
+                y,
                 pixel_offset_x=random.random(),
                 pixel_offset_y=random.random(),
                 aperture_offset_x=ax,
@@ -164,7 +165,7 @@ class Camera:
             workers = os.cpu_count() or 1
         all_rows = list(range(self.vsize))
         chunk_size = max(1, math.ceil(self.vsize / workers))
-        chunks = [all_rows[i: i + chunk_size] for i in range(0, self.vsize, chunk_size)]
+        chunks = [all_rows[i : i + chunk_size] for i in range(0, self.vsize, chunk_size)]
 
         image = Canvas(self.hsize, self.vsize)
         with ProcessPoolExecutor(max_workers=workers) as executor:

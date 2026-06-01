@@ -25,6 +25,7 @@ class Sphere(Shape):
 
     def bounds(self):
         from rayz.bounds import Bounds
+
         return Bounds(Point(-1, -1, -1), Point(1, 1, 1))
 
 

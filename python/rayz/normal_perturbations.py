@@ -14,6 +14,7 @@ def sine_wave(frequency: float = 10.0, amplitude: float = 0.1) -> Callable[[Poin
             math.sin(point.z * frequency) * amplitude,
             math.sin(point.x * frequency) * amplitude,
         )
+
     return perturb
 
 
@@ -23,6 +24,7 @@ def quilted(frequency: float = 5.0, amplitude: float = 0.15) -> Callable[[Point]
         v = math.sin(point.z * frequency)
         magnitude = u * v * amplitude
         return Vector(0, magnitude, 0)
+
     return perturb
 
 
@@ -32,6 +34,7 @@ def noise(frequency: float = 5.0, amplitude: float = 0.1) -> Callable[[Point], V
         ny = math.sin(point.y * frequency + point.z * frequency * 0.7) * amplitude
         nz = math.sin(point.z * frequency + point.x * frequency * 0.7) * amplitude
         return Vector(nx, ny, nz)
+
     return perturb
 
 
@@ -50,4 +53,5 @@ def ripples(
         distance = math.sqrt(dx * dx + dz * dz)
         magnitude = math.sin(distance * frequency) * amplitude
         return Vector(0, magnitude, 0)
+
     return perturb

@@ -60,6 +60,7 @@ class Cone(Shape):
     def bounds(self):
         from rayz.bounds import Bounds
         from rayz.tuple import Point
+
         radius = max(abs(self.minimum), abs(self.maximum))
         return Bounds(Point(-radius, self.minimum, -radius), Point(radius, self.maximum, radius))
 

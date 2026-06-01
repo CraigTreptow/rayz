@@ -21,4 +21,5 @@ class Plane(Shape):
 
         from rayz.bounds import Bounds
         from rayz.tuple import Point
+
         return Bounds(Point(-math.inf, 0, -math.inf), Point(math.inf, 0, math.inf))

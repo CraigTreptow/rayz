@@ -36,6 +36,7 @@ class World:
 
     def is_shadowed_from(self, point, light_position) -> bool:
         from rayz.ray import Ray
+
         v = light_position - point
         distance = v.magnitude()
         direction = v.normalize()
@@ -59,6 +60,7 @@ class World:
         if remaining <= 0 or comps.object.material.reflective == 0:
             return Color(0, 0, 0)
         from rayz.ray import Ray
+
         reflect_ray = Ray(comps.over_point, comps.reflectv)
         return self.color_at(reflect_ray, remaining - 1) * comps.object.material.reflective
 
@@ -66,6 +68,7 @@ class World:
         if remaining <= 0 or comps.object.material.transparency == 0:
             return Color(0, 0, 0)
         import math
+
         n_ratio = comps.n1 / comps.n2
         cos_i = comps.eyev.dot(comps.normalv)
         sin2_t = n_ratio * n_ratio * (1 - cos_i * cos_i)
@@ -74,6 +77,7 @@ class World:
         cos_t = math.sqrt(1.0 - sin2_t)
         direction = comps.normalv * (n_ratio * cos_i - cos_t) - comps.eyev * n_ratio
         from rayz.ray import Ray
+
         refract_ray = Ray(comps.under_point, direction)
         return self.color_at(refract_ray, remaining - 1) * comps.object.material.transparency
 
@@ -119,6 +123,7 @@ def default_world() -> World:
 
 def schlick(comps) -> float:
     import math
+
     cos = comps.eyev.dot(comps.normalv)
     if comps.n1 > comps.n2:
         n = comps.n1 / comps.n2
