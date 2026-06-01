@@ -14,6 +14,8 @@ class Group(Shape):
         shape.parent = self
 
     def local_intersect(self, ray) -> list:
+        if self.children and not self.bounds().intersects(ray):
+            return []
         xs = []
         for child in self.children:
             xs.extend(child.intersect(ray))
