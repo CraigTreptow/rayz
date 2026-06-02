@@ -119,7 +119,7 @@ def main() -> None:
         "elapsed": round(elapsed, 4),
         "pixels_per_second": round(width * height / elapsed),
     }
-    sys.stdout.write(json.dumps(result) + "\n")
+    sys.stdout.write(json.dumps(result, separators=(",", ":")) + "\n")
     sys.stdout.flush()
 
 
