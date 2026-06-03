@@ -130,6 +130,21 @@ cd crystal
 crystal spec    # Run all specs
 ```
 
+### Crystal Code Quality
+```bash
+cd crystal
+crystal tool format .     # Format all Crystal source files in place
+```
+
+### Cross-Language Benchmark
+```bash
+./benchmark/run.sh              # Run full benchmark across all languages
+./benchmark/run.sh --dev        # Run with small sizes for fast iteration
+./benchmark/run.sh --dry-run    # Print shuffled queue without rendering
+./benchmark/run.sh --iterations N  # Override iteration count (default: 2)
+```
+Results written to `benchmark/results/` as JSON, Markdown, and HTML. Auto-discovers any language with a `<lang>/benchmark/variants.conf` file.
+
 ## Architecture
 
 ### Core Mathematical Foundation
@@ -316,10 +331,11 @@ open performance_results.html                 # View graphs in browser
 - `/jruby/features/` - Cucumber BDD tests for the JRuby implementation (370 scenarios)
 - `/python/rayz/` - Python port of the ray tracer library
 - `/python/examples/` - Chapter demonstration scripts for Python
-- `/python/features/` - Behave BDD tests for the Python implementation (22 feature files)
+- `/python/features/` - Behave BDD tests for the Python implementation (25 feature files)
 - `/crystal/src/` - Crystal port of the ray tracer library
 - `/crystal/examples/` - Chapter demonstration scripts for Crystal
 - `/crystal/spec/` - Crystal spec tests (31 spec files)
+- `/benchmark/` - Cross-language benchmark runner (`run.sh`) and results; auto-discovers languages via `<lang>/benchmark/variants.conf`
 - `/book/` - Reference book in epub format
 
 ## Output Files
@@ -392,38 +408,13 @@ Full port of the Ruby implementation to JRuby (JVM). All 370 scenarios pass. Key
 ### Test Coverage
 - 295 scenarios passing (346 total scenarios in ruby/features/, 51 undefined for additional edge cases)
 - 370 scenarios passing in jruby/features/ (identical feature files, JRuby-compatible step definitions)
-- 25 feature files in `/ruby/features/` directory:
-  - `tuples.feature` - Core mathematical operations including vector reflection
-  - `colors.feature` - Color arithmetic
-  - `canvas.feature` - Pixel operations and PPM export
-  - `matrices.feature` - Matrix operations
-  - `transformations.feature` - Transformation matrices with π and √ notation support
-  - `rays.feature` - Ray creation, position calculation, and transformations
-  - `spheres.feature` - Sphere-ray intersection, surface normals, materials
-  - `intersections.feature` - Intersection aggregation and hit detection
-  - `lights.feature` - Point light sources
-  - `materials.feature` - Material properties and Phong lighting
-  - `world.feature` - World and camera for scene rendering
-  - `camera.feature` - Camera rendering, anti-aliasing, focal blur, and motion blur
-  - `patterns.feature` - Surface patterns (stripe, gradient, ring, checkers)
-  - `planes.feature` - Infinite plane intersections and normals
-  - `reflections.feature` - Reflection, refraction, and Fresnel effects
-  - `cubes.feature` - Cube primitive with ray-cube intersection and normals
-  - `cylinders.feature` - Cylinder primitive with truncation, end caps, and normals
-  - `groups.feature` - Group hierarchy, parent-child relationships, and intersection aggregation
-  - `cones.feature` - Cone primitive with ray-cone intersection and normals
-  - `triangles.feature` - Triangle primitive with Möller-Trumbore intersection algorithm
-  - `smooth-triangles.feature` - Smooth triangles with normal interpolation
-  - `csg.feature` - Constructive Solid Geometry with union, intersection, and difference operations
-  - `obj_file.feature` - OBJ file parser with vertex, normal, face parsing, and group support
-  - `bounding_boxes.feature` - Bounding box optimization with bounds creation, transformation, merging, intersection testing, and group optimization
-  - `shapes.feature` - Abstract shape tests for world_to_object and normal_to_world transformations
+- 25 feature files in both `/ruby/features/` and `/python/features/` (see Test Structure above for full list)
 - Reference tests from the book in `/book_features/` at the repo root (language-agnostic)
 
 ### Python Implementation - ✅ Complete
 Full port of the Ruby implementation to Python 3.14. Chapters 1-17 all implemented. Key differences from Ruby:
 
-- **Testing**: Uses `behave` (BDD with Gherkin) matching the book's feature files; 22 feature files in `python/features/`
+- **Testing**: Uses `behave` (BDD with Gherkin) matching the book's feature files; 25 feature files in `python/features/`
 - **Parallelism**: `render_parallel` in `camera.py` uses `concurrent.futures.ThreadPoolExecutor`
 - **Dependencies**: `numpy`, `behave`, `pytest`; managed with `uv`
 - **Location**: `python/` directory; run scripts via `uv run examples/run.py`
