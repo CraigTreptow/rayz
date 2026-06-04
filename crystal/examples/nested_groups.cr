@@ -158,7 +158,7 @@ puts "  - Solar system: sun, earth, moon (6 levels deep)"
 puts "  - Mars system with satellite (5 levels deep)"
 puts "  - Space station with 4 rotating arms (3 levels deep)"
 
-canvas = camera.render(world)
+canvas = camera.render_parallel(world)
 
 output_path = File.join(File.dirname(__FILE__), "nested_groups.ppm")
 File.write(output_path, canvas.to_ppm)

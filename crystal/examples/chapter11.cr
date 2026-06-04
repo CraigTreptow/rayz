@@ -100,7 +100,7 @@ camera.transform = Rayz::Transformations.view_transform(
 )
 
 print "Rendering scene with cubes..."
-image = camera.render(world)
+image = camera.render_parallel(world)
 puts "done"
 
 file_name = "examples/chapter11.ppm"
