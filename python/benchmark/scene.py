@@ -1,7 +1,7 @@
 """Benchmark scene for cross-language performance comparison.
 
 Usage (from python/):
-    uv run benchmark/scene.py --scene tiny|small|medium --output /path/to/out.ppm
+    uv run benchmark/scene.py --scene small|medium|large --output /path/to/out.ppm
 
 Outputs a single JSON line to stdout with timing results.
 """
@@ -27,13 +27,11 @@ from rayz.tuple import Point, Vector
 from rayz.world import World
 
 _DEV_SCENES: dict[str, tuple[int, int]] = {
-    "tiny": (20, 10),
     "small": (40, 20),
     "medium": (60, 30),
     "large": (100, 50),
 }
 _PROD_SCENES: dict[str, tuple[int, int]] = {
-    "tiny": (200, 100),
     "small": (400, 200),
     "medium": (600, 300),
     "large": (800, 400),

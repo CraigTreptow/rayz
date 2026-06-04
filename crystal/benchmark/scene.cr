@@ -5,14 +5,12 @@ require "../src/rayz"
 include Rayz
 
 DEV_SCENES = {
-  "tiny"   => {20, 10},
   "small"  => {40, 20},
   "medium" => {60, 30},
   "large"  => {100, 50},
 }
 
 PROD_SCENES = {
-  "tiny"   => {200, 100},
   "small"  => {400, 200},
   "medium" => {600, 300},
   "large"  => {800, 400},
