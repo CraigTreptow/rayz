@@ -35,7 +35,7 @@ camera.transform = Rayz::Transformations.view_transform(
 )
 
 print "Rendering OBJ parser demo..."
-image = camera.render(world)
+image = camera.render_parallel(world)
 puts "done"
 
 file_name = "examples/obj_parser.ppm"

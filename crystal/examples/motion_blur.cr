@@ -49,7 +49,7 @@ camera.transform = Transformations.view_transform(
   Vector.new(0.0, 1.0, 0.0)
 )
 
-canvas = camera.render(world)
+canvas = camera.render_parallel(world)
 
 file_name = "examples/motion_blur.ppm"
 File.write(file_name, canvas.to_ppm)
