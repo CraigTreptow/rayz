@@ -129,7 +129,7 @@ end.sort_by { |r| [r[:language], r[:variant], r[:scene]] }
 # Compares the first-iteration PPM of every language for each scene.
 # Within-language variant consistency is also checked.
 # ---------------------------------------------------------------------------
-scenes = %w[tiny small medium]
+scenes = %w[small medium large]
 ppm_comparisons = []
 
 scenes.each do |scene|
@@ -288,7 +288,7 @@ puts "  Written: #{md_path}"
 # ---------------------------------------------------------------------------
 # HTML report (Chart.js)
 # ---------------------------------------------------------------------------
-scene_order = %w[tiny small medium]
+scene_order = %w[small medium large]
 all_variants = aggregated.map { |r| "#{r[:language]}:#{r[:variant]}" }.uniq.sort
 
 # Build dataset series: one per language:variant, values indexed by scene

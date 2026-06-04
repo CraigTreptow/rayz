@@ -93,7 +93,7 @@ fi
 
 echo "Discovered languages: ${LANGUAGES[*]}"
 if [[ "${DEV_MODE}" == "true" ]]; then
-    echo "Mode: DEV (tiny scene sizes for fast iteration)"
+    echo "Mode: DEV (small scene sizes for fast iteration)"
 else
     echo "Mode: PRODUCTION (full scene sizes)"
 fi
@@ -122,7 +122,7 @@ done
 # Build run queue: lang|variant_name|variant_desc|variant_env|scene|iteration
 # ---------------------------------------------------------------------------
 declare -a RUN_QUEUE=()
-SCENES=("tiny" "small" "medium" "large")
+SCENES=("small" "medium" "large")
 
 for lang in "${LANGUAGES[@]}"; do
     variants_file="${REPO_ROOT}/${lang}/benchmark/variants.conf"
