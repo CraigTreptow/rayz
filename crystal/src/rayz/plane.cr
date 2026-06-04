@@ -3,10 +3,14 @@ module Rayz
     PLANE_EPSILON = 1e-5
 
     def local_intersect(local_ray : Ray) : Array(Intersection)
-      return [] of Intersection if local_ray.direction.y.abs < PLANE_EPSILON
+      buf = [] of Intersection
+      local_intersect_into(local_ray, buf)
+      buf
+    end
 
-      t = -local_ray.origin.y / local_ray.direction.y
-      [Intersection.new(t, self)]
+    def local_intersect_into(local_ray : Ray, buf : Array(Intersection)) : Nil
+      return if local_ray.direction.y.abs < PLANE_EPSILON
+      buf << Intersection.new(-local_ray.origin.y / local_ray.direction.y, self)
     end
 
     def local_normal_at(local_point : Point) : Tuple

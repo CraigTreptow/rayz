@@ -29,12 +29,14 @@ module Rayz
       String.build do |str|
         str << "P3\n#{@width} #{@height}\n#{MAX_COLOR_VALUE}\n"
         (@height - 1).downto(0) do |row|
-          chunk = Array(String).new(@width)
-          (0...@width).each do |col|
+          first = true
+          (@width - 1).downto(0) do |col|
+            str << ' ' unless first
+            first = false
             pixel = @pixels[row][col]
-            chunk << "#{scale(pixel.red)} #{scale(pixel.green)} #{scale(pixel.blue)} "
+            str << scale(pixel.red) << ' ' << scale(pixel.green) << ' ' << scale(pixel.blue)
           end
-          str << chunk.reverse.join.rstrip << "\n"
+          str << '\n'
         end
         str << "\n"
       end

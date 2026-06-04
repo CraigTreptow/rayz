@@ -2,11 +2,13 @@ module Rayz
   class Matrix
     getter rows : Int32
     getter cols : Int32
+    getter flat : Array(Float64)
 
     def initialize(data : Array(Array(Float64)))
       @data = data
       @rows = data.size
       @cols = data[0].size
+      @flat = data.flatten
     end
 
     def self.identity(size : Int32 = 4) : Matrix
@@ -28,14 +30,35 @@ module Rayz
     end
 
     def *(other : Matrix) : Matrix
+      af = @flat
+      bf = other.flat
+      nc = other.cols
       data = Array.new(@rows) do |i|
-        Array.new(other.cols) do |j|
+        Array.new(nc) do |j|
           sum = 0.0
-          @cols.times { |k| sum += @data[i][k] * other[k, j] }
+          @cols.times { |k| sum += af.unsafe_fetch(i * @cols + k) * bf.unsafe_fetch(k * nc + j) }
           sum
         end
       end
       Matrix.new(data)
+    end
+
+    def *(pt : Point) : Point
+      f = @flat
+      Point.new(
+        f.unsafe_fetch(0) * pt.x + f.unsafe_fetch(1) * pt.y + f.unsafe_fetch(2) * pt.z + f.unsafe_fetch(3),
+        f.unsafe_fetch(4) * pt.x + f.unsafe_fetch(5) * pt.y + f.unsafe_fetch(6) * pt.z + f.unsafe_fetch(7),
+        f.unsafe_fetch(8) * pt.x + f.unsafe_fetch(9) * pt.y + f.unsafe_fetch(10) * pt.z + f.unsafe_fetch(11)
+      )
+    end
+
+    def *(vec : Vector) : Vector
+      f = @flat
+      Vector.new(
+        f.unsafe_fetch(0) * vec.x + f.unsafe_fetch(1) * vec.y + f.unsafe_fetch(2) * vec.z,
+        f.unsafe_fetch(4) * vec.x + f.unsafe_fetch(5) * vec.y + f.unsafe_fetch(6) * vec.z,
+        f.unsafe_fetch(8) * vec.x + f.unsafe_fetch(9) * vec.y + f.unsafe_fetch(10) * vec.z
+      )
     end
 
     def *(tuple : Tuple) : Tuple
@@ -98,7 +121,10 @@ module Rayz
     end
 
     private def row_dot(row : Int32, t : Tuple) : Float64
-      @data[row][0] * t.x + @data[row][1] * t.y + @data[row][2] * t.z + @data[row][3] * t.w
+      base = row * @cols
+      f = @flat
+      f.unsafe_fetch(base) * t.x + f.unsafe_fetch(base + 1) * t.y +
+        f.unsafe_fetch(base + 2) * t.z + f.unsafe_fetch(base + 3) * t.w
     end
   end
 end

@@ -54,16 +54,14 @@ module Rayz
       world_x = @half_width - xoffset
       world_y = @half_height - yoffset
 
-      pixel_t = @transform_inverse * Point.new(world_x, world_y, -@focal_distance)
-      pixel = Point.new(pixel_t.x, pixel_t.y, pixel_t.z)
+      pixel = @transform_inverse * Point.new(world_x, world_y, -@focal_distance)
 
       aperture_x = aperture_offset_x * @aperture_size
       aperture_y = aperture_offset_y * @aperture_size
-      origin_t = @transform_inverse * Point.new(aperture_x, aperture_y, 0.0)
-      origin = Point.new(origin_t.x, origin_t.y, origin_t.z)
+      origin = @transform_inverse * Point.new(aperture_x, aperture_y, 0.0)
 
-      dir_t = (pixel - origin).normalize
-      direction = Vector.new(dir_t.x, dir_t.y, dir_t.z)
+      diff = pixel - origin
+      direction = Vector.new(diff.x, diff.y, diff.z).normalize
 
       Ray.new(origin, direction, time)
     end
@@ -76,6 +74,29 @@ module Rayz
           image.write_pixel(x, @vsize - 1 - y, color)
         end
       end
+      image
+    end
+
+    def render_parallel(world : World) : Canvas
+      image = Canvas.new(@hsize, @vsize)
+      num_threads = {System.cpu_count.to_i, @vsize}.min
+
+      threads = (0...num_threads).map do |t|
+        start_y = t
+        Thread.new do
+          y = start_y
+          while y < @vsize
+            row = @vsize - 1 - y
+            (0...@hsize).each do |x|
+              color = render_pixel(x, y, world)
+              image.write_pixel(x, row, color)
+            end
+            y += num_threads
+          end
+        end
+      end
+
+      threads.each(&.join)
       image
     end
 
