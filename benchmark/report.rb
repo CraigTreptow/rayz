@@ -122,7 +122,7 @@ aggregated = grouped.map do |(lang, variant, scene), runs|
     pixels_per_second: (first["width"] * first["height"] / avg).round(0),
     ppm_path: first["ppm_path"]
   }
-end.sort_by { |r| [r[:language], r[:variant], r[:scene]] }
+end.sort_by { |r| [%w[small medium large].index(r[:scene]) || 99, r[:avg_seconds]] }
 
 # ---------------------------------------------------------------------------
 # PPM comparisons
@@ -249,17 +249,21 @@ md_lines << ""
 report[:scene_shapes].each { |s| md_lines << "- #{s}" }
 md_lines << ""
 md_lines << "## Results"
-md_lines << ""
-md_lines << "| Language | Variant | Scene | W×H | Avg | Min | Max | Std Dev | Px/s |"
-md_lines << "|---|---|---|---|---|---|---|---|---|"
 
-aggregated.each do |r|
-  dims = "#{r[:width]}×#{r[:height]}"
-  md_lines << "| #{r[:language]} (#{r[:language_version].split.first(2).join(" ")}) " \
-              "| #{r[:variant]} | #{r[:scene]} | #{dims} " \
-              "| #{fmt_seconds(r[:avg_seconds])} | #{fmt_seconds(r[:min_seconds])} " \
-              "| #{fmt_seconds(r[:max_seconds])} | #{fmt_seconds(r[:stddev_seconds])} " \
-              "| #{r[:pixels_per_second].to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse} |"
+%w[small medium large].each do |scene|
+  md_lines << ""
+  md_lines << "### #{scene.capitalize}"
+  md_lines << ""
+  md_lines << "| Language | Variant | W×H | Avg | Min | Max | Std Dev | Px/s |"
+  md_lines << "|---|---|---|---|---|---|---|---|"
+  aggregated.select { |r| r[:scene] == scene }.each do |r|
+    dims = "#{r[:width]}×#{r[:height]}"
+    md_lines << "| #{r[:language]} (#{r[:language_version].split.first(2).join(" ")}) " \
+                "| #{r[:variant]} | #{dims} " \
+                "| #{fmt_seconds(r[:avg_seconds])} | #{fmt_seconds(r[:min_seconds])} " \
+                "| #{fmt_seconds(r[:max_seconds])} | #{fmt_seconds(r[:stddev_seconds])} " \
+                "| #{r[:pixels_per_second].to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse} |"
+  end
 end
 
 md_lines << ""
@@ -330,12 +334,23 @@ ppm_rows_html = ppm_comparisons.map do |c|
   end
 end.join("\n")
 
-results_rows_html = aggregated.map do |r|
-  "<tr><td>#{h(r[:language])}</td><td>#{h(r[:variant])}</td><td>#{h(r[:scene])}</td>" \
-  "<td>#{r[:width]}×#{r[:height]}</td><td>#{fmt_seconds(r[:avg_seconds])}</td>" \
-  "<td>#{fmt_seconds(r[:min_seconds])}</td><td>#{fmt_seconds(r[:max_seconds])}</td>" \
-  "<td>#{r[:pixels_per_second].to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse}</td></tr>"
-end.join("\n")
+def results_table_html(rows_data, &fmt)
+  header = "<thead><tr><th>Language</th><th>Variant</th><th>Size</th>" \
+            "<th>Avg</th><th>Min</th><th>Max</th><th>Px/s</th></tr></thead>"
+  rows = rows_data.map(&fmt).join("\n")
+  "<table>\n  #{header}\n  <tbody>\n#{rows}\n  </tbody>\n</table>"
+end
+
+scene_tables_html = %w[small medium large].map do |scene|
+  rows = aggregated.select { |r| r[:scene] == scene }
+  table = results_table_html(rows) do |r|
+    "<tr><td>#{h(r[:language])}</td><td>#{h(r[:variant])}</td>" \
+    "<td>#{r[:width]}×#{r[:height]}</td><td>#{fmt_seconds(r[:avg_seconds])}</td>" \
+    "<td>#{fmt_seconds(r[:min_seconds])}</td><td>#{fmt_seconds(r[:max_seconds])}</td>" \
+    "<td>#{r[:pixels_per_second].to_s.reverse.gsub(/(\d{3})(?=\d)/, "\\1,").reverse}</td></tr>"
+  end
+  "<h3>#{scene.capitalize}</h3>\n#{table}"
+end.join("\n\n")
 
 html = <<~HTML
   <!DOCTYPE html>
@@ -378,15 +393,7 @@ html = <<~HTML
     </div>
 
     <h2>Results</h2>
-    <table>
-      <thead><tr>
-        <th>Language</th><th>Variant</th><th>Scene</th><th>Size</th>
-        <th>Avg</th><th>Min</th><th>Max</th><th>Px/s</th>
-      </tr></thead>
-      <tbody>
-        #{results_rows_html}
-      </tbody>
-    </table>
+    #{scene_tables_html}
 
     <h2>PPM Comparison (±1 tolerance per channel)</h2>
     <table>
