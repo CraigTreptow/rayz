@@ -1,17 +1,21 @@
 module Rayz
   class Sphere < Shape
     def local_intersect(local_ray : Ray) : Array(Intersection)
+      buf = [] of Intersection
+      local_intersect_into(local_ray, buf)
+      buf
+    end
+
+    def local_intersect_into(local_ray : Ray, buf : Array(Intersection)) : Nil
       sphere_to_ray = local_ray.origin - Point.new(0.0, 0.0, 0.0)
       a = local_ray.direction.dot(local_ray.direction)
       b = 2.0 * local_ray.direction.dot(sphere_to_ray)
       c = sphere_to_ray.dot(sphere_to_ray) - 1.0
       discriminant = b * b - 4.0 * a * c
-      return [] of Intersection if discriminant < 0.0
+      return if discriminant < 0.0
       sq = Math.sqrt(discriminant)
-      [
-        Intersection.new((-b - sq) / (2.0 * a), self),
-        Intersection.new((-b + sq) / (2.0 * a), self),
-      ]
+      buf << Intersection.new((-b - sq) / (2.0 * a), self)
+      buf << Intersection.new((-b + sq) / (2.0 * a), self)
     end
 
     def local_normal_at(local_point : Point) : Tuple

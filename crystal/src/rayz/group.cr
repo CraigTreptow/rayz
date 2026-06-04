@@ -32,7 +32,7 @@ module Rayz
       return [] of Intersection unless bounds.intersects?(local_ray)
 
       xs = [] of Intersection
-      @children.each { |child| xs.concat(child.intersect(local_ray)) }
+      @children.each { |child| child.intersect_into(local_ray, xs) }
       xs.sort
     end
 

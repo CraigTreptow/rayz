@@ -15,13 +15,7 @@ module Rayz
     end
 
     def transform(matrix : Matrix) : Ray
-      new_o = matrix * @origin
-      new_d = matrix * @direction
-      Ray.new(
-        Point.new(new_o.x, new_o.y, new_o.z),
-        Vector.new(new_d.x, new_d.y, new_d.z),
-        @time
-      )
+      Ray.new(matrix * @origin, matrix * @direction, @time)
     end
   end
 end
