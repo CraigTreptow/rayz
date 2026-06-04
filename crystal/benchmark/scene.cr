@@ -90,7 +90,7 @@ camera.transform = Transformations.view_transform(
 
 canvas = uninitialized Canvas
 elapsed = Time.measure do
-  canvas = camera.render(world)
+  canvas = ENV["PARALLEL"]? == "true" ? camera.render_parallel(world) : camera.render(world)
   File.write(output_path, canvas.to_ppm)
 end
 

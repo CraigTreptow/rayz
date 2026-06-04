@@ -29,9 +29,9 @@ module Rayz
     end
 
     def intersect(ray : Ray) : Array(Intersection)
-      all = [] of Intersection
-      @objects.each { |obj| all.concat(obj.intersect(ray)) }
-      all.sort
+      all = Array(Intersection).new(10)
+      @objects.each { |obj| obj.intersect_into(ray, all) }
+      all.sort!
     end
 
     def shade_hit(comps : Computations, remaining : Int32 = 3) : Color
@@ -108,10 +108,13 @@ module Rayz
       direction = Vector.new(direction_t.x, direction_t.y, direction_t.z)
 
       shadow_ray = Ray.new(point, direction)
+      buf = [] of Intersection
       @objects.each do |obj|
-        obj.intersect(shadow_ray).each do |i|
+        obj.intersect_into(shadow_ray, buf)
+        buf.each do |i|
           return true if i.t > 0 && i.t < distance
         end
+        buf.clear
       end
 
       false

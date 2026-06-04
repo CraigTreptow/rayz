@@ -22,12 +22,23 @@ module Rayz
     end
 
     def intersect(ray : Ray) : Array(Intersection)
+      buf = [] of Intersection
+      intersect_into(ray, buf)
+      buf
+    end
+
+    def intersect_into(ray : Ray, buf : Array(Intersection)) : Nil
       inv = if mt = @motion_transform
               (mt.call(ray.time) * @transform).inverse
             else
               @transform_inverse
             end
-      local_intersect(ray.transform(inv))
+      local_ray = ray.transform(inv)
+      local_intersect_into(local_ray, buf)
+    end
+
+    def local_intersect_into(local_ray : Ray, buf : Array(Intersection)) : Nil
+      buf.concat(local_intersect(local_ray))
     end
 
     def normal_at(world_point : Point, hit : Intersection? = nil) : Vector
@@ -57,8 +68,7 @@ module Rayz
           else
             point
           end
-      result = @transform_inverse * p
-      Point.new(result.x, result.y, result.z)
+      @transform_inverse * p
     end
 
     def normal_to_world(normal : Tuple) : Vector

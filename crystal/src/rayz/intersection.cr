@@ -73,7 +73,12 @@ module Rayz
   end
 
   def self.hit(xs : Array(Intersection)) : Intersection?
-    xs.select { |i| i.t >= 0.0 }.min?
+    result = nil
+    xs.each do |i|
+      next if i.t < 0.0
+      result = i if result.nil? || i.t < result.t
+    end
+    result
   end
 
   def self.schlick(comps : Computations) : Float64

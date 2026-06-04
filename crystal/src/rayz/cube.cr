@@ -1,6 +1,12 @@
 module Rayz
   class Cube < Shape
     def local_intersect(local_ray : Ray) : Array(Intersection)
+      buf = [] of Intersection
+      local_intersect_into(local_ray, buf)
+      buf
+    end
+
+    def local_intersect_into(local_ray : Ray, buf : Array(Intersection)) : Nil
       xtmin, xtmax = check_axis(local_ray.origin.x, local_ray.direction.x)
       ytmin, ytmax = check_axis(local_ray.origin.y, local_ray.direction.y)
       ztmin, ztmax = check_axis(local_ray.origin.z, local_ray.direction.z)
@@ -8,9 +14,10 @@ module Rayz
       tmin = {xtmin, ytmin, ztmin}.max
       tmax = {xtmax, ytmax, ztmax}.min
 
-      return [] of Intersection if tmin > tmax
+      return if tmin > tmax
 
-      [Intersection.new(tmin, self), Intersection.new(tmax, self)]
+      buf << Intersection.new(tmin, self)
+      buf << Intersection.new(tmax, self)
     end
 
     def local_normal_at(local_point : Point) : Tuple

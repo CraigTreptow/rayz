@@ -1,5 +1,5 @@
 module Rayz
-  class Color
+  struct Color
     getter red : Float64
     getter green : Float64
     getter blue : Float64
