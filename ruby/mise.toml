@@ -1,6 +1,0 @@
-[tools]
-rust = "1.95.0"
-ruby = "4.0.2"
-
-[env]
-RUBY_CONFIGURE_OPTS = "--enable-yjit"

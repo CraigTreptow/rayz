@@ -1,2 +1,9 @@
 [tools]
 crystal = "1.20.2"
+python = "3.14.4"
+ruby = "4.0.2"
+rust = "1.95.0"
+uv = "latest"
+
+[env]
+RUBY_CONFIGURE_OPTS = "--enable-yjit"
