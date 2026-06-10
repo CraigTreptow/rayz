@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Run chapter examples for the Rust ray tracer.
+# Usage: ./examples/run [chapter_number|all]
+set -euo pipefail
+
+cd "$(dirname "$0")/.."
+
+command -v mise &>/dev/null || { echo "ERROR: 'mise' is not installed or not on PATH" >&2; exit 1; }
+
+mise exec -- cargo run --release --bin run -- "$@"

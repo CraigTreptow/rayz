@@ -136,6 +136,32 @@ cd crystal
 crystal tool format .     # Format all Crystal source files in place
 ```
 
+### Rust Setup
+```bash
+cd rust
+mise install      # Install Rust 1.96.0 from root mise.toml
+```
+
+### Rust Running
+```bash
+cd rust
+./examples/run              # Run all chapters (1-17)
+./examples/run 7            # Run only chapter 7
+```
+
+### Rust Testing
+```bash
+cd rust
+cargo test    # Run all 14 unit tests
+```
+
+### Rust Code Quality
+```bash
+cd rust
+cargo clippy -- -D warnings    # Lint
+cargo fmt                       # Format
+```
+
 ### Cross-Language Benchmark
 ```bash
 ./benchmark/run.sh              # Run full benchmark across all languages
@@ -335,6 +361,9 @@ open performance_results.html                 # View graphs in browser
 - `/crystal/src/` - Crystal port of the ray tracer library
 - `/crystal/examples/` - Chapter demonstration scripts for Crystal
 - `/crystal/spec/` - Crystal spec tests (31 spec files)
+- `/rust/src/` - Rust port of the ray tracer library (index-based scene graph, enum dispatch, rayon)
+- `/rust/src/bin/` - Rust binaries: `run.rs` (chapter runner) and `scene.rs` (benchmark binary)
+- `/rust/examples/` - Chapter runner script for Rust
 - `/benchmark/` - Cross-language benchmark runner (`run.sh`) and results; auto-discovers languages via `<lang>/benchmark/variants.conf`
 - `/book/` - Reference book in epub format
 
@@ -426,6 +455,20 @@ Full port of the Ruby implementation to Crystal. Chapters 1-17 all implemented p
 - **No GIL**: Crystal has true thread parallelism, similar to JRuby
 - **Compiled**: `crystal build` produces a native binary for maximum performance
 - **Location**: `crystal/` directory; runner at `crystal/examples/run`
+
+### Rust Implementation - ✅ Complete
+Full port of the Ruby implementation to Rust 1.96.0. Chapters 1-17 all implemented. Key differences from Ruby:
+
+- **Testing**: Uses Rust's built-in `cargo test`; 14 unit tests in `rust/src/`
+- **Parallelism**: `rayon` crate for data-parallel row rendering; `RAYON_NUM_THREADS=1` for sequential variant
+- **No GIL, no GC**: Rust's ownership system ensures memory safety without a garbage collector
+- **Performance**: ~10-15× faster than Crystal (single-threaded), ~1–1.2M px/s at benchmark sizes
+- **Index-based scene graph**: `parent_id: Option<usize>` instead of parent pointers to satisfy Rust ownership
+- **Enum dispatch**: `Geometry` enum covers all shapes (Sphere, Plane, Cube, Cylinder, Cone, Triangle, SmoothTriangle, Group, CSG) — no vtable overhead
+- **Hand-rolled Matrix4**: `[f64; 16]` flat array with Gauss-Jordan inverse; no `nalgebra` dependency
+- **Location**: `rust/` directory; runner at `rust/examples/run`
+- **Benchmark**: `rust/benchmark/` with `parallel` and `sequential` variants; auto-discovered by `benchmark/run.sh`
+- **PPM convention**: rows height-1 downto 0, columns width-1 downto 0 (matches Ruby/Crystal convention)
 
 ### Assertions and Testing
 - Use Minitest assertions (`assert`, `assert_equal`, `assert_in_delta`, `assert_nil`, `refute_nil`) not RSpec's `expect`
