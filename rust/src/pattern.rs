@@ -78,7 +78,11 @@ impl Pattern {
         match self {
             Pattern::Solid(c) => *c,
             Pattern::Stripe(d) => {
-                if p.x.floor() as i64 % 2 == 0 { d.a } else { d.b }
+                if p.x.floor() as i64 % 2 == 0 {
+                    d.a
+                } else {
+                    d.b
+                }
             }
             Pattern::Gradient(d) => {
                 let fraction = p.x - p.x.floor();
@@ -86,11 +90,19 @@ impl Pattern {
             }
             Pattern::Ring(d) => {
                 let dist = (p.x * p.x + p.z * p.z).sqrt();
-                if dist.floor() as i64 % 2 == 0 { d.a } else { d.b }
+                if dist.floor() as i64 % 2 == 0 {
+                    d.a
+                } else {
+                    d.b
+                }
             }
             Pattern::Checkers(d) => {
                 let sum = p.x.floor() as i64 + p.y.floor() as i64 + p.z.floor() as i64;
-                if sum % 2 == 0 { d.a } else { d.b }
+                if sum % 2 == 0 {
+                    d.a
+                } else {
+                    d.b
+                }
             }
             Pattern::Test(_) => Color::new(p.x, p.y, p.z),
         }

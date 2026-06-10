@@ -13,6 +13,7 @@ pub mod pattern;
 pub mod point;
 pub mod ray;
 pub mod shape;
+pub mod torus;
 pub mod transformations;
 pub mod util;
 pub mod vector;

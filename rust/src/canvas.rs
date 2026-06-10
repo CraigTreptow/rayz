@@ -37,7 +37,13 @@ impl Canvas {
                 parts.push(scale(c.g));
                 parts.push(scale(c.b));
             }
-            out.push_str(&parts.iter().map(|v| v.to_string()).collect::<Vec<_>>().join(" "));
+            out.push_str(
+                &parts
+                    .iter()
+                    .map(|v| v.to_string())
+                    .collect::<Vec<_>>()
+                    .join(" "),
+            );
             out.push('\n');
         }
         out.push('\n');

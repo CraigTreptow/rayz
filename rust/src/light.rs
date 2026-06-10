@@ -36,10 +36,20 @@ pub enum Light {
 
 impl Light {
     pub fn point(position: Point, intensity: Color) -> Self {
-        Light::Point(PointLight { position, intensity })
+        Light::Point(PointLight {
+            position,
+            intensity,
+        })
     }
 
-    pub fn area(corner: Point, full_uvec: Vector, usteps: usize, full_vvec: Vector, vsteps: usize, intensity: Color) -> Self {
+    pub fn area(
+        corner: Point,
+        full_uvec: Vector,
+        usteps: usize,
+        full_vvec: Vector,
+        vsteps: usize,
+        intensity: Color,
+    ) -> Self {
         Light::Area(AreaLight {
             corner,
             uvec: full_uvec / usteps as f64,
@@ -50,8 +60,20 @@ impl Light {
         })
     }
 
-    pub fn spot(position: Point, direction: Vector, cone_angle: f64, fade_angle: f64, intensity: Color) -> Self {
-        Light::Spot(Spotlight { position, direction, cone_angle, fade_angle, intensity })
+    pub fn spot(
+        position: Point,
+        direction: Vector,
+        cone_angle: f64,
+        fade_angle: f64,
+        intensity: Color,
+    ) -> Self {
+        Light::Spot(Spotlight {
+            position,
+            direction,
+            cone_angle,
+            fade_angle,
+            intensity,
+        })
     }
 
     pub fn intensity_color(&self) -> Color {

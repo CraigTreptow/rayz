@@ -8,7 +8,7 @@ use rayon::prelude::*;
 use std::cell::Cell;
 
 thread_local! {
-    static RNG_STATE: Cell<u64> = Cell::new(0x853c49e6748fea9b);
+    static RNG_STATE: Cell<u64> = const { Cell::new(0x853c49e6748fea9b) };
 }
 
 fn rand_f64() -> f64 {
@@ -75,18 +75,32 @@ impl Camera {
         self.pixel_size = (self.half_width * 2.0) / self.hsize as f64;
     }
 
-    fn ray_for_pixel(&self, px: usize, py: usize, px_off: f64, py_off: f64, ap_x: f64, ap_y: f64, time: f64) -> Ray {
+    #[allow(clippy::too_many_arguments)]
+    fn ray_for_pixel(
+        &self,
+        px: usize,
+        py: usize,
+        px_off: f64,
+        py_off: f64,
+        ap_x: f64,
+        ap_y: f64,
+        time: f64,
+    ) -> Ray {
         let xoffset = (px as f64 + px_off) * self.pixel_size;
         let yoffset = (py as f64 + py_off) * self.pixel_size;
         let world_x = self.half_width - xoffset;
         let world_y = self.half_height - yoffset;
 
         let canvas_z = -self.focal_distance;
-        let pixel = self.transform_inverse.mul_point(Point::new(world_x, world_y, canvas_z));
+        let pixel = self
+            .transform_inverse
+            .mul_point(Point::new(world_x, world_y, canvas_z));
 
         let aperture_x = ap_x * self.aperture_size;
         let aperture_y = ap_y * self.aperture_size;
-        let origin = self.transform_inverse.mul_point(Point::new(aperture_x, aperture_y, 0.0));
+        let origin = self
+            .transform_inverse
+            .mul_point(Point::new(aperture_x, aperture_y, 0.0));
 
         let direction = (pixel - origin).normalize();
         Ray::new_at_time(origin, direction, time)

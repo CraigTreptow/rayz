@@ -45,8 +45,16 @@ impl Bounds {
 
     pub fn add_point(self, p: Point) -> Bounds {
         Bounds {
-            min: Point::new(self.min.x.min(p.x), self.min.y.min(p.y), self.min.z.min(p.z)),
-            max: Point::new(self.max.x.max(p.x), self.max.y.max(p.y), self.max.z.max(p.z)),
+            min: Point::new(
+                self.min.x.min(p.x),
+                self.min.y.min(p.y),
+                self.min.z.min(p.z),
+            ),
+            max: Point::new(
+                self.max.x.max(p.x),
+                self.max.y.max(p.y),
+                self.max.z.max(p.z),
+            ),
         }
     }
 
@@ -62,13 +70,19 @@ impl Bounds {
             Point::new(self.max.x, self.max.y, self.min.z),
             Point::new(self.max.x, self.max.y, self.max.z),
         ];
-        corners.iter().map(|&p| m.mul_point(p)).fold(Bounds::empty(), |b, p| b.add_point(p))
+        corners
+            .iter()
+            .map(|&p| m.mul_point(p))
+            .fold(Bounds::empty(), |b, p| b.add_point(p))
     }
 
     pub fn contains_point(&self, p: Point) -> bool {
-        p.x >= self.min.x && p.x <= self.max.x
-            && p.y >= self.min.y && p.y <= self.max.y
-            && p.z >= self.min.z && p.z <= self.max.z
+        p.x >= self.min.x
+            && p.x <= self.max.x
+            && p.y >= self.min.y
+            && p.y <= self.max.y
+            && p.z >= self.min.z
+            && p.z <= self.max.z
     }
 
     pub fn contains_bounds(&self, other: &Bounds) -> bool {
@@ -124,5 +138,9 @@ fn check_axis(origin: f64, direction: f64, min: f64, max: f64) -> (f64, f64) {
         (tmin_num * f64::INFINITY, tmax_num * f64::INFINITY)
     };
 
-    if tmin > tmax { (tmax, tmin) } else { (tmin, tmax) }
+    if tmin > tmax {
+        (tmax, tmin)
+    } else {
+        (tmin, tmax)
+    }
 }

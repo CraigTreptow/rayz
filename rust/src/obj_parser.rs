@@ -23,16 +23,16 @@ impl ObjParser {
     fn parse_lines(&mut self, input: &str) {
         for line in input.lines() {
             let line = line.trim();
-            if line.starts_with("v ") {
-                let parts: Vec<f64> = line[2..]
+            if let Some(rest) = line.strip_prefix("v ") {
+                let parts: Vec<f64> = rest
                     .split_whitespace()
                     .filter_map(|s| s.parse().ok())
                     .collect();
                 if parts.len() >= 3 {
                     self.vertices.push(Point::new(parts[0], parts[1], parts[2]));
                 }
-            } else if line.starts_with("vn ") {
-                let parts: Vec<f64> = line[3..]
+            } else if let Some(rest) = line.strip_prefix("vn ") {
+                let parts: Vec<f64> = rest
                     .split_whitespace()
                     .filter_map(|s| s.parse().ok())
                     .collect();
@@ -55,16 +55,16 @@ impl ObjParser {
 
         for line in input.lines() {
             let line = line.trim();
-            if line.starts_with("v ") {
-                let parts: Vec<f64> = line[2..]
+            if let Some(rest) = line.strip_prefix("v ") {
+                let parts: Vec<f64> = rest
                     .split_whitespace()
                     .filter_map(|s| s.parse().ok())
                     .collect();
                 if parts.len() >= 3 {
                     vertices.push(Point::new(parts[0], parts[1], parts[2]));
                 }
-            } else if line.starts_with("vn ") {
-                let parts: Vec<f64> = line[3..]
+            } else if let Some(rest) = line.strip_prefix("vn ") {
+                let parts: Vec<f64> = rest
                     .split_whitespace()
                     .filter_map(|s| s.parse().ok())
                     .collect();
@@ -78,10 +78,14 @@ impl ObjParser {
 
         for line in input.lines() {
             let line = line.trim();
-            if !line.starts_with("f ") { continue; }
+            if !line.starts_with("f ") {
+                continue;
+            }
 
             let face_tokens: Vec<&str> = line[2..].split_whitespace().collect();
-            if face_tokens.len() < 3 { continue; }
+            if face_tokens.len() < 3 {
+                continue;
+            }
 
             let indices: Vec<(usize, Option<usize>)> = face_tokens
                 .iter()
@@ -100,8 +104,12 @@ impl ObjParser {
 
                 let tri = match (ni0, ni1, ni2) {
                     (Some(n0), Some(n1), Some(n2)) => ShapeNode::smooth_triangle(
-                        p1, p2, p3,
-                        normals[n0], normals[n1], normals[n2],
+                        p1,
+                        p2,
+                        p3,
+                        normals[n0],
+                        normals[n1],
+                        normals[n2],
                     ),
                     _ => ShapeNode::triangle(p1, p2, p3),
                 };
@@ -116,6 +124,10 @@ impl ObjParser {
 fn parse_face_token(tok: &str) -> Option<(usize, Option<usize>)> {
     let parts: Vec<&str> = tok.split('/').collect();
     let vi = parts[0].parse::<usize>().ok()?;
-    let ni = if parts.len() >= 3 { parts[2].parse::<usize>().ok() } else { None };
+    let ni = if parts.len() >= 3 {
+        parts[2].parse::<usize>().ok()
+    } else {
+        None
+    };
     Some((vi, ni))
 }

@@ -11,11 +11,19 @@ pub struct Ray {
 
 impl Ray {
     pub fn new(origin: Point, direction: Vector) -> Self {
-        Ray { origin, direction, time: 0.0 }
+        Ray {
+            origin,
+            direction,
+            time: 0.0,
+        }
     }
 
     pub fn new_at_time(origin: Point, direction: Vector, time: f64) -> Self {
-        Ray { origin, direction, time }
+        Ray {
+            origin,
+            direction,
+            time,
+        }
     }
 
     pub fn position(&self, t: f64) -> Point {

@@ -10,8 +10,14 @@ fn main() {
     let mut i = 1;
     while i < args.len() {
         match args[i].as_str() {
-            "--scene" => { i += 1; scene_name = args[i].clone(); }
-            "--output" => { i += 1; output_path = args[i].clone(); }
+            "--scene" => {
+                i += 1;
+                scene_name = args[i].clone();
+            }
+            "--output" => {
+                i += 1;
+                output_path = args[i].clone();
+            }
             _ => {}
         }
         i += 1;
@@ -27,17 +33,23 @@ fn main() {
 
     let (width, height) = if dev_mode {
         match scene_name.as_str() {
-            "small"  => (40, 20),
+            "small" => (40, 20),
             "medium" => (60, 30),
-            "large"  => (100, 50),
-            _ => { eprintln!("Unknown scene: {scene_name}"); std::process::exit(1); }
+            "large" => (100, 50),
+            _ => {
+                eprintln!("Unknown scene: {scene_name}");
+                std::process::exit(1);
+            }
         }
     } else {
         match scene_name.as_str() {
-            "small"  => (400, 200),
+            "small" => (400, 200),
             "medium" => (600, 300),
-            "large"  => (800, 400),
-            _ => { eprintln!("Unknown scene: {scene_name}"); std::process::exit(1); }
+            "large" => (800, 400),
+            _ => {
+                eprintln!("Unknown scene: {scene_name}");
+                std::process::exit(1);
+            }
         }
     };
 
@@ -70,10 +82,7 @@ fn main() {
 
 fn build_scene() -> World {
     let mut world = World::new();
-    world.light = Some(Light::point(
-        Point::new(-10.0, 10.0, -10.0),
-        Color::WHITE,
-    ));
+    world.light = Some(Light::point(Point::new(-10.0, 10.0, -10.0), Color::WHITE));
 
     // Checkers floor
     let floor_id = world.add(ShapeNode::plane());
@@ -126,7 +135,12 @@ fn build_scene() -> World {
     // Green closed cylinder
     let cyl_id = world.add({
         let mut cyl = ShapeNode::cylinder();
-        if let Geometry::Cylinder { ref mut minimum, ref mut maximum, ref mut closed } = cyl.geometry {
+        if let Geometry::Cylinder {
+            ref mut minimum,
+            ref mut maximum,
+            ref mut closed,
+        } = cyl.geometry
+        {
             *minimum = 0.0;
             *maximum = 2.0;
             *closed = true;

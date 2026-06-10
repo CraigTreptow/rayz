@@ -16,10 +16,7 @@ impl Matrix4 {
     pub fn identity() -> Self {
         Matrix4 {
             data: [
-                1.0, 0.0, 0.0, 0.0,
-                0.0, 1.0, 0.0, 0.0,
-                0.0, 0.0, 1.0, 0.0,
-                0.0, 0.0, 0.0, 1.0,
+                1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0,
             ],
         }
     }
@@ -39,10 +36,8 @@ impl Matrix4 {
     pub fn transpose(&self) -> Self {
         let d = &self.data;
         Matrix4::new([
-            d[0], d[4], d[8],  d[12],
-            d[1], d[5], d[9],  d[13],
-            d[2], d[6], d[10], d[14],
-            d[3], d[7], d[11], d[15],
+            d[0], d[4], d[8], d[12], d[1], d[5], d[9], d[13], d[2], d[6], d[10], d[14], d[3], d[7],
+            d[11], d[15],
         ])
     }
 
@@ -68,8 +63,8 @@ impl Matrix4 {
     pub fn inverse(&self) -> Self {
         let mut aug = [[0.0f64; 8]; 4];
         for row in 0..4 {
-            for col in 0..4 {
-                aug[row][col] = self.data[row * 4 + col];
+            for (col, item) in aug[row][..4].iter_mut().enumerate() {
+                *item = self.data[row * 4 + col];
             }
             aug[row][4 + row] = 1.0;
         }
@@ -77,22 +72,21 @@ impl Matrix4 {
         for col in 0..4 {
             // Partial pivot
             let pivot_row = (col..4)
-                .max_by(|&a, &b| {
-                    aug[a][col].abs().partial_cmp(&aug[b][col].abs()).unwrap()
-                })
+                .max_by(|&a, &b| aug[a][col].abs().partial_cmp(&aug[b][col].abs()).unwrap())
                 .unwrap();
             aug.swap(col, pivot_row);
 
             let pivot = aug[col][col];
-            for j in 0..8 {
-                aug[col][j] /= pivot;
+            for item in aug[col].iter_mut() {
+                *item /= pivot;
             }
 
             for row in 0..4 {
                 if row != col {
                     let factor = aug[row][col];
-                    for j in 0..8 {
-                        aug[row][j] -= factor * aug[col][j];
+                    let pivot_row = aug[col]; // copy (f64 is Copy)
+                    for (item, pv) in aug[row].iter_mut().zip(pivot_row.iter()) {
+                        *item -= factor * pv;
                     }
                 }
             }
@@ -110,7 +104,10 @@ impl Matrix4 {
 
 impl PartialEq for Matrix4 {
     fn eq(&self, other: &Self) -> bool {
-        self.data.iter().zip(other.data.iter()).all(|(a, b)| approx_eq(*a, *b))
+        self.data
+            .iter()
+            .zip(other.data.iter())
+            .all(|(a, b)| approx_eq(*a, *b))
     }
 }
 
@@ -122,11 +119,10 @@ impl std::ops::Mul for Matrix4 {
         let mut r = [0.0f64; 16];
         for row in 0..4 {
             for col in 0..4 {
-                r[row * 4 + col] =
-                    a[row * 4 + 0] * b[0 * 4 + col]
-                    + a[row * 4 + 1] * b[1 * 4 + col]
-                    + a[row * 4 + 2] * b[2 * 4 + col]
-                    + a[row * 4 + 3] * b[3 * 4 + col];
+                r[row * 4 + col] = a[row * 4] * b[col]
+                    + a[row * 4 + 1] * b[4 + col]
+                    + a[row * 4 + 2] * b[8 + col]
+                    + a[row * 4 + 3] * b[12 + col];
             }
         }
         Matrix4 { data: r }
@@ -140,10 +136,7 @@ mod tests {
     #[test]
     fn multiply_identity() {
         let m = Matrix4::new([
-            1.0, 2.0, 3.0, 4.0,
-            5.0, 6.0, 7.0, 8.0,
-            9.0, 8.0, 7.0, 6.0,
-            5.0, 4.0, 3.0, 2.0,
+            1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 8.0, 7.0, 6.0, 5.0, 4.0, 3.0, 2.0,
         ]);
         assert_eq!(m * Matrix4::identity(), m);
     }
@@ -156,10 +149,7 @@ mod tests {
     #[test]
     fn multiply_by_inverse() {
         let m = Matrix4::new([
-            3.0, -9.0,  7.0,  3.0,
-            3.0, -8.0,  2.0, -9.0,
-           -4.0,  4.0,  4.0,  1.0,
-           -6.0,  5.0, -1.0,  1.0,
+            3.0, -9.0, 7.0, 3.0, 3.0, -8.0, 2.0, -9.0, -4.0, 4.0, 4.0, 1.0, -6.0, 5.0, -1.0, 1.0,
         ]);
         let inv = m.inverse();
         let product = m * inv;

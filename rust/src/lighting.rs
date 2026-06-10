@@ -30,9 +30,8 @@ pub fn lighting(
     let lightv = match light {
         Light::Point(l) => (l.position - point).normalize(),
         Light::Area(l) => {
-            let center = l.corner
-                + l.uvec * (l.usteps as f64 / 2.0)
-                + l.vvec * (l.vsteps as f64 / 2.0);
+            let center =
+                l.corner + l.uvec * (l.usteps as f64 / 2.0) + l.vvec * (l.vsteps as f64 / 2.0);
             (center - point).normalize()
         }
         Light::Spot(l) => (l.position - point).normalize(),
@@ -59,13 +58,16 @@ pub fn lighting(
 }
 
 /// Compute soft-shadow intensity for area lights (0.0 fully shadowed, 1.0 fully lit).
-pub fn area_light_intensity(light: &AreaLight, point: Point, is_shadowed: impl Fn(Point, Point) -> bool) -> f64 {
+pub fn area_light_intensity(
+    light: &AreaLight,
+    point: Point,
+    is_shadowed: impl Fn(Point, Point) -> bool,
+) -> f64 {
     let mut total = 0.0;
     for v in 0..light.vsteps {
         for u in 0..light.usteps {
-            let light_pos = light.corner
-                + light.uvec * (u as f64 + 0.5)
-                + light.vvec * (v as f64 + 0.5);
+            let light_pos =
+                light.corner + light.uvec * (u as f64 + 0.5) + light.vvec * (v as f64 + 0.5);
             if !is_shadowed(point, light_pos) {
                 total += 1.0;
             }

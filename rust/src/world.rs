@@ -1,7 +1,7 @@
 use crate::color::Color;
 use crate::computations::{prepare_computations, schlick, Computations};
 use crate::intersection::{hit, Intersection};
-use crate::light::{Light};
+use crate::light::Light;
 use crate::lighting::{area_light_intensity, lighting, spot_intensity};
 use crate::point::Point;
 use crate::ray::Ray;
@@ -15,7 +15,11 @@ pub struct World {
 
 impl World {
     pub fn new() -> Self {
-        World { shapes: Vec::new(), root_ids: Vec::new(), light: None }
+        World {
+            shapes: Vec::new(),
+            root_ids: Vec::new(),
+            light: None,
+        }
     }
 
     /// Add a shape as a top-level object and return its id.
@@ -44,11 +48,16 @@ impl World {
         child_id
     }
 
-    pub fn shape(&self, id: usize) -> &ShapeNode { &self.shapes[id] }
-    pub fn shape_mut(&mut self, id: usize) -> &mut ShapeNode { &mut self.shapes[id] }
+    pub fn shape(&self, id: usize) -> &ShapeNode {
+        &self.shapes[id]
+    }
+    pub fn shape_mut(&mut self, id: usize) -> &mut ShapeNode {
+        &mut self.shapes[id]
+    }
 
     pub fn intersect(&self, ray: &Ray) -> Vec<Intersection> {
-        let mut xs: Vec<Intersection> = self.root_ids
+        let mut xs: Vec<Intersection> = self
+            .root_ids
             .iter()
             .flat_map(|&id| intersect_shape(&self.shapes, id, ray))
             .collect();
@@ -74,7 +83,11 @@ impl World {
     fn shadow_intensity(&self, point: Point) -> f64 {
         match &self.light {
             Some(Light::Point(l)) => {
-                if self.is_shadowed_from(point, l.position) { 0.0 } else { 1.0 }
+                if self.is_shadowed_from(point, l.position) {
+                    0.0
+                } else {
+                    1.0
+                }
             }
             Some(Light::Area(l)) => {
                 let l = l.clone();
@@ -90,7 +103,8 @@ impl World {
             return Color::BLACK;
         }
         let reflect_ray = Ray::new(comps.over_point, comps.reflectv);
-        self.color_at(&reflect_ray, remaining - 1) * self.shapes[comps.object_id].material.reflective
+        self.color_at(&reflect_ray, remaining - 1)
+            * self.shapes[comps.object_id].material.reflective
     }
 
     pub fn refracted_color(&self, comps: &Computations, remaining: u8) -> Color {
@@ -100,11 +114,14 @@ impl World {
         let n_ratio = comps.n1 / comps.n2;
         let cos_i = comps.eyev.dot(comps.normalv);
         let sin2_t = n_ratio * n_ratio * (1.0 - cos_i * cos_i);
-        if sin2_t > 1.0 { return Color::BLACK; }
+        if sin2_t > 1.0 {
+            return Color::BLACK;
+        }
         let cos_t = (1.0 - sin2_t).sqrt();
         let direction = comps.normalv * (n_ratio * cos_i - cos_t) - comps.eyev * n_ratio;
         let refract_ray = Ray::new(comps.under_point, direction);
-        self.color_at(&refract_ray, remaining - 1) * self.shapes[comps.object_id].material.transparency
+        self.color_at(&refract_ray, remaining - 1)
+            * self.shapes[comps.object_id].material.transparency
     }
 
     pub fn shade_hit(&self, comps: &Computations, remaining: u8) -> Color {
@@ -113,7 +130,15 @@ impl World {
         let transform_inv = &self.shapes[comps.object_id].transform_inverse;
 
         let surface = if let Some(light) = &self.light {
-            lighting(material, transform_inv, light, comps.point, comps.eyev, comps.normalv, intensity)
+            lighting(
+                material,
+                transform_inv,
+                light,
+                comps.point,
+                comps.eyev,
+                comps.normalv,
+                intensity,
+            )
         } else {
             material.color * material.ambient
         };

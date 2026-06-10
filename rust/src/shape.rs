@@ -4,6 +4,7 @@ use crate::material::Material;
 use crate::matrix::Matrix4;
 use crate::point::Point;
 use crate::ray::Ray;
+use crate::torus::solve_quartic;
 use crate::util::EPSILON;
 use crate::vector::Vector;
 
@@ -41,6 +42,10 @@ pub enum Geometry {
         n1: Vector,
         n2: Vector,
         n3: Vector,
+    },
+    Torus {
+        major_radius: f64,
+        minor_radius: f64,
     },
     Group {
         children: Vec<usize>,
@@ -84,9 +89,15 @@ impl ShapeNode {
         }
     }
 
-    pub fn sphere() -> Self { Self::with_geometry(Geometry::Sphere) }
-    pub fn plane() -> Self { Self::with_geometry(Geometry::Plane) }
-    pub fn cube() -> Self { Self::with_geometry(Geometry::Cube) }
+    pub fn sphere() -> Self {
+        Self::with_geometry(Geometry::Sphere)
+    }
+    pub fn plane() -> Self {
+        Self::with_geometry(Geometry::Plane)
+    }
+    pub fn cube() -> Self {
+        Self::with_geometry(Geometry::Cube)
+    }
 
     pub fn cylinder() -> Self {
         Self::with_geometry(Geometry::Cylinder {
@@ -97,11 +108,19 @@ impl ShapeNode {
     }
 
     pub fn cylinder_truncated(min: f64, max: f64) -> Self {
-        Self::with_geometry(Geometry::Cylinder { minimum: min, maximum: max, closed: false })
+        Self::with_geometry(Geometry::Cylinder {
+            minimum: min,
+            maximum: max,
+            closed: false,
+        })
     }
 
     pub fn cylinder_closed(min: f64, max: f64) -> Self {
-        Self::with_geometry(Geometry::Cylinder { minimum: min, maximum: max, closed: true })
+        Self::with_geometry(Geometry::Cylinder {
+            minimum: min,
+            maximum: max,
+            closed: true,
+        })
     }
 
     pub fn cone() -> Self {
@@ -113,11 +132,19 @@ impl ShapeNode {
     }
 
     pub fn cone_truncated(min: f64, max: f64) -> Self {
-        Self::with_geometry(Geometry::Cone { minimum: min, maximum: max, closed: false })
+        Self::with_geometry(Geometry::Cone {
+            minimum: min,
+            maximum: max,
+            closed: false,
+        })
     }
 
     pub fn cone_closed(min: f64, max: f64) -> Self {
-        Self::with_geometry(Geometry::Cone { minimum: min, maximum: max, closed: true })
+        Self::with_geometry(Geometry::Cone {
+            minimum: min,
+            maximum: max,
+            closed: true,
+        })
     }
 
     pub fn csg_union(left: usize, right: usize) -> Self {
@@ -136,21 +163,57 @@ impl ShapeNode {
         let e1 = p2 - p1;
         let e2 = p3 - p1;
         let normal = e2.cross(e1).normalize();
-        Self::with_geometry(Geometry::Triangle { p1, p2, p3, e1, e2, normal })
+        Self::with_geometry(Geometry::Triangle {
+            p1,
+            p2,
+            p3,
+            e1,
+            e2,
+            normal,
+        })
     }
 
-    pub fn smooth_triangle(p1: Point, p2: Point, p3: Point, n1: Vector, n2: Vector, n3: Vector) -> Self {
+    pub fn smooth_triangle(
+        p1: Point,
+        p2: Point,
+        p3: Point,
+        n1: Vector,
+        n2: Vector,
+        n3: Vector,
+    ) -> Self {
         let e1 = p2 - p1;
         let e2 = p3 - p1;
-        Self::with_geometry(Geometry::SmoothTriangle { p1, p2, p3, e1, e2, n1, n2, n3 })
+        Self::with_geometry(Geometry::SmoothTriangle {
+            p1,
+            p2,
+            p3,
+            e1,
+            e2,
+            n1,
+            n2,
+            n3,
+        })
     }
 
     pub fn group() -> Self {
-        Self::with_geometry(Geometry::Group { children: Vec::new() })
+        Self::with_geometry(Geometry::Group {
+            children: Vec::new(),
+        })
     }
 
     pub fn csg(operation: CsgOperation, left: usize, right: usize) -> Self {
-        Self::with_geometry(Geometry::Csg { operation, left, right })
+        Self::with_geometry(Geometry::Csg {
+            operation,
+            left,
+            right,
+        })
+    }
+
+    pub fn torus(major_radius: f64, minor_radius: f64) -> Self {
+        Self::with_geometry(Geometry::Torus {
+            major_radius,
+            minor_radius,
+        })
     }
 
     pub fn glass_sphere() -> Self {
@@ -182,19 +245,33 @@ fn local_bounds_for(geom: &Geometry) -> Bounds {
             Point::new(f64::INFINITY, 0.0, f64::INFINITY),
         ),
         Geometry::Cube => Bounds::unit(),
-        Geometry::Cylinder { minimum, maximum, .. } => Bounds::new(
+        Geometry::Cylinder {
+            minimum, maximum, ..
+        } => Bounds::new(
             Point::new(-1.0, *minimum, -1.0),
             Point::new(1.0, *maximum, 1.0),
         ),
-        Geometry::Cone { minimum, maximum, .. } => {
+        Geometry::Cone {
+            minimum, maximum, ..
+        } => {
             let limit = minimum.abs().max(maximum.abs());
-            Bounds::new(Point::new(-limit, *minimum, -limit), Point::new(limit, *maximum, limit))
+            Bounds::new(
+                Point::new(-limit, *minimum, -limit),
+                Point::new(limit, *maximum, limit),
+            )
         }
         Geometry::Triangle { p1, p2, p3, .. } | Geometry::SmoothTriangle { p1, p2, p3, .. } => {
-            Bounds::empty()
-                .add_point(*p1)
-                .add_point(*p2)
-                .add_point(*p3)
+            Bounds::empty().add_point(*p1).add_point(*p2).add_point(*p3)
+        }
+        Geometry::Torus {
+            major_radius,
+            minor_radius,
+        } => {
+            let e = major_radius + minor_radius;
+            Bounds::new(
+                Point::new(-e, -*minor_radius, -e),
+                Point::new(e, *minor_radius, e),
+            )
         }
         Geometry::Group { .. } | Geometry::Csg { .. } => Bounds::empty(),
     }
@@ -206,7 +283,9 @@ fn local_intersect_sphere(ray: &Ray, id: usize) -> Vec<Intersection> {
     let b = 2.0 * ray.direction.dot(sphere_to_ray);
     let c = sphere_to_ray.dot(sphere_to_ray) - 1.0;
     let disc = b * b - 4.0 * a * c;
-    if disc < 0.0 { return vec![]; }
+    if disc < 0.0 {
+        return vec![];
+    }
     let sqrt_d = disc.sqrt();
     vec![
         Intersection::new((-b - sqrt_d) / (2.0 * a), id),
@@ -215,7 +294,9 @@ fn local_intersect_sphere(ray: &Ray, id: usize) -> Vec<Intersection> {
 }
 
 fn local_intersect_plane(ray: &Ray, id: usize) -> Vec<Intersection> {
-    if ray.direction.y.abs() < EPSILON { return vec![]; }
+    if ray.direction.y.abs() < EPSILON {
+        return vec![];
+    }
     vec![Intersection::new(-ray.origin.y / ray.direction.y, id)]
 }
 
@@ -225,17 +306,29 @@ fn local_intersect_cube(ray: &Ray, id: usize) -> Vec<Intersection> {
     let (ztmin, ztmax) = check_axis(ray.origin.z, ray.direction.z);
     let tmin = xtmin.max(ytmin).max(ztmin);
     let tmax = xtmax.min(ytmax).min(ztmax);
-    if tmin > tmax { return vec![]; }
+    if tmin > tmax {
+        return vec![];
+    }
     vec![Intersection::new(tmin, id), Intersection::new(tmax, id)]
 }
 
 fn check_axis(origin: f64, direction: f64) -> (f64, f64) {
     let tmin = (-1.0 - origin) / direction;
     let tmax = (1.0 - origin) / direction;
-    if tmin > tmax { (tmax, tmin) } else { (tmin, tmax) }
+    if tmin > tmax {
+        (tmax, tmin)
+    } else {
+        (tmin, tmax)
+    }
 }
 
-fn local_intersect_cylinder(ray: &Ray, id: usize, minimum: f64, maximum: f64, closed: bool) -> Vec<Intersection> {
+fn local_intersect_cylinder(
+    ray: &Ray,
+    id: usize,
+    minimum: f64,
+    maximum: f64,
+    closed: bool,
+) -> Vec<Intersection> {
     let a = ray.direction.x * ray.direction.x + ray.direction.z * ray.direction.z;
     let mut xs = Vec::new();
 
@@ -243,14 +336,22 @@ fn local_intersect_cylinder(ray: &Ray, id: usize, minimum: f64, maximum: f64, cl
         let b = 2.0 * ray.origin.x * ray.direction.x + 2.0 * ray.origin.z * ray.direction.z;
         let c = ray.origin.x * ray.origin.x + ray.origin.z * ray.origin.z - 1.0;
         let disc = b * b - 4.0 * a * c;
-        if disc < 0.0 { return vec![]; }
+        if disc < 0.0 {
+            return vec![];
+        }
         let sqrt_d = disc.sqrt();
         let (mut t0, mut t1) = ((-b - sqrt_d) / (2.0 * a), (-b + sqrt_d) / (2.0 * a));
-        if t0 > t1 { std::mem::swap(&mut t0, &mut t1); }
+        if t0 > t1 {
+            std::mem::swap(&mut t0, &mut t1);
+        }
         let y0 = ray.origin.y + t0 * ray.direction.y;
-        if minimum < y0 && y0 < maximum { xs.push(Intersection::new(t0, id)); }
+        if minimum < y0 && y0 < maximum {
+            xs.push(Intersection::new(t0, id));
+        }
         let y1 = ray.origin.y + t1 * ray.direction.y;
-        if minimum < y1 && y1 < maximum { xs.push(Intersection::new(t1, id)); }
+        if minimum < y1 && y1 < maximum {
+            xs.push(Intersection::new(t1, id));
+        }
     }
     intersect_caps_cylinder(ray, id, minimum, maximum, closed, &mut xs);
     xs
@@ -262,33 +363,64 @@ fn cap_hit(ray: &Ray, t: f64) -> bool {
     x * x + z * z <= 1.0
 }
 
-fn intersect_caps_cylinder(ray: &Ray, id: usize, minimum: f64, maximum: f64, closed: bool, xs: &mut Vec<Intersection>) {
-    if !closed || ray.direction.y.abs() < EPSILON { return; }
+fn intersect_caps_cylinder(
+    ray: &Ray,
+    id: usize,
+    minimum: f64,
+    maximum: f64,
+    closed: bool,
+    xs: &mut Vec<Intersection>,
+) {
+    if !closed || ray.direction.y.abs() < EPSILON {
+        return;
+    }
     let t = (minimum - ray.origin.y) / ray.direction.y;
-    if cap_hit(ray, t) { xs.push(Intersection::new(t, id)); }
+    if cap_hit(ray, t) {
+        xs.push(Intersection::new(t, id));
+    }
     let t = (maximum - ray.origin.y) / ray.direction.y;
-    if cap_hit(ray, t) { xs.push(Intersection::new(t, id)); }
+    if cap_hit(ray, t) {
+        xs.push(Intersection::new(t, id));
+    }
 }
 
-fn local_intersect_cone(ray: &Ray, id: usize, minimum: f64, maximum: f64, closed: bool) -> Vec<Intersection> {
-    let a = ray.direction.x * ray.direction.x - ray.direction.y * ray.direction.y + ray.direction.z * ray.direction.z;
-    let b = 2.0 * ray.origin.x * ray.direction.x - 2.0 * ray.origin.y * ray.direction.y + 2.0 * ray.origin.z * ray.direction.z;
+fn local_intersect_cone(
+    ray: &Ray,
+    id: usize,
+    minimum: f64,
+    maximum: f64,
+    closed: bool,
+) -> Vec<Intersection> {
+    let a = ray.direction.x * ray.direction.x - ray.direction.y * ray.direction.y
+        + ray.direction.z * ray.direction.z;
+    let b = 2.0 * ray.origin.x * ray.direction.x - 2.0 * ray.origin.y * ray.direction.y
+        + 2.0 * ray.origin.z * ray.direction.z;
     let c = ray.origin.x * ray.origin.x - ray.origin.y * ray.origin.y + ray.origin.z * ray.origin.z;
     let mut xs = Vec::new();
 
     if a.abs() < EPSILON {
-        if b.abs() < EPSILON { return vec![]; }
+        if b.abs() < EPSILON {
+            return vec![];
+        }
         xs.push(Intersection::new(-c / (2.0 * b), id));
     } else {
         let disc = b * b - 4.0 * a * c;
-        if disc < 0.0 { return vec![]; }
+        if disc < 0.0 {
+            return vec![];
+        }
         let sqrt_d = disc.sqrt();
         let (mut t0, mut t1) = ((-b - sqrt_d) / (2.0 * a), (-b + sqrt_d) / (2.0 * a));
-        if t0 > t1 { std::mem::swap(&mut t0, &mut t1); }
+        if t0 > t1 {
+            std::mem::swap(&mut t0, &mut t1);
+        }
         let y0 = ray.origin.y + t0 * ray.direction.y;
-        if minimum < y0 && y0 < maximum { xs.push(Intersection::new(t0, id)); }
+        if minimum < y0 && y0 < maximum {
+            xs.push(Intersection::new(t0, id));
+        }
         let y1 = ray.origin.y + t1 * ray.direction.y;
-        if minimum < y1 && y1 < maximum { xs.push(Intersection::new(t1, id)); }
+        if minimum < y1 && y1 < maximum {
+            xs.push(Intersection::new(t1, id));
+        }
     }
     intersect_caps_cone(ray, id, minimum, maximum, closed, &mut xs);
     xs
@@ -300,42 +432,111 @@ fn cone_cap_hit(ray: &Ray, t: f64, y: f64) -> bool {
     x * x + z * z <= y * y
 }
 
-fn intersect_caps_cone(ray: &Ray, id: usize, minimum: f64, maximum: f64, closed: bool, xs: &mut Vec<Intersection>) {
-    if !closed || ray.direction.y.abs() < EPSILON { return; }
+fn intersect_caps_cone(
+    ray: &Ray,
+    id: usize,
+    minimum: f64,
+    maximum: f64,
+    closed: bool,
+    xs: &mut Vec<Intersection>,
+) {
+    if !closed || ray.direction.y.abs() < EPSILON {
+        return;
+    }
     let t = (minimum - ray.origin.y) / ray.direction.y;
-    if cone_cap_hit(ray, t, minimum) { xs.push(Intersection::new(t, id)); }
+    if cone_cap_hit(ray, t, minimum) {
+        xs.push(Intersection::new(t, id));
+    }
     let t = (maximum - ray.origin.y) / ray.direction.y;
-    if cone_cap_hit(ray, t, maximum) { xs.push(Intersection::new(t, id)); }
+    if cone_cap_hit(ray, t, maximum) {
+        xs.push(Intersection::new(t, id));
+    }
 }
 
-fn local_intersect_triangle(ray: &Ray, id: usize, p1: Point, e1: Vector, e2: Vector, _normal: Vector) -> Vec<Intersection> {
+fn local_intersect_triangle(
+    ray: &Ray,
+    id: usize,
+    p1: Point,
+    e1: Vector,
+    e2: Vector,
+    _normal: Vector,
+) -> Vec<Intersection> {
     let dir_cross_e2 = ray.direction.cross(e2);
     let det = e1.dot(dir_cross_e2);
-    if det.abs() < EPSILON { return vec![]; }
+    if det.abs() < EPSILON {
+        return vec![];
+    }
     let f = 1.0 / det;
     let p1_to_origin = ray.origin - p1;
     let u = f * p1_to_origin.dot(dir_cross_e2);
-    if u < 0.0 || u > 1.0 { return vec![]; }
+    if !(0.0..=1.0).contains(&u) {
+        return vec![];
+    }
     let origin_cross_e1 = p1_to_origin.cross(e1);
     let v = f * ray.direction.dot(origin_cross_e1);
-    if v < 0.0 || (u + v) > 1.0 { return vec![]; }
+    if v < 0.0 || (u + v) > 1.0 {
+        return vec![];
+    }
     let t = f * e2.dot(origin_cross_e1);
     vec![Intersection::new(t, id)]
 }
 
-fn local_intersect_smooth_triangle(ray: &Ray, id: usize, p1: Point, e1: Vector, e2: Vector) -> Vec<Intersection> {
+fn local_intersect_smooth_triangle(
+    ray: &Ray,
+    id: usize,
+    p1: Point,
+    e1: Vector,
+    e2: Vector,
+) -> Vec<Intersection> {
     let dir_cross_e2 = ray.direction.cross(e2);
     let det = e1.dot(dir_cross_e2);
-    if det.abs() < EPSILON { return vec![]; }
+    if det.abs() < EPSILON {
+        return vec![];
+    }
     let f = 1.0 / det;
     let p1_to_origin = ray.origin - p1;
     let u = f * p1_to_origin.dot(dir_cross_e2);
-    if u < 0.0 || u > 1.0 { return vec![]; }
+    if !(0.0..=1.0).contains(&u) {
+        return vec![];
+    }
     let origin_cross_e1 = p1_to_origin.cross(e1);
     let v = f * ray.direction.dot(origin_cross_e1);
-    if v < 0.0 || (u + v) > 1.0 { return vec![]; }
+    if v < 0.0 || (u + v) > 1.0 {
+        return vec![];
+    }
     let t = f * e2.dot(origin_cross_e1);
     vec![Intersection::with_uv(t, id, u, v)]
+}
+
+fn local_intersect_torus(
+    ray: &Ray,
+    id: usize,
+    major_radius: f64,
+    minor_radius: f64,
+) -> Vec<Intersection> {
+    let ox = ray.origin.x;
+    let oy = ray.origin.y;
+    let oz = ray.origin.z;
+    let dx = ray.direction.x;
+    let dy = ray.direction.y;
+    let dz = ray.direction.z;
+
+    let sum_d_sqr = dx * dx + dy * dy + dz * dz;
+    let e = ox * ox + oy * oy + oz * oz - major_radius * major_radius - minor_radius * minor_radius;
+    let f = ox * dx + oy * dy + oz * dz;
+    let four_a_sqr = 4.0 * major_radius * major_radius;
+
+    let a = sum_d_sqr * sum_d_sqr;
+    let b = 4.0 * sum_d_sqr * f;
+    let c = 2.0 * sum_d_sqr * e + 4.0 * f * f + four_a_sqr * dz * dz;
+    let d = 4.0 * f * e + 2.0 * four_a_sqr * oz * dz;
+    let e_coef = e * e - four_a_sqr * (minor_radius * minor_radius - oz * oz);
+
+    solve_quartic(a, b, c, d, e_coef)
+        .into_iter()
+        .filter(|&t| t > 0.0)
+        .map(|t| Intersection::new(t, id))
+        .collect()
 }
 
 // ─── World-space intersect and normal functions ───────────────────────────────
@@ -357,18 +558,26 @@ pub fn intersect_shape(shapes: &[ShapeNode], id: usize, ray: &Ray) -> Vec<Inters
         Geometry::Sphere => local_intersect_sphere(&local_ray, id),
         Geometry::Plane => local_intersect_plane(&local_ray, id),
         Geometry::Cube => local_intersect_cube(&local_ray, id),
-        Geometry::Cylinder { minimum, maximum, closed } => {
-            local_intersect_cylinder(&local_ray, id, *minimum, *maximum, *closed)
-        }
-        Geometry::Cone { minimum, maximum, closed } => {
-            local_intersect_cone(&local_ray, id, *minimum, *maximum, *closed)
-        }
-        Geometry::Triangle { p1, e1, e2, normal, .. } => {
-            local_intersect_triangle(&local_ray, id, *p1, *e1, *e2, *normal)
-        }
+        Geometry::Cylinder {
+            minimum,
+            maximum,
+            closed,
+        } => local_intersect_cylinder(&local_ray, id, *minimum, *maximum, *closed),
+        Geometry::Cone {
+            minimum,
+            maximum,
+            closed,
+        } => local_intersect_cone(&local_ray, id, *minimum, *maximum, *closed),
+        Geometry::Triangle {
+            p1, e1, e2, normal, ..
+        } => local_intersect_triangle(&local_ray, id, *p1, *e1, *e2, *normal),
         Geometry::SmoothTriangle { p1, e1, e2, .. } => {
             local_intersect_smooth_triangle(&local_ray, id, *p1, *e1, *e2)
         }
+        Geometry::Torus {
+            major_radius,
+            minor_radius,
+        } => local_intersect_torus(&local_ray, id, *major_radius, *minor_radius),
         Geometry::Group { children } => {
             let bounds = group_bounds(shapes, id);
             if !bounds.intersects_ray(&local_ray) {
@@ -382,7 +591,11 @@ pub fn intersect_shape(shapes: &[ShapeNode], id: usize, ray: &Ray) -> Vec<Inters
             xs.sort_by(|a, b| a.t.partial_cmp(&b.t).unwrap());
             xs
         }
-        Geometry::Csg { operation, left, right } => {
+        Geometry::Csg {
+            operation,
+            left,
+            right,
+        } => {
             let (op, l, r) = (*operation, *left, *right);
             let mut left_xs = intersect_shape(shapes, l, &local_ray);
             let mut right_xs = intersect_shape(shapes, r, &local_ray);
@@ -407,7 +620,12 @@ fn group_bounds(shapes: &[ShapeNode], id: usize) -> Bounds {
     }
 }
 
-fn csg_intersection_allowed(op: CsgOperation, left_hit: bool, in_left: bool, in_right: bool) -> bool {
+fn csg_intersection_allowed(
+    op: CsgOperation,
+    left_hit: bool,
+    in_left: bool,
+    in_right: bool,
+) -> bool {
     match op {
         CsgOperation::Union => (left_hit && !in_right) || (!left_hit && !in_left),
         CsgOperation::Intersection => (left_hit && in_right) || (!left_hit && in_left),
@@ -416,7 +634,9 @@ fn csg_intersection_allowed(op: CsgOperation, left_hit: bool, in_left: bool, in_
 }
 
 fn shape_includes(shapes: &[ShapeNode], id: usize, target: usize) -> bool {
-    if id == target { return true; }
+    if id == target {
+        return true;
+    }
     match &shapes[id].geometry {
         Geometry::Group { children } => {
             let children: Vec<usize> = children.clone();
@@ -445,7 +665,11 @@ fn filter_csg_intersections(
         if csg_intersection_allowed(op, left_hit, in_left, in_right) {
             result.push(i);
         }
-        if left_hit { in_left = !in_left; } else { in_right = !in_right; }
+        if left_hit {
+            in_left = !in_left;
+        } else {
+            in_right = !in_right;
+        }
     }
     result
 }
@@ -462,7 +686,10 @@ pub fn world_to_object(shapes: &[ShapeNode], id: usize, world_point: Point) -> P
 
 /// Transform a local-space normal vector into world space, walking up the parent chain.
 pub fn normal_to_world(shapes: &[ShapeNode], id: usize, local_normal: Vector) -> Vector {
-    let world_normal = shapes[id].transform_inverse_transpose.mul_vector(local_normal).normalize();
+    let world_normal = shapes[id]
+        .transform_inverse_transpose
+        .mul_vector(local_normal)
+        .normalize();
     match shapes[id].parent_id {
         Some(parent) => normal_to_world(shapes, parent, world_normal),
         None => world_normal,
@@ -470,7 +697,12 @@ pub fn normal_to_world(shapes: &[ShapeNode], id: usize, local_normal: Vector) ->
 }
 
 /// Compute the surface normal at `world_point` on shape `id`.
-pub fn normal_at(shapes: &[ShapeNode], id: usize, world_point: Point, hit: &Intersection) -> Vector {
+pub fn normal_at(
+    shapes: &[ShapeNode],
+    id: usize,
+    world_point: Point,
+    hit: &Intersection,
+) -> Vector {
     let local_point = world_to_object(shapes, id, world_point);
     let local_normal = local_normal_at(&shapes[id], local_point, hit);
 
@@ -492,22 +724,38 @@ fn local_normal_at(shape: &ShapeNode, p: Point, hit: &Intersection) -> Vector {
             let ay = p.y.abs();
             let az = p.z.abs();
             let max = ax.max(ay).max(az);
-            if max == ax { Vector::new(p.x, 0.0, 0.0) }
-            else if max == ay { Vector::new(0.0, p.y, 0.0) }
-            else { Vector::new(0.0, 0.0, p.z) }
+            if max == ax {
+                Vector::new(p.x, 0.0, 0.0)
+            } else if max == ay {
+                Vector::new(0.0, p.y, 0.0)
+            } else {
+                Vector::new(0.0, 0.0, p.z)
+            }
         }
-        Geometry::Cylinder { minimum, maximum, .. } => {
+        Geometry::Cylinder {
+            minimum, maximum, ..
+        } => {
             let dist = p.x * p.x + p.z * p.z;
-            if dist < 1.0 && p.y >= maximum - EPSILON { Vector::new(0.0, 1.0, 0.0) }
-            else if dist < 1.0 && p.y <= minimum + EPSILON { Vector::new(0.0, -1.0, 0.0) }
-            else { Vector::new(p.x, 0.0, p.z) }
+            if dist < 1.0 && p.y >= maximum - EPSILON {
+                Vector::new(0.0, 1.0, 0.0)
+            } else if dist < 1.0 && p.y <= minimum + EPSILON {
+                Vector::new(0.0, -1.0, 0.0)
+            } else {
+                Vector::new(p.x, 0.0, p.z)
+            }
         }
-        Geometry::Cone { minimum, maximum, .. } => {
+        Geometry::Cone {
+            minimum, maximum, ..
+        } => {
             let dist = (p.x * p.x + p.z * p.z).sqrt();
             let y = if p.y > 0.0 { -dist } else { dist };
             if p.x * p.x + p.z * p.z < p.y * p.y {
-                if p.y >= maximum - EPSILON { return Vector::new(0.0, 1.0, 0.0); }
-                if p.y <= minimum + EPSILON { return Vector::new(0.0, -1.0, 0.0); }
+                if p.y >= maximum - EPSILON {
+                    return Vector::new(0.0, 1.0, 0.0);
+                }
+                if p.y <= minimum + EPSILON {
+                    return Vector::new(0.0, -1.0, 0.0);
+                }
             }
             Vector::new(p.x, y, p.z)
         }
@@ -516,6 +764,15 @@ fn local_normal_at(shape: &ShapeNode, p: Point, hit: &Intersection) -> Vector {
             let u = hit.u.unwrap_or(0.0);
             let v = hit.v.unwrap_or(0.0);
             (*n2 * u + *n3 * v + *n1 * (1.0 - u - v)).normalize()
+        }
+        Geometry::Torus { major_radius, .. } => {
+            let dist = (p.x * p.x + p.z * p.z).sqrt();
+            let (cx, cz) = if dist > 0.0 {
+                (p.x * major_radius / dist, p.z * major_radius / dist)
+            } else {
+                (*major_radius, 0.0)
+            };
+            Vector::new(p.x - cx, p.y, p.z - cz).normalize()
         }
         Geometry::Group { .. } | Geometry::Csg { .. } => Vector::new(0.0, 1.0, 0.0),
     }

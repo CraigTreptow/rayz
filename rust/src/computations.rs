@@ -50,7 +50,9 @@ pub fn prepare_computations(
             n1 = if containers.is_empty() {
                 1.0
             } else {
-                shapes[*containers.last().unwrap()].material.refractive_index
+                shapes[*containers.last().unwrap()]
+                    .material
+                    .refractive_index
             };
         }
 
@@ -64,7 +66,9 @@ pub fn prepare_computations(
             n2 = if containers.is_empty() {
                 1.0
             } else {
-                shapes[*containers.last().unwrap()].material.refractive_index
+                shapes[*containers.last().unwrap()]
+                    .material
+                    .refractive_index
             };
             break;
         }
@@ -91,7 +95,9 @@ pub fn schlick(comps: &Computations) -> f64 {
     if comps.n1 > comps.n2 {
         let n = comps.n1 / comps.n2;
         let sin2_t = n * n * (1.0 - cos * cos);
-        if sin2_t > 1.0 { return 1.0; }
+        if sin2_t > 1.0 {
+            return 1.0;
+        }
         let cos_t = (1.0 - sin2_t).sqrt();
         cos = cos_t;
     }
