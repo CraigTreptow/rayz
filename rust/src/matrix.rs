@@ -77,6 +77,10 @@ impl Matrix4 {
             aug.swap(col, pivot_row);
 
             let pivot = aug[col][col];
+            debug_assert!(
+                pivot.abs() > f64::EPSILON,
+                "Matrix4::inverse: matrix is singular"
+            );
             for item in aug[col].iter_mut() {
                 *item /= pivot;
             }

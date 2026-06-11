@@ -183,7 +183,7 @@ fn chapter6() {
                 let eyev = -r.direction;
                 let color = lighting(
                     &shapes[0].material,
-                    &shapes[0].transform_inverse,
+                    shapes[0].transform_inverse(),
                     &light,
                     point,
                     eyev,

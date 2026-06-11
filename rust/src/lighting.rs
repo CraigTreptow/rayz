@@ -89,3 +89,82 @@ pub fn spot_intensity(light: &Spotlight, point: Point) -> f64 {
         1.0
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn surface_point() -> Point {
+        Point::new(0.0, 0.0, 0.0)
+    }
+
+    fn surface_normal() -> Vector {
+        Vector::new(0.0, 0.0, -1.0)
+    }
+
+    #[test]
+    fn lighting_eye_between_light_and_surface() {
+        // eye=(0,0,-1), light at (0,0,-10): ambient + diffuse + specular all full → 1.9
+        let m = Material::new();
+        let inv = Matrix4::identity();
+        let eye = Vector::new(0.0, 0.0, -1.0);
+        let light = Light::point(Point::new(0.0, 0.0, -10.0), Color::WHITE);
+        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 1.0);
+        assert!((result.r - 1.9).abs() < 1e-4);
+        assert!((result.g - 1.9).abs() < 1e-4);
+        assert!((result.b - 1.9).abs() < 1e-4);
+    }
+
+    #[test]
+    fn lighting_eye_offset_45_degrees() {
+        // eye=(0, √2/2, -√2/2): reflect faces away from eye → no specular → 1.0
+        let m = Material::new();
+        let inv = Matrix4::identity();
+        let sq2 = std::f64::consts::SQRT_2 / 2.0;
+        let eye = Vector::new(0.0, sq2, -sq2);
+        let light = Light::point(Point::new(0.0, 0.0, -10.0), Color::WHITE);
+        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 1.0);
+        assert!((result.r - 1.0).abs() < 1e-4);
+        assert!((result.g - 1.0).abs() < 1e-4);
+        assert!((result.b - 1.0).abs() < 1e-4);
+    }
+
+    #[test]
+    fn lighting_light_offset_45_degrees() {
+        // light at (0,10,-10): diffuse = 0.9 * cos45 ≈ 0.6364, specular ≈ 0 → 0.7364
+        let m = Material::new();
+        let inv = Matrix4::identity();
+        let eye = Vector::new(0.0, 0.0, -1.0);
+        let light = Light::point(Point::new(0.0, 10.0, -10.0), Color::WHITE);
+        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 1.0);
+        assert!((result.r - 0.7364).abs() < 1e-4);
+        assert!((result.g - 0.7364).abs() < 1e-4);
+        assert!((result.b - 0.7364).abs() < 1e-4);
+    }
+
+    #[test]
+    fn lighting_light_behind_surface() {
+        // light at (0,0,10): light_dot_normal < 0 → ambient only → 0.1
+        let m = Material::new();
+        let inv = Matrix4::identity();
+        let eye = Vector::new(0.0, 0.0, -1.0);
+        let light = Light::point(Point::new(0.0, 0.0, 10.0), Color::WHITE);
+        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 1.0);
+        assert!((result.r - 0.1).abs() < 1e-4);
+        assert!((result.g - 0.1).abs() < 1e-4);
+        assert!((result.b - 0.1).abs() < 1e-4);
+    }
+
+    #[test]
+    fn lighting_surface_in_shadow() {
+        // intensity=0.0: shadow path → ambient only → 0.1
+        let m = Material::new();
+        let inv = Matrix4::identity();
+        let eye = Vector::new(0.0, 0.0, -1.0);
+        let light = Light::point(Point::new(0.0, 0.0, -10.0), Color::WHITE);
+        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 0.0);
+        assert!((result.r - 0.1).abs() < 1e-4);
+        assert!((result.g - 0.1).abs() < 1e-4);
+        assert!((result.b - 0.1).abs() < 1e-4);
+    }
+}

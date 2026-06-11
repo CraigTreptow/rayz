@@ -12,10 +12,18 @@ fn main() {
         match args[i].as_str() {
             "--scene" => {
                 i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --scene requires a value");
+                    std::process::exit(1);
+                }
                 scene_name = args[i].clone();
             }
             "--output" => {
                 i += 1;
+                if i >= args.len() {
+                    eprintln!("Error: --output requires a value");
+                    std::process::exit(1);
+                }
                 output_path = args[i].clone();
             }
             _ => {}

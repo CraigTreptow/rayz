@@ -105,3 +105,137 @@ pub fn schlick(comps: &Computations) -> f64 {
     let r0 = ((comps.n1 - comps.n2) / (comps.n1 + comps.n2)).powi(2);
     r0 + (1.0 - r0) * (1.0 - cos).powi(5)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::intersection::Intersection;
+    use crate::point::Point;
+    use crate::ray::Ray;
+    use crate::shape::ShapeNode;
+    use crate::transformations::{scaling, translation};
+    use crate::vector::Vector;
+
+    fn three_glass_spheres() -> Vec<ShapeNode> {
+        let mut a = ShapeNode::glass_sphere();
+        a.set_transform(scaling(2.0, 2.0, 2.0));
+        a.material.refractive_index = 1.5;
+
+        let mut b = ShapeNode::glass_sphere();
+        b.set_transform(translation(0.0, 0.0, -0.25));
+        b.material.refractive_index = 2.0;
+
+        let mut c = ShapeNode::glass_sphere();
+        c.set_transform(translation(0.0, 0.0, 0.25));
+        c.material.refractive_index = 2.5;
+
+        vec![a, b, c]
+    }
+
+    fn n1n2_xs() -> Vec<Intersection> {
+        vec![
+            Intersection::new(2.0, 0),
+            Intersection::new(2.75, 1),
+            Intersection::new(3.25, 2),
+            Intersection::new(4.75, 1),
+            Intersection::new(5.25, 2),
+            Intersection::new(6.0, 0),
+        ]
+    }
+
+    fn n1n2_ray() -> Ray {
+        Ray::new(Point::new(0.0, 0.0, -4.0), Vector::new(0.0, 0.0, 1.0))
+    }
+
+    // ─── n1/n2 tests ─────────────────────────────────────────────────────────
+
+    #[test]
+    fn n1_n2_at_index_0() {
+        let shapes = three_glass_spheres();
+        let xs = n1n2_xs();
+        let comps = prepare_computations(&shapes, &xs[0], &n1n2_ray(), &xs);
+        assert!((comps.n1 - 1.0).abs() < 1e-5);
+        assert!((comps.n2 - 1.5).abs() < 1e-5);
+    }
+
+    #[test]
+    fn n1_n2_at_index_1() {
+        let shapes = three_glass_spheres();
+        let xs = n1n2_xs();
+        let comps = prepare_computations(&shapes, &xs[1], &n1n2_ray(), &xs);
+        assert!((comps.n1 - 1.5).abs() < 1e-5);
+        assert!((comps.n2 - 2.0).abs() < 1e-5);
+    }
+
+    #[test]
+    fn n1_n2_at_index_2() {
+        let shapes = three_glass_spheres();
+        let xs = n1n2_xs();
+        let comps = prepare_computations(&shapes, &xs[2], &n1n2_ray(), &xs);
+        assert!((comps.n1 - 2.0).abs() < 1e-5);
+        assert!((comps.n2 - 2.5).abs() < 1e-5);
+    }
+
+    #[test]
+    fn n1_n2_at_index_3() {
+        let shapes = three_glass_spheres();
+        let xs = n1n2_xs();
+        let comps = prepare_computations(&shapes, &xs[3], &n1n2_ray(), &xs);
+        assert!((comps.n1 - 2.5).abs() < 1e-5);
+        assert!((comps.n2 - 2.5).abs() < 1e-5);
+    }
+
+    #[test]
+    fn n1_n2_at_index_4() {
+        let shapes = three_glass_spheres();
+        let xs = n1n2_xs();
+        let comps = prepare_computations(&shapes, &xs[4], &n1n2_ray(), &xs);
+        assert!((comps.n1 - 2.5).abs() < 1e-5);
+        assert!((comps.n2 - 1.5).abs() < 1e-5);
+    }
+
+    #[test]
+    fn n1_n2_at_index_5() {
+        let shapes = three_glass_spheres();
+        let xs = n1n2_xs();
+        let comps = prepare_computations(&shapes, &xs[5], &n1n2_ray(), &xs);
+        assert!((comps.n1 - 1.5).abs() < 1e-5);
+        assert!((comps.n2 - 1.0).abs() < 1e-5);
+    }
+
+    // ─── Schlick tests ────────────────────────────────────────────────────────
+
+    #[test]
+    fn schlick_total_internal_reflection() {
+        let shapes = vec![ShapeNode::glass_sphere()];
+        let sqrt2_over_2 = 2.0_f64.sqrt() / 2.0;
+        let r = Ray::new(
+            Point::new(0.0, 0.0, sqrt2_over_2),
+            Vector::new(0.0, 1.0, 0.0),
+        );
+        let xs = vec![
+            Intersection::new(-sqrt2_over_2, 0),
+            Intersection::new(sqrt2_over_2, 0),
+        ];
+        let comps = prepare_computations(&shapes, &xs[1], &r, &xs);
+        assert!((schlick(&comps) - 1.0).abs() < 1e-5);
+    }
+
+    #[test]
+    fn schlick_perpendicular_viewing_angle() {
+        let shapes = vec![ShapeNode::glass_sphere()];
+        let r = Ray::new(Point::new(0.0, 0.0, 0.0), Vector::new(0.0, 1.0, 0.0));
+        let xs = vec![Intersection::new(-1.0, 0), Intersection::new(1.0, 0)];
+        let comps = prepare_computations(&shapes, &xs[1], &r, &xs);
+        assert!((schlick(&comps) - 0.04).abs() < 1e-5);
+    }
+
+    #[test]
+    fn schlick_small_angle_n2_greater_than_n1() {
+        let shapes = vec![ShapeNode::glass_sphere()];
+        let r = Ray::new(Point::new(0.0, 0.99, -2.0), Vector::new(0.0, 0.0, 1.0));
+        let xs = vec![Intersection::new(1.8589, 0)];
+        let comps = prepare_computations(&shapes, &xs[0], &r, &xs);
+        assert!((schlick(&comps) - 0.48873).abs() < 1e-4);
+    }
+}

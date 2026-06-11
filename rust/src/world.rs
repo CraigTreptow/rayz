@@ -39,6 +39,10 @@ impl World {
 
     /// Add a shape owned by a group (not a top-level root).
     pub fn add_child(&mut self, group_id: usize, child: ShapeNode) -> usize {
+        assert!(
+            matches!(self.shapes[group_id].geometry, crate::shape::Geometry::Group { .. }),
+            "add_child: parent shape {group_id} is not a Group"
+        );
         let child_id = self.shapes.len();
         self.shapes.push(child);
         self.shapes[child_id].parent_id = Some(group_id);
@@ -127,7 +131,7 @@ impl World {
     pub fn shade_hit(&self, comps: &Computations, remaining: u8) -> Color {
         let intensity = self.shadow_intensity(comps.over_point);
         let material = &self.shapes[comps.object_id].material;
-        let transform_inv = &self.shapes[comps.object_id].transform_inverse;
+        let transform_inv = self.shapes[comps.object_id].transform_inverse();
 
         let surface = if let Some(light) = &self.light {
             lighting(
@@ -170,5 +174,76 @@ impl World {
 impl Default for World {
     fn default() -> Self {
         World::new()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::color::Color;
+    use crate::computations::Computations;
+    use crate::light::Light;
+    use crate::point::Point;
+    use crate::shape::ShapeNode;
+    use crate::vector::Vector;
+
+    fn world_with_sphere() -> World {
+        let mut w = World::new();
+        w.light = Some(Light::point(Point::new(-10.0, 10.0, -10.0), Color::WHITE));
+        w.add(ShapeNode::sphere());
+        w
+    }
+
+    // ── is_shadowed_from ──────────────────────────────────────────────────────
+
+    #[test]
+    fn no_shadow_when_nothing_collinear_with_point_and_light() {
+        let w = world_with_sphere();
+        assert!(!w.is_shadowed_from(Point::new(0.0, 10.0, 0.0), Point::new(-10.0, 10.0, -10.0)));
+    }
+
+    #[test]
+    fn shadow_when_object_between_point_and_light() {
+        let w = world_with_sphere();
+        assert!(w.is_shadowed_from(Point::new(10.0, -10.0, 10.0), Point::new(-10.0, 10.0, -10.0)));
+    }
+
+    #[test]
+    fn no_shadow_when_object_is_behind_light() {
+        let w = world_with_sphere();
+        assert!(!w.is_shadowed_from(Point::new(-20.0, 20.0, -20.0), Point::new(-10.0, 10.0, -10.0)));
+    }
+
+    #[test]
+    fn no_shadow_when_object_is_behind_point() {
+        let w = world_with_sphere();
+        assert!(!w.is_shadowed_from(Point::new(-2.0, 2.0, -2.0), Point::new(-10.0, 10.0, -10.0)));
+    }
+
+    // ── reflected_color ───────────────────────────────────────────────────────
+
+    #[test]
+    fn reflected_color_at_max_depth_is_black() {
+        let mut w = World::new();
+        let mut plane = ShapeNode::plane();
+        plane.material.reflective = 0.5;
+        let plane_id = w.add(plane);
+
+        let sq2 = std::f64::consts::SQRT_2 / 2.0;
+        let comps = Computations {
+            t: sq2,
+            object_id: plane_id,
+            point: Point::new(0.0, -1.0, 0.0),
+            over_point: Point::new(0.0, -1.0 + 1e-5, 0.0),
+            under_point: Point::new(0.0, -1.0 - 1e-5, 0.0),
+            eyev: Vector::new(0.0, sq2, -sq2),
+            normalv: Vector::new(0.0, 1.0, 0.0),
+            reflectv: Vector::new(0.0, sq2, sq2),
+            inside: false,
+            n1: 1.0,
+            n2: 1.0,
+        };
+
+        assert_eq!(w.reflected_color(&comps, 0), Color::BLACK);
     }
 }

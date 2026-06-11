@@ -68,9 +68,9 @@ pub enum CsgOperation {
 
 pub struct ShapeNode {
     pub geometry: Geometry,
-    pub transform: Matrix4,
-    pub transform_inverse: Matrix4,
-    pub transform_inverse_transpose: Matrix4,
+    transform: Matrix4,
+    transform_inverse: Matrix4,
+    transform_inverse_transpose: Matrix4,
     pub material: Material,
     pub parent_id: Option<usize>,
     pub motion_transform: Option<Box<dyn Fn(f64) -> Matrix4 + Send + Sync>>,
@@ -228,6 +228,18 @@ impl ShapeNode {
         self.transform = t;
         self.transform_inverse = inv;
         self.transform_inverse_transpose = inv_t;
+    }
+
+    pub fn transform(&self) -> &Matrix4 {
+        &self.transform
+    }
+
+    pub fn transform_inverse(&self) -> &Matrix4 {
+        &self.transform_inverse
+    }
+
+    pub fn transform_inverse_transpose(&self) -> &Matrix4 {
+        &self.transform_inverse_transpose
     }
 
     pub fn local_bounds(&self) -> Bounds {
@@ -606,15 +618,27 @@ pub fn intersect_shape(shapes: &[ShapeNode], id: usize, ray: &Ray) -> Vec<Inters
     }
 }
 
+fn shape_bounds(shapes: &[ShapeNode], id: usize) -> Bounds {
+    match &shapes[id].geometry {
+        Geometry::Group { .. } | Geometry::Csg { .. } => group_bounds(shapes, id),
+        _ => shapes[id].local_bounds(),
+    }
+}
+
 fn group_bounds(shapes: &[ShapeNode], id: usize) -> Bounds {
     match &shapes[id].geometry {
         Geometry::Group { children } => {
             let children: Vec<usize> = children.clone();
             children.iter().fold(Bounds::empty(), |acc, &child_id| {
-                let child_local_bounds = shapes[child_id].local_bounds();
-                let child_world_bounds = child_local_bounds.transform(&shapes[child_id].transform);
-                acc.merge(child_world_bounds)
+                let child_bounds = shape_bounds(shapes, child_id);
+                acc.merge(child_bounds.transform(&shapes[child_id].transform))
             })
+        }
+        Geometry::Csg { left, right, .. } => {
+            let (l, r) = (*left, *right);
+            let left_bounds = shape_bounds(shapes, l).transform(&shapes[l].transform);
+            let right_bounds = shape_bounds(shapes, r).transform(&shapes[r].transform);
+            left_bounds.merge(right_bounds)
         }
         _ => shapes[id].local_bounds(),
     }
@@ -886,5 +910,83 @@ mod tests {
         assert!((n.x).abs() < 0.001);
         assert!((n.y - 0.70711).abs() < 0.001);
         assert!((n.z + 0.70711).abs() < 0.001);
+    }
+
+    // ─── CSG truth-table tests ────────────────────────────────────────────────
+
+    #[test]
+    fn csg_union_allowed() {
+        assert!(!csg_intersection_allowed(CsgOperation::Union, true,  true,  true));
+        assert!( csg_intersection_allowed(CsgOperation::Union, true,  true,  false));
+        assert!(!csg_intersection_allowed(CsgOperation::Union, true,  false, true));
+        assert!( csg_intersection_allowed(CsgOperation::Union, true,  false, false));
+        assert!(!csg_intersection_allowed(CsgOperation::Union, false, true,  true));
+        assert!(!csg_intersection_allowed(CsgOperation::Union, false, true,  false));
+        assert!( csg_intersection_allowed(CsgOperation::Union, false, false, true));
+        assert!( csg_intersection_allowed(CsgOperation::Union, false, false, false));
+    }
+
+    #[test]
+    fn csg_intersection_allowed_test() {
+        assert!( csg_intersection_allowed(CsgOperation::Intersection, true,  true,  true));
+        assert!(!csg_intersection_allowed(CsgOperation::Intersection, true,  true,  false));
+        assert!( csg_intersection_allowed(CsgOperation::Intersection, true,  false, true));
+        assert!(!csg_intersection_allowed(CsgOperation::Intersection, true,  false, false));
+        assert!( csg_intersection_allowed(CsgOperation::Intersection, false, true,  true));
+        assert!( csg_intersection_allowed(CsgOperation::Intersection, false, true,  false));
+        assert!(!csg_intersection_allowed(CsgOperation::Intersection, false, false, true));
+        assert!(!csg_intersection_allowed(CsgOperation::Intersection, false, false, false));
+    }
+
+    #[test]
+    fn csg_difference_allowed() {
+        assert!(!csg_intersection_allowed(CsgOperation::Difference, true,  true,  true));
+        assert!( csg_intersection_allowed(CsgOperation::Difference, true,  true,  false));
+        assert!(!csg_intersection_allowed(CsgOperation::Difference, true,  false, true));
+        assert!( csg_intersection_allowed(CsgOperation::Difference, true,  false, false));
+        assert!( csg_intersection_allowed(CsgOperation::Difference, false, true,  true));
+        assert!( csg_intersection_allowed(CsgOperation::Difference, false, true,  false));
+        assert!(!csg_intersection_allowed(CsgOperation::Difference, false, false, true));
+        assert!(!csg_intersection_allowed(CsgOperation::Difference, false, false, false));
+    }
+
+    // ─── CSG filter tests ─────────────────────────────────────────────────────
+
+    fn two_spheres_xs() -> (Vec<ShapeNode>, Vec<Intersection>) {
+        let shapes = vec![ShapeNode::sphere(), ShapeNode::sphere()];
+        let xs = vec![
+            Intersection::new(1.0, 0),
+            Intersection::new(2.0, 1),
+            Intersection::new(3.0, 0),
+            Intersection::new(4.0, 1),
+        ];
+        (shapes, xs)
+    }
+
+    #[test]
+    fn csg_filter_union() {
+        let (shapes, xs) = two_spheres_xs();
+        let result = filter_csg_intersections(&shapes, CsgOperation::Union, 0, 1, &xs);
+        assert_eq!(result.len(), 2);
+        assert!((result[0].t - 1.0).abs() < 1e-5);
+        assert!((result[1].t - 4.0).abs() < 1e-5);
+    }
+
+    #[test]
+    fn csg_filter_intersection() {
+        let (shapes, xs) = two_spheres_xs();
+        let result = filter_csg_intersections(&shapes, CsgOperation::Intersection, 0, 1, &xs);
+        assert_eq!(result.len(), 2);
+        assert!((result[0].t - 2.0).abs() < 1e-5);
+        assert!((result[1].t - 3.0).abs() < 1e-5);
+    }
+
+    #[test]
+    fn csg_filter_difference() {
+        let (shapes, xs) = two_spheres_xs();
+        let result = filter_csg_intersections(&shapes, CsgOperation::Difference, 0, 1, &xs);
+        assert_eq!(result.len(), 2);
+        assert!((result[0].t - 1.0).abs() < 1e-5);
+        assert!((result[1].t - 2.0).abs() < 1e-5);
     }
 }

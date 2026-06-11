@@ -98,19 +98,29 @@ impl ObjParser {
                 let (vi1, ni1) = indices[i];
                 let (vi2, ni2) = indices[i + 1];
 
-                let p1 = vertices[vi0];
-                let p2 = vertices[vi1];
-                let p3 = vertices[vi2];
+                let (Some(&p1), Some(&p2), Some(&p3)) = (
+                    vertices.get(vi0),
+                    vertices.get(vi1),
+                    vertices.get(vi2),
+                ) else {
+                    eprintln!("OBJ parse warning: face vertex index out of range, skipping");
+                    continue;
+                };
 
                 let tri = match (ni0, ni1, ni2) {
-                    (Some(n0), Some(n1), Some(n2)) => ShapeNode::smooth_triangle(
-                        p1,
-                        p2,
-                        p3,
-                        normals[n0],
-                        normals[n1],
-                        normals[n2],
-                    ),
+                    (Some(n0), Some(n1), Some(n2)) => match (
+                        normals.get(n0),
+                        normals.get(n1),
+                        normals.get(n2),
+                    ) {
+                        (Some(&nv0), Some(&nv1), Some(&nv2)) => {
+                            ShapeNode::smooth_triangle(p1, p2, p3, nv0, nv1, nv2)
+                        }
+                        _ => {
+                            eprintln!("OBJ parse warning: face normal index out of range, using flat shading");
+                            ShapeNode::triangle(p1, p2, p3)
+                        }
+                    },
                     _ => ShapeNode::triangle(p1, p2, p3),
                 };
                 world.add_child(group_id, tri);
