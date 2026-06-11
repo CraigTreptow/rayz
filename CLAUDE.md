@@ -145,8 +145,11 @@ mise install      # Install Rust 1.96.0 from root mise.toml
 ### Rust Running
 ```bash
 cd rust
-./examples/run              # Run all chapters (1-17)
+./examples/run              # Run all chapters (1-17) and demos
 ./examples/run 7            # Run only chapter 7
+./examples/run advanced_features  # Run advanced features demo
+./examples/run obj_parser         # Run OBJ parser demo
+./examples/run nested_groups      # Run nested groups demo
 ```
 
 ### Rust Testing
@@ -457,15 +460,16 @@ Full port of the Ruby implementation to Crystal. Chapters 1-17 all implemented p
 - **Location**: `crystal/` directory; runner at `crystal/examples/run`
 
 ### Rust Implementation - ✅ Complete
-Full port of the Ruby implementation to Rust 1.96.0. Chapters 1-17 all implemented. Key differences from Ruby:
+Full port of the Ruby implementation to Rust 1.96.0. Chapters 1-17 all implemented plus demos (torus, OBJ parser, nested groups, advanced features). Key differences from Ruby:
 
 - **Testing**: Uses Rust's built-in `cargo test`; 14 unit tests in `rust/src/`
 - **Parallelism**: `rayon` crate for data-parallel row rendering; `RAYON_NUM_THREADS=1` for sequential variant
 - **No GIL, no GC**: Rust's ownership system ensures memory safety without a garbage collector
 - **Performance**: ~10-15× faster than Crystal (single-threaded), ~1–1.2M px/s at benchmark sizes
 - **Index-based scene graph**: `parent_id: Option<usize>` instead of parent pointers to satisfy Rust ownership
-- **Enum dispatch**: `Geometry` enum covers all shapes (Sphere, Plane, Cube, Cylinder, Cone, Triangle, SmoothTriangle, Group, CSG) — no vtable overhead
+- **Enum dispatch**: `Geometry` enum covers all shapes (Sphere, Plane, Cube, Cylinder, Cone, Triangle, SmoothTriangle, Torus, Group, CSG) — no vtable overhead
 - **Hand-rolled Matrix4**: `[f64; 16]` flat array with Gauss-Jordan inverse; no `nalgebra` dependency
+- **Torus**: `solve_quartic` via Durand-Kerner iteration with hand-rolled complex arithmetic (no external crate)
 - **Location**: `rust/` directory; runner at `rust/examples/run`
 - **Benchmark**: `rust/benchmark/` with `parallel` and `sequential` variants; auto-discovered by `benchmark/run.sh`
 - **PPM convention**: rows height-1 downto 0, columns width-1 downto 0 (matches Ruby/Crystal convention)
