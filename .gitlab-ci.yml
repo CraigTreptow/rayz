@@ -114,6 +114,37 @@ test-crystal:
           - crystal/**/*
         compare_to: master
 
+# ── Rust ──────────────────────────────────────────────────────────────────────
+
+.rust-base:
+  image: rust:1.96
+  before_script:
+    - rustup component add rustfmt clippy
+    - cd rust
+
+lint-rust:
+  extends: .rust-base
+  stage: lint
+  script:
+    - cargo fmt -- --check
+    - cargo clippy -- -D warnings
+  rules:
+    - changes:
+        paths:
+          - rust/**/*
+        compare_to: master
+
+test-rust:
+  extends: .rust-base
+  stage: test
+  script:
+    - cargo test
+  rules:
+    - changes:
+        paths:
+          - rust/**/*
+        compare_to: master
+
 # ── Shell ─────────────────────────────────────────────────────────────────────
 
 lint-shell:
