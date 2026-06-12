@@ -916,38 +916,158 @@ mod tests {
 
     #[test]
     fn csg_union_allowed() {
-        assert!(!csg_intersection_allowed(CsgOperation::Union, true,  true,  true));
-        assert!( csg_intersection_allowed(CsgOperation::Union, true,  true,  false));
-        assert!(!csg_intersection_allowed(CsgOperation::Union, true,  false, true));
-        assert!( csg_intersection_allowed(CsgOperation::Union, true,  false, false));
-        assert!(!csg_intersection_allowed(CsgOperation::Union, false, true,  true));
-        assert!(!csg_intersection_allowed(CsgOperation::Union, false, true,  false));
-        assert!( csg_intersection_allowed(CsgOperation::Union, false, false, true));
-        assert!( csg_intersection_allowed(CsgOperation::Union, false, false, false));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Union,
+            true,
+            true,
+            true
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Union,
+            true,
+            true,
+            false
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Union,
+            true,
+            false,
+            true
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Union,
+            true,
+            false,
+            false
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Union,
+            false,
+            true,
+            true
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Union,
+            false,
+            true,
+            false
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Union,
+            false,
+            false,
+            true
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Union,
+            false,
+            false,
+            false
+        ));
     }
 
     #[test]
     fn csg_intersection_allowed_test() {
-        assert!( csg_intersection_allowed(CsgOperation::Intersection, true,  true,  true));
-        assert!(!csg_intersection_allowed(CsgOperation::Intersection, true,  true,  false));
-        assert!( csg_intersection_allowed(CsgOperation::Intersection, true,  false, true));
-        assert!(!csg_intersection_allowed(CsgOperation::Intersection, true,  false, false));
-        assert!( csg_intersection_allowed(CsgOperation::Intersection, false, true,  true));
-        assert!( csg_intersection_allowed(CsgOperation::Intersection, false, true,  false));
-        assert!(!csg_intersection_allowed(CsgOperation::Intersection, false, false, true));
-        assert!(!csg_intersection_allowed(CsgOperation::Intersection, false, false, false));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Intersection,
+            true,
+            true,
+            true
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Intersection,
+            true,
+            true,
+            false
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Intersection,
+            true,
+            false,
+            true
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Intersection,
+            true,
+            false,
+            false
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Intersection,
+            false,
+            true,
+            true
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Intersection,
+            false,
+            true,
+            false
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Intersection,
+            false,
+            false,
+            true
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Intersection,
+            false,
+            false,
+            false
+        ));
     }
 
     #[test]
     fn csg_difference_allowed() {
-        assert!(!csg_intersection_allowed(CsgOperation::Difference, true,  true,  true));
-        assert!( csg_intersection_allowed(CsgOperation::Difference, true,  true,  false));
-        assert!(!csg_intersection_allowed(CsgOperation::Difference, true,  false, true));
-        assert!( csg_intersection_allowed(CsgOperation::Difference, true,  false, false));
-        assert!( csg_intersection_allowed(CsgOperation::Difference, false, true,  true));
-        assert!( csg_intersection_allowed(CsgOperation::Difference, false, true,  false));
-        assert!(!csg_intersection_allowed(CsgOperation::Difference, false, false, true));
-        assert!(!csg_intersection_allowed(CsgOperation::Difference, false, false, false));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Difference,
+            true,
+            true,
+            true
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Difference,
+            true,
+            true,
+            false
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Difference,
+            true,
+            false,
+            true
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Difference,
+            true,
+            false,
+            false
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Difference,
+            false,
+            true,
+            true
+        ));
+        assert!(csg_intersection_allowed(
+            CsgOperation::Difference,
+            false,
+            true,
+            false
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Difference,
+            false,
+            false,
+            true
+        ));
+        assert!(!csg_intersection_allowed(
+            CsgOperation::Difference,
+            false,
+            false,
+            false
+        ));
     }
 
     // ─── CSG filter tests ─────────────────────────────────────────────────────

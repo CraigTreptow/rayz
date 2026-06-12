@@ -109,7 +109,15 @@ mod tests {
         let inv = Matrix4::identity();
         let eye = Vector::new(0.0, 0.0, -1.0);
         let light = Light::point(Point::new(0.0, 0.0, -10.0), Color::WHITE);
-        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 1.0);
+        let result = lighting(
+            &m,
+            &inv,
+            &light,
+            surface_point(),
+            eye,
+            surface_normal(),
+            1.0,
+        );
         assert!((result.r - 1.9).abs() < 1e-4);
         assert!((result.g - 1.9).abs() < 1e-4);
         assert!((result.b - 1.9).abs() < 1e-4);
@@ -123,7 +131,15 @@ mod tests {
         let sq2 = std::f64::consts::SQRT_2 / 2.0;
         let eye = Vector::new(0.0, sq2, -sq2);
         let light = Light::point(Point::new(0.0, 0.0, -10.0), Color::WHITE);
-        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 1.0);
+        let result = lighting(
+            &m,
+            &inv,
+            &light,
+            surface_point(),
+            eye,
+            surface_normal(),
+            1.0,
+        );
         assert!((result.r - 1.0).abs() < 1e-4);
         assert!((result.g - 1.0).abs() < 1e-4);
         assert!((result.b - 1.0).abs() < 1e-4);
@@ -136,7 +152,15 @@ mod tests {
         let inv = Matrix4::identity();
         let eye = Vector::new(0.0, 0.0, -1.0);
         let light = Light::point(Point::new(0.0, 10.0, -10.0), Color::WHITE);
-        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 1.0);
+        let result = lighting(
+            &m,
+            &inv,
+            &light,
+            surface_point(),
+            eye,
+            surface_normal(),
+            1.0,
+        );
         assert!((result.r - 0.7364).abs() < 1e-4);
         assert!((result.g - 0.7364).abs() < 1e-4);
         assert!((result.b - 0.7364).abs() < 1e-4);
@@ -149,7 +173,15 @@ mod tests {
         let inv = Matrix4::identity();
         let eye = Vector::new(0.0, 0.0, -1.0);
         let light = Light::point(Point::new(0.0, 0.0, 10.0), Color::WHITE);
-        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 1.0);
+        let result = lighting(
+            &m,
+            &inv,
+            &light,
+            surface_point(),
+            eye,
+            surface_normal(),
+            1.0,
+        );
         assert!((result.r - 0.1).abs() < 1e-4);
         assert!((result.g - 0.1).abs() < 1e-4);
         assert!((result.b - 0.1).abs() < 1e-4);
@@ -162,7 +194,15 @@ mod tests {
         let inv = Matrix4::identity();
         let eye = Vector::new(0.0, 0.0, -1.0);
         let light = Light::point(Point::new(0.0, 0.0, -10.0), Color::WHITE);
-        let result = lighting(&m, &inv, &light, surface_point(), eye, surface_normal(), 0.0);
+        let result = lighting(
+            &m,
+            &inv,
+            &light,
+            surface_point(),
+            eye,
+            surface_normal(),
+            0.0,
+        );
         assert!((result.r - 0.1).abs() < 1e-4);
         assert!((result.g - 0.1).abs() < 1e-4);
         assert!((result.b - 0.1).abs() < 1e-4);

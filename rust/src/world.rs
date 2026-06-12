@@ -40,7 +40,10 @@ impl World {
     /// Add a shape owned by a group (not a top-level root).
     pub fn add_child(&mut self, group_id: usize, child: ShapeNode) -> usize {
         assert!(
-            matches!(self.shapes[group_id].geometry, crate::shape::Geometry::Group { .. }),
+            matches!(
+                self.shapes[group_id].geometry,
+                crate::shape::Geometry::Group { .. }
+            ),
             "add_child: parent shape {group_id} is not a Group"
         );
         let child_id = self.shapes.len();
@@ -205,13 +208,19 @@ mod tests {
     #[test]
     fn shadow_when_object_between_point_and_light() {
         let w = world_with_sphere();
-        assert!(w.is_shadowed_from(Point::new(10.0, -10.0, 10.0), Point::new(-10.0, 10.0, -10.0)));
+        assert!(w.is_shadowed_from(
+            Point::new(10.0, -10.0, 10.0),
+            Point::new(-10.0, 10.0, -10.0)
+        ));
     }
 
     #[test]
     fn no_shadow_when_object_is_behind_light() {
         let w = world_with_sphere();
-        assert!(!w.is_shadowed_from(Point::new(-20.0, 20.0, -20.0), Point::new(-10.0, 10.0, -10.0)));
+        assert!(!w.is_shadowed_from(
+            Point::new(-20.0, 20.0, -20.0),
+            Point::new(-10.0, 10.0, -10.0)
+        ));
     }
 
     #[test]
