@@ -119,6 +119,7 @@ test-crystal:
 .rust-base:
   image: rust:1.96
   before_script:
+    - rustup component add rustfmt clippy
     - cd rust
 
 lint-rust:
