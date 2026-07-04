@@ -14,7 +14,7 @@ class CSG(Shape):
         right.parent = self
 
     def includes(self, shape) -> bool:
-        return _includes(self.left, shape) or _includes(self.right, shape)
+        return self.left.includes(shape) or self.right.includes(shape)
 
     def local_intersect(self, ray) -> list:
         left_xs = self.left.intersect(ray)
@@ -31,14 +31,6 @@ class CSG(Shape):
         return l_bounds.merge(r_bounds)
 
 
-def _includes(shape, target) -> bool:
-    if hasattr(shape, "includes"):
-        return shape.includes(target)
-    if hasattr(shape, "left"):
-        return _includes(shape.left, target) or _includes(shape.right, target)
-    return shape is target
-
-
 def intersection_allowed(op: str, lhit: bool, inl: bool, inr: bool) -> bool:
     if op == "union":
         return (lhit and not inr) or (not lhit and not inl)
@@ -53,7 +45,7 @@ def filter_intersections(csg: CSG, xs: list) -> list:
     inl, inr = False, False
     result = []
     for i in xs:
-        lhit = _includes(csg.left, i.object)
+        lhit = csg.left.includes(i.object)
         if intersection_allowed(csg.operation, lhit, inl, inr):
             result.append(i)
         if lhit:

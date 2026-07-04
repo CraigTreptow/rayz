@@ -24,6 +24,9 @@ class Group(Shape):
     def local_normal_at(self, point, hit=None) -> Vector:
         raise RuntimeError("Groups have no surface normals")
 
+    def includes(self, shape) -> bool:
+        return any(child.includes(shape) for child in self.children)
+
     def bounds(self):
         from rayz.bounds import Bounds
 

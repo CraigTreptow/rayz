@@ -92,6 +92,11 @@ impl ObjParser {
                 .filter_map(|tok| parse_face_token(tok))
                 .collect();
 
+            if indices.len() < 3 {
+                eprintln!("OBJ parse warning: face has fewer than 3 valid vertices, skipping");
+                continue;
+            }
+
             // Fan triangulation
             for i in 1..indices.len() - 1 {
                 let (vi0, ni0) = indices[0];
@@ -136,4 +141,21 @@ fn parse_face_token(tok: &str) -> Option<(usize, Option<usize>)> {
         None
     };
     Some((vi, ni))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::shape::Geometry;
+
+    #[test]
+    fn face_with_all_tokens_unparseable_is_skipped_not_panicking() {
+        let input = "v 0 0 0\nv 1 0 0\nv 0 1 0\nf a b c\n";
+        let mut world = World::new();
+        let group_id = ObjParser::load_into_world(input, &mut world);
+        let Geometry::Group { children } = &world.shape(group_id).geometry else {
+            panic!("expected group geometry");
+        };
+        assert!(children.is_empty());
+    }
 }
