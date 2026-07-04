@@ -600,7 +600,7 @@ pub fn intersect_shape(shapes: &[ShapeNode], id: usize, ray: &Ray) -> Vec<Inters
                 .iter()
                 .flat_map(|&child_id| intersect_shape(shapes, child_id, &local_ray))
                 .collect();
-            xs.sort_by(|a, b| a.t.partial_cmp(&b.t).unwrap());
+            xs.sort_by(|a, b| a.t.total_cmp(&b.t));
             xs
         }
         Geometry::Csg {
@@ -612,7 +612,7 @@ pub fn intersect_shape(shapes: &[ShapeNode], id: usize, ray: &Ray) -> Vec<Inters
             let mut left_xs = intersect_shape(shapes, l, &local_ray);
             let mut right_xs = intersect_shape(shapes, r, &local_ray);
             left_xs.append(&mut right_xs);
-            left_xs.sort_by(|a, b| a.t.partial_cmp(&b.t).unwrap());
+            left_xs.sort_by(|a, b| a.t.total_cmp(&b.t));
             filter_csg_intersections(shapes, op, l, r, &left_xs)
         }
     }
