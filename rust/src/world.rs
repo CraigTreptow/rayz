@@ -68,7 +68,7 @@ impl World {
             .iter()
             .flat_map(|&id| intersect_shape(&self.shapes, id, ray))
             .collect();
-        xs.sort_by(|a, b| a.t.partial_cmp(&b.t).unwrap());
+        xs.sort_by(|a, b| a.t.total_cmp(&b.t));
         xs
     }
 

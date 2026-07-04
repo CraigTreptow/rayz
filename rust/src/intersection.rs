@@ -31,5 +31,5 @@ impl Intersection {
 pub fn hit(xs: &[Intersection]) -> Option<&Intersection> {
     xs.iter()
         .filter(|i| i.t >= 0.0)
-        .min_by(|a, b| a.t.partial_cmp(&b.t).unwrap())
+        .min_by(|a, b| a.t.total_cmp(&b.t))
 }

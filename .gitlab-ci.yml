@@ -29,6 +29,7 @@ lint-ruby:
   script:
     - bundle exec standardrb
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         paths:
           - ruby/**/*
@@ -40,6 +41,7 @@ test-ruby:
   script:
     - bundle exec cucumber
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         paths:
           - ruby/**/*
@@ -69,6 +71,7 @@ lint-python:
     - uv run ruff check .
     - uv run ruff format --check .
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         paths:
           - python/**/*
@@ -80,6 +83,7 @@ test-python:
   script:
     - uv run behave features/
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         paths:
           - python/**/*
@@ -98,6 +102,7 @@ lint-crystal:
   script:
     - crystal tool format --check
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         paths:
           - crystal/**/*
@@ -109,6 +114,7 @@ test-crystal:
   script:
     - crystal spec
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         paths:
           - crystal/**/*
@@ -129,6 +135,7 @@ lint-rust:
     - cargo fmt -- --check
     - cargo clippy -- -D warnings
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         paths:
           - rust/**/*
@@ -140,6 +147,7 @@ test-rust:
   script:
     - cargo test
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         paths:
           - rust/**/*
@@ -155,6 +163,7 @@ lint-shell:
   script:
     - find . -name '*.sh' -print0 | xargs -0 shellcheck
   rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         paths:
           - "**/*.sh"

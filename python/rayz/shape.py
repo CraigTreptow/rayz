@@ -59,6 +59,9 @@ class Shape(ABC):
             ).normalize()
         return self.normal_to_world(local_normal)
 
+    def includes(self, shape) -> bool:
+        return self is shape
+
     @abstractmethod
     def local_intersect(self, ray) -> list: ...
 

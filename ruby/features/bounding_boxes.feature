@@ -143,6 +143,11 @@ Scenario Outline: Intersecting a ray with a non-cubic bounding box
   | point(8, 6, -1)    | vector(0, -1, 0) | false  |
   | point(12, 5, 4)    | vector(-1, 0, 0) | false  |
 
+Scenario: A ray grazing a box face exactly at the boundary does not crash
+  Given box ← bounds(min: point(-1, -1, -1), max: point(1, 1, 1))
+    And r ← ray(point(-1, 0, -2), vector(0, 0, 1))
+  Then intersects(box, r) = true
+
 Scenario: A group has a bounding box that contains its children
   Given s ← sphere()
   And set_transform(s, translation(2, 5, -3) * scaling(2, 2, 2))
