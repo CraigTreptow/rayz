@@ -462,7 +462,7 @@ Full port of the Ruby implementation to Crystal. Chapters 1-17 all implemented p
 ### Rust Implementation - ✅ Complete
 Full port of the Ruby implementation to Rust 1.96.0. Chapters 1-17 all implemented plus demos (torus, OBJ parser, nested groups, advanced features). Key differences from Ruby:
 
-- **Testing**: Uses Rust's built-in `cargo test`; 14 unit tests in `rust/src/`
+- **Testing**: Uses Rust's built-in `cargo test`; 41 unit tests in `rust/src/`
 - **Parallelism**: `rayon` crate for data-parallel row rendering; `RAYON_NUM_THREADS=1` for sequential variant
 - **No GIL, no GC**: Rust's ownership system ensures memory safety without a garbage collector
 - **Performance**: ~10-15× faster than Crystal (single-threaded), ~1–1.2M px/s at benchmark sizes
@@ -472,7 +472,7 @@ Full port of the Ruby implementation to Rust 1.96.0. Chapters 1-17 all implement
 - **Torus**: `solve_quartic` via Durand-Kerner iteration with hand-rolled complex arithmetic (no external crate)
 - **Location**: `rust/` directory; runner at `rust/examples/run`
 - **Benchmark**: `rust/benchmark/` with `parallel` and `sequential` variants; auto-discovered by `benchmark/run.sh`
-- **PPM convention**: rows height-1 downto 0, columns width-1 downto 0 (matches Ruby/Crystal convention)
+- **PPM convention**: rows height-1 downto 0 (canvas row 0 is the bottom of the image), columns 0 to width-1 left-to-right, matching Ruby/JRuby/Python/Crystal
 
 ### Assertions and Testing
 - Use Minitest assertions (`assert`, `assert_equal`, `assert_in_delta`, `assert_nil`, `refute_nil`) not RSpec's `expect`
