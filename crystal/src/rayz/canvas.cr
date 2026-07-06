@@ -30,7 +30,7 @@ module Rayz
         str << "P3\n#{@width} #{@height}\n#{MAX_COLOR_VALUE}\n"
         (@height - 1).downto(0) do |row|
           first = true
-          (@width - 1).downto(0) do |col|
+          (0...@width).each do |col|
             str << ' ' unless first
             first = false
             pixel = @pixels[row][col]
