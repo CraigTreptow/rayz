@@ -59,7 +59,7 @@ module Rayz
 
           chunk << "#{clamped_red} #{clamped_green} #{clamped_blue} "
         end
-        output[idx] = chunk.reverse.join.rstrip + "\n"
+        output[idx] = chunk.join.rstrip + "\n"
       end
 
       output.compact.join
