@@ -68,7 +68,7 @@ module Rayz
 
               chunk << "#{clamped_red} #{clamped_green} #{clamped_blue} "
             end
-            @mutex.synchronize { output[idx] = chunk.reverse.join.rstrip + "\n" }
+            @mutex.synchronize { output[idx] = chunk.join.rstrip + "\n" }
           end
         end
       end.wait

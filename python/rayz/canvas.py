@@ -31,10 +31,10 @@ class Canvas:
 
     def to_ppm(self) -> str:
         lines = ["P3", f"{self.width} {self.height}", str(_MAX_COLOR)]
-        # Rows top-to-bottom in the file (high row index first), cols right-to-left.
+        # Rows top-to-bottom in the file (high row index first), cols left-to-right.
         for row in range(self.height - 1, -1, -1):
             values: list[str] = []
-            for col in range(self.width - 1, -1, -1):
+            for col in range(self.width):
                 pixel = self.pixels[row][col]
                 values.append(str(min(_MAX_COLOR, max(0, round(pixel.red * _SCALE)))))
                 values.append(str(min(_MAX_COLOR, max(0, round(pixel.green * _SCALE)))))

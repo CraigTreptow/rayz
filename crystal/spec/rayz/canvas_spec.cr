@@ -39,9 +39,9 @@ describe "Canvas" do
     c.write_pixel(4, 2, color3)
     ppm = c.to_ppm
     lines = ppm.lines
-    lines[3].chomp.should eq("0 0 255 0 0 0 0 0 0 0 0 0 0 0 0")
+    lines[3].chomp.should eq("0 0 0 0 0 0 0 0 0 0 0 0 0 0 255")
     lines[4].chomp.should eq("0 0 0 0 0 0 0 128 0 0 0 0 0 0 0")
-    lines[5].chomp.should eq("0 0 0 0 0 0 0 0 0 0 0 0 255 0 0")
+    lines[5].chomp.should eq("255 0 0 0 0 0 0 0 0 0 0 0 0 0 0")
   end
 
   it "PPM files are terminated by a newline character" do
