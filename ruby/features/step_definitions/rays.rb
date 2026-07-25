@@ -58,6 +58,14 @@ Then('r2.direction = vector\({float}, {float}, {float})') do |x, y, z|
   assert_equal(@r2.direction, Rayz::Vector.new(x: x, y: y, z: z))
 end
 
+Then("r2.origin is a Point") do
+  assert_instance_of(Rayz::Point, @r2.origin)
+end
+
+Then("r2.direction is a Vector") do
+  assert_instance_of(Rayz::Vector, @r2.direction)
+end
+
 Given('m ← scaling\({float}, {float}, {float})') do |x, y, z|
   @m = Rayz::Transformations.scaling(x: x, y: y, z: z)
 end

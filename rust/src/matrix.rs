@@ -77,7 +77,7 @@ impl Matrix4 {
             aug.swap(col, pivot_row);
 
             let pivot = aug[col][col];
-            debug_assert!(
+            assert!(
                 pivot.abs() > f64::EPSILON,
                 "Matrix4::inverse: matrix is singular"
             );
@@ -158,5 +158,16 @@ mod tests {
         let inv = m.inverse();
         let product = m * inv;
         assert_eq!(product, Matrix4::identity());
+    }
+
+    #[test]
+    #[should_panic(expected = "singular")]
+    fn inverse_of_singular_matrix_panics() {
+        // A degenerate (e.g. zero-scale) transform is genuinely singular.
+        // This must panic in release builds too, not just debug — a plain
+        // `assert!` is used in `inverse()` specifically so the check isn't
+        // compiled out under `--release` the way `debug_assert!` would be.
+        let m = Matrix4::zero();
+        let _ = m.inverse();
     }
 }

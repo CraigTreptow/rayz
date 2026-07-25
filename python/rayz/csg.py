@@ -17,6 +17,8 @@ class CSG(Shape):
         return self.left.includes(shape) or self.right.includes(shape)
 
     def local_intersect(self, ray) -> list:
+        if not self.bounds().intersects(ray):
+            return []
         left_xs = self.left.intersect(ray)
         right_xs = self.right.intersect(ray)
         xs = sorted(left_xs + right_xs, key=lambda i: i.t)

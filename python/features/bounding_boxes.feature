@@ -101,6 +101,11 @@ Scenario: Intersecting a ray with a bounding box at the origin
   And r ← ray(point(-5, 0, 0), direction)
   Then intersects(box, r) = true
 
+Scenario: A ray parallel to an axis, grazing the box exactly at that axis's boundary
+  Given box ← bounds(min: point(-1, -1, -1), max: point(1, 1, 1))
+  And r ← ray(point(1, 0, 0), vector(0, 1, 0))
+  Then intersects(box, r) = true
+
 Scenario Outline: Intersecting a ray with a bounding box at the origin (examples)
   Given box ← bounds(min: point(-1, -1, -1), max: point(1, 1, 1))
   And r ← ray(<origin>, <direction>)
