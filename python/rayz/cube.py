@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+
 from rayz.constants import EPSILON
 from rayz.intersection import Intersection
 from rayz.shape import Shape
@@ -42,8 +44,12 @@ def _check_axis(origin: float, direction: float) -> tuple[float, float]:
         tmin = tmin_num / direction
         tmax = tmax_num / direction
     else:
-        tmin = tmin_num * float("inf")
-        tmax = tmax_num * float("inf")
+        # Ray is parallel to this axis's planes. A numerator of exactly
+        # zero means the origin sits exactly on that plane, which imposes
+        # no constraint from this axis rather than the NaN that
+        # `0 * inf` would otherwise produce.
+        tmin = -math.inf if tmin_num == 0 else tmin_num * math.inf
+        tmax = math.inf if tmax_num == 0 else tmax_num * math.inf
     if tmin > tmax:
         return tmax, tmin
     return tmin, tmax
