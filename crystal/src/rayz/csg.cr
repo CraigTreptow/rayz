@@ -45,6 +45,8 @@ module Rayz
     end
 
     def local_intersect(local_ray : Ray) : Array(Intersection)
+      return [] of Intersection unless bounds.intersects?(local_ray)
+
       xs = (@left.intersect(local_ray) + @right.intersect(local_ray)).sort
       filter_intersections(xs)
     end

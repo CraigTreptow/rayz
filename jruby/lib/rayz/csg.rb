@@ -15,6 +15,9 @@ module Rayz
     end
 
     def local_intersect(local_ray)
+      # Optimization: check bounding box first
+      return [] unless bounds.intersects?(local_ray)
+
       # Intersect ray with both children
       left_xs = @left.intersect(local_ray)
       right_xs = @right.intersect(local_ray)

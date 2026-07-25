@@ -13,24 +13,39 @@ module Rayz
       "Class: #{self.class.name} X: #{@x} Y: #{@y} Z: #{@z} W: #{@w}"
     end
 
+    # Dispatches to Point/Vector when the resulting w matches their invariant
+    # (w=1 / w=0), so arithmetic on a Point or Vector doesn't silently
+    # downgrade the result to a bare Tuple.
+    # rubocop:disable Style/YodaCondition
+    def self.build(x:, y:, z:, w:)
+      if Rayz::Util.==(w, 1.0)
+        Point.new(x: x, y: y, z: z)
+      elsif Rayz::Util.==(w, 0.0)
+        Vector.new(x: x, y: y, z: z)
+      else
+        new(x: x, y: y, z: z, w: w)
+      end
+    end
+    # rubocop:enable Style/YodaCondition
+
     def *(other)
-      Tuple.new(x: @x * other, y: @y * other, z: @z * other, w: @w * other)
+      Tuple.build(x: @x * other, y: @y * other, z: @z * other, w: @w * other)
     end
 
     def /(other)
-      Tuple.new(x: @x / other, y: @y / other, z: @z / other, w: @w / other)
+      Tuple.build(x: @x / other, y: @y / other, z: @z / other, w: @w / other)
     end
 
     def +(other)
-      Tuple.new(x: @x + other.x, y: @y + other.y, z: @z + other.z, w: @w + other.w)
+      Tuple.build(x: @x + other.x, y: @y + other.y, z: @z + other.z, w: @w + other.w)
     end
 
     def -(other)
-      Tuple.new(x: @x - other.x, y: @y - other.y, z: @z - other.z, w: @w - other.w)
+      Tuple.build(x: @x - other.x, y: @y - other.y, z: @z - other.z, w: @w - other.w)
     end
 
     def negate
-      Tuple.new(x: -@x, y: -@y, z: -@z, w: -@w)
+      Tuple.build(x: -@x, y: -@y, z: -@z, w: -@w)
     end
 
     def -@
@@ -50,7 +65,7 @@ module Rayz
 
     def normalize
       mag = magnitude
-      Tuple.new(x: @x / mag, y: @y / mag, z: @z / mag, w: @w / mag)
+      Tuple.build(x: @x / mag, y: @y / mag, z: @z / mag, w: @w / mag)
     end
 
     def reflect(normal)

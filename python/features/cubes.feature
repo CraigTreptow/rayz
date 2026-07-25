@@ -18,6 +18,14 @@ Scenario Outline: A ray intersects a cube
     | -z     | point(0.5, 0, -5) | vector(0, 0, 1)  |  4 |  6 |
     | inside | point(0, 0.5, 0)  | vector(0, 0, 1)  | -1 |  1 |
 
+Scenario: A ray parallel to an axis, grazing a face exactly at that axis's boundary
+  Given c ← cube()
+    And r ← ray(point(1, 0, 0), vector(0, 1, 0))
+  When xs ← local_intersect(c, r)
+  Then xs.count = 2
+    And xs[0].t = -1
+    And xs[1].t = 1
+
 Scenario Outline: A ray misses a cube
   Given c ← cube()
     And r ← ray(<origin>, <direction>)

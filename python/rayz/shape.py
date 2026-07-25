@@ -15,7 +15,11 @@ class Shape(ABC):
         self._transform_inverse_transpose = Matrix.identity(4)
         self.material = Material()
         self.parent = None
-        self.motion_transform = None  # Callable[[float], Matrix] | None
+        # Callable[[float], Matrix] | None. If ever set to a lambda/closure,
+        # it won't survive ProcessPoolExecutor pickling in render_parallel —
+        # use a module-level function (see normal_perturbations.py's pattern)
+        # if motion blur needs to work with the parallel renderer.
+        self.motion_transform = None
 
     @property
     def transform(self) -> Matrix:

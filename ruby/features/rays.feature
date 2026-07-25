@@ -27,3 +27,10 @@ Scenario: Scaling a ray
   When r2 ← transform(r, m)
   Then r2.origin = point(2, 6, 12)
     And r2.direction = vector(0, 3, 0)
+
+Scenario: Transforming a ray preserves Point and Vector types
+  Given r ← ray(point(1, 2, 3), vector(0, 1, 0))
+    And m ← translation(3, 4, 5)
+  When r2 ← transform(r, m)
+  Then r2.origin is a Point
+    And r2.direction is a Vector

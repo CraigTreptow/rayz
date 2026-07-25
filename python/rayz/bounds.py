@@ -75,12 +75,18 @@ class Bounds:
     def _check_axis(self, origin: float, direction: float, min_val: float, max_val: float):
         from rayz.constants import EPSILON
 
+        tmin_num = min_val - origin
+        tmax_num = max_val - origin
         if abs(direction) >= EPSILON:
-            tmin = (min_val - origin) / direction
-            tmax = (max_val - origin) / direction
+            tmin = tmin_num / direction
+            tmax = tmax_num / direction
         else:
-            tmin = (min_val - origin) * math.inf
-            tmax = (max_val - origin) * math.inf
+            # Ray is parallel to this axis's planes. A numerator of exactly
+            # zero means the origin sits exactly on that plane, which imposes
+            # no constraint from this axis rather than the NaN that
+            # `0 * inf` would otherwise produce.
+            tmin = -math.inf if tmin_num == 0 else tmin_num * math.inf
+            tmax = math.inf if tmax_num == 0 else tmax_num * math.inf
         if tmin > tmax:
             tmin, tmax = tmax, tmin
         return tmin, tmax
