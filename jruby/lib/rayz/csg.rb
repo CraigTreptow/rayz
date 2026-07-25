@@ -39,10 +39,19 @@ module Rayz
     end
 
     def bounds
-      # CSG bounds are the union of left and right child bounds
-      left_bounds = @left.bounds.transform(@left.transform)
-      right_bounds = @right.bounds.transform(@right.transform)
-      left_bounds.merge(right_bounds)
+      # Cached: see Group#bounds for why. Invalidated via
+      # invalidate_bounds_cache whenever either child's transform changes
+      # or a group nested within either child gains/loses a child.
+      @cached_bounds ||= begin
+        left_bounds = @left.bounds.transform(@left.transform)
+        right_bounds = @right.bounds.transform(@right.transform)
+        left_bounds.merge(right_bounds)
+      end
+    end
+
+    def invalidate_bounds_cache
+      @cached_bounds = nil
+      super
     end
 
     private

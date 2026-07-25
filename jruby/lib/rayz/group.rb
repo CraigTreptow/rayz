@@ -12,6 +12,7 @@ module Rayz
     def add_child(shape)
       @children << shape
       shape.parent = self
+      invalidate_bounds_cache
     end
 
     def empty?
@@ -47,16 +48,26 @@ module Rayz
     end
 
     def bounds
-      # Start with an empty bounding box
-      result = Bounds.new
+      # Cached: recomputing this from scratch (recursing every descendant
+      # and transforming each one's bounds) on every single ray test was
+      # the dominant cost of local_intersect's bounding-box check.
+      # Invalidated via invalidate_bounds_cache whenever a child is added
+      # or any descendant's transform changes.
+      @cached_bounds ||= begin
+        result = Bounds.new
 
-      # Merge all children's bounds (transformed to group space)
-      @children.each do |child|
-        child_bounds = child.bounds.transform(child.transform)
-        result = result.merge(child_bounds)
+        @children.each do |child|
+          child_bounds = child.bounds.transform(child.transform)
+          result = result.merge(child_bounds)
+        end
+
+        result
       end
+    end
 
-      result
+    def invalidate_bounds_cache
+      @cached_bounds = nil
+      super
     end
   end
 end

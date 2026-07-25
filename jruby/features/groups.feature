@@ -37,6 +37,19 @@ Scenario: Intersecting a ray with a nonempty group
     And xs[2].object = s1
     And xs[3].object = s1
 
+Scenario: Adding a child invalidates a group's cached bounds
+  Given g ← group()
+    And s1 ← sphere()
+    And set_transform(s1, translation(100, 0, 0))
+    And add_child(g, s1)
+    And r ← ray(point(0, 0, -5), vector(0, 0, 1))
+  When xs ← local_intersect(g, r)
+  Then xs is empty
+  When s2 ← sphere()
+    And add_child(g, s2)
+    And xs ← local_intersect(g, r)
+  Then xs.count = 2
+
 Scenario: Intersecting a transformed group
   Given g ← group()
     And set_transform(g, scaling(2, 2, 2))
