@@ -6,9 +6,32 @@ use crate::ray::Ray;
 use crate::world::World;
 use rayon::prelude::*;
 use std::cell::Cell;
+use std::sync::atomic::{AtomicU64, Ordering};
+
+/// Distinguishes rayon worker threads from one another so each gets an
+/// independent RNG seed instead of every thread replaying the same
+/// jitter sequence for the pixels it happens to process first.
+static THREAD_SEED_COUNTER: AtomicU64 = AtomicU64::new(1);
+
+fn thread_seed() -> u64 {
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
+
+    let counter = THREAD_SEED_COUNTER.fetch_add(0x9E3779B97F4A7C15, Ordering::Relaxed);
+    let mut hasher = DefaultHasher::new();
+    std::thread::current().id().hash(&mut hasher);
+    let tid_hash = hasher.finish();
+
+    let seed = 0x853c49e6748fea9bu64 ^ counter ^ tid_hash;
+    if seed == 0 {
+        0x9E3779B97F4A7C15
+    } else {
+        seed
+    }
+}
 
 thread_local! {
-    static RNG_STATE: Cell<u64> = const { Cell::new(0x853c49e6748fea9b) };
+    static RNG_STATE: Cell<u64> = Cell::new(thread_seed());
 }
 
 fn rand_f64() -> f64 {
@@ -152,5 +175,31 @@ impl Camera {
             canvas.write_pixel(x, height - 1 - y, color);
         }
         canvas
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::thread;
+
+    #[test]
+    fn thread_seeds_are_independent_across_threads() {
+        let seed_a = thread_seed();
+        let seed_b = thread::spawn(thread_seed).join().unwrap();
+        assert_ne!(
+            seed_a, seed_b,
+            "different threads must not share an RNG seed"
+        );
+    }
+
+    #[test]
+    fn rng_first_output_differs_across_threads() {
+        let first_a = rand_f64();
+        let first_b = thread::spawn(rand_f64).join().unwrap();
+        assert_ne!(
+            first_a, first_b,
+            "threads must not replay the same jitter sequence"
+        );
     }
 }
