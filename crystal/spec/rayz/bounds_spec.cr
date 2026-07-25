@@ -14,6 +14,12 @@ module Rayz
       box.max.x.should be_close(3.0, 1e-5)
     end
 
+    it "a ray parallel to an axis, grazing the box exactly at that axis's boundary, still intersects" do
+      box = Bounds.new(min: Point.new(-1.0, -1.0, -1.0), max: Point.new(1.0, 1.0, 1.0))
+      r = Ray.new(Point.new(1.0, 0.5, 0.0), Vector.new(0.0, 0.0, 1.0))
+      box.intersects?(r).should be_true
+    end
+
     it "a sphere has a bounding box" do
       box = Rayz.bounds_of(Sphere.new)
       box.min.x.should be_close(-1.0, 1e-5)

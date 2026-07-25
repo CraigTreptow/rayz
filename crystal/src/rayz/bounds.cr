@@ -86,8 +86,12 @@ module Rayz
         tmin = tmin_num / direction
         tmax = tmax_num / direction
       else
-        tmin = tmin_num * Float64::INFINITY
-        tmax = tmax_num * Float64::INFINITY
+        # Ray is parallel to this axis's planes. A numerator of exactly
+        # zero means the origin sits exactly on that plane, which imposes
+        # no constraint from this axis rather than the NaN that
+        # `0.0 * Float64::INFINITY` would otherwise produce.
+        tmin = tmin_num.zero? ? -Float64::INFINITY : tmin_num * Float64::INFINITY
+        tmax = tmax_num.zero? ? Float64::INFINITY : tmax_num * Float64::INFINITY
       end
 
       tmin < tmax ? {tmin, tmax} : {tmax, tmin}

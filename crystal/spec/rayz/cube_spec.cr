@@ -22,6 +22,15 @@ module Rayz
         end
       end
 
+      it "a ray parallel to an axis, grazing a face exactly at that axis's boundary" do
+        c = Cube.new
+        r = Ray.new(Point.new(1.0, 0.5, 0.0), Vector.new(0.0, 0.0, 1.0))
+        xs = c.local_intersect(r)
+        xs.size.should eq(2)
+        xs[0].t.should be_close(-1.0, 1e-5)
+        xs[1].t.should be_close(1.0, 1e-5)
+      end
+
       [
         {Point.new(-2.0, 0.0, 0.0), Vector.new(0.2673, 0.5345, 0.8018)},
         {Point.new(0.0, -2.0, 0.0), Vector.new(0.8018, 0.2673, 0.5345)},
