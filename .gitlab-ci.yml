@@ -93,6 +93,12 @@ test-python:
 
 .crystal-base:
   image: crystallang/crystal:1.20.2
+  variables:
+    CRYSTAL_CACHE_DIR: $CI_PROJECT_DIR/crystal/.crystal-cache
+  cache:
+    key: crystal-cache-$CI_COMMIT_REF_SLUG
+    paths:
+      - crystal/.crystal-cache
   before_script:
     - cd crystal
 
@@ -124,6 +130,13 @@ test-crystal:
 
 .rust-base:
   image: rust:1.96
+  variables:
+    CARGO_HOME: $CI_PROJECT_DIR/rust/.cargo-home
+  cache:
+    key: cargo-$CI_COMMIT_REF_SLUG
+    paths:
+      - rust/.cargo-home
+      - rust/target
   before_script:
     - rustup component add rustfmt clippy
     - cd rust
