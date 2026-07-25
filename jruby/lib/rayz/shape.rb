@@ -3,7 +3,6 @@ require "matrix"
 module Rayz
   class Shape
     attr_accessor :material, :parent, :motion_transform
-    attr_accessor :saved_ray # For test_shape debugging
     attr_reader :transform
 
     def initialize
@@ -33,7 +32,6 @@ module Rayz
 
       # Transform the ray by the inverse of the shape's transformation
       local_ray = ray.transform(effective_transform_inverse)
-      @saved_ray = local_ray unless frozen? # For test_shape debugging
       local_intersect(local_ray)
     end
 
