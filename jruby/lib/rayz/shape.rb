@@ -18,6 +18,14 @@ module Rayz
       @transform = matrix
       @transform_inverse = matrix.inverse
       @transform_inverse_transpose = @transform_inverse.transpose
+      invalidate_bounds_cache
+    end
+
+    # Base case: this shape has no bounds cache of its own, but a change
+    # anywhere in a subtree must still invalidate every cached ancestor
+    # (Group/CSG) above it, so keep propagating up the parent chain.
+    def invalidate_bounds_cache
+      parent&.invalidate_bounds_cache
     end
 
     def intersect(ray, time = 0.0)
