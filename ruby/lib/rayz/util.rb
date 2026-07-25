@@ -8,7 +8,7 @@ module Rayz
 
     def self.matrix_multiplied_by_tuple(m, t)
       result = (m * t.to_matrix).to_a.flatten
-      Rayz::Tuple.new(x: result[0], y: result[1], z: result[2], w: result[3])
+      Rayz::Tuple.build(x: result[0], y: result[1], z: result[2], w: result[3])
     end
 
     def self.matrix_minor(matrix, i, j)
