@@ -74,6 +74,15 @@ pub struct ShapeNode {
     pub material: Material,
     pub parent_id: Option<usize>,
     pub motion_transform: Option<Box<dyn Fn(f64) -> Matrix4 + Send + Sync>>,
+    // Group/CSG merged-subtree bounds. Only ever written by World's
+    // `&mut` scene-mutation methods (precompute_bounds, invalidate on
+    // add_child/set_shape_transform) -- never by the read-only hot path
+    // (intersect_shape only ever has `&[ShapeNode]`), so a plain field
+    // is safe under rayon's parallel render without any interior
+    // mutability. `shape_bounds` falls back to a live recompute if this
+    // is `None`, so an un-precomputed scene still renders correctly,
+    // just without the caching win.
+    bounds_cache: Option<Bounds>,
 }
 
 impl ShapeNode {
@@ -86,6 +95,7 @@ impl ShapeNode {
             material: Material::new(),
             parent_id: None,
             motion_transform: None,
+            bounds_cache: None,
         }
     }
 
@@ -591,7 +601,7 @@ pub fn intersect_shape(shapes: &[ShapeNode], id: usize, ray: &Ray) -> Vec<Inters
             minor_radius,
         } => local_intersect_torus(&local_ray, id, *major_radius, *minor_radius),
         Geometry::Group { children } => {
-            let bounds = group_bounds(shapes, id);
+            let bounds = shape_bounds(shapes, id);
             if !bounds.intersects_ray(&local_ray) {
                 return vec![];
             }
@@ -620,8 +630,49 @@ pub fn intersect_shape(shapes: &[ShapeNode], id: usize, ray: &Ray) -> Vec<Inters
 
 fn shape_bounds(shapes: &[ShapeNode], id: usize) -> Bounds {
     match &shapes[id].geometry {
-        Geometry::Group { .. } | Geometry::Csg { .. } => group_bounds(shapes, id),
+        Geometry::Group { .. } | Geometry::Csg { .. } => shapes[id]
+            .bounds_cache
+            .unwrap_or_else(|| group_bounds(shapes, id)),
         _ => shapes[id].local_bounds(),
+    }
+}
+
+/// Walks up from `id` through `parent_id`, clearing any cached Group/CSG
+/// bounds along the way. Must be called whenever a shape already attached
+/// to the graph has its transform changed, or gains/loses a child --
+/// otherwise an ancestor's cached bounds would silently go stale.
+pub(crate) fn invalidate_bounds_cache(shapes: &mut [ShapeNode], mut id: usize) {
+    loop {
+        shapes[id].bounds_cache = None;
+        match shapes[id].parent_id {
+            Some(parent_id) => id = parent_id,
+            None => break,
+        }
+    }
+}
+
+/// Precomputes and caches merged bounds for every Group/CSG node so the
+/// render hot path (`shape_bounds`, called on every ray) hits a cached
+/// value instead of re-walking the subtree. Safe to call multiple times
+/// (e.g. once per render of an unchanged scene) or not at all --
+/// `shape_bounds` falls back to a live computation when the cache is
+/// empty, so this is purely a performance step, never a correctness
+/// requirement.
+pub(crate) fn precompute_bounds(shapes: &mut Vec<ShapeNode>) {
+    let composite_ids: Vec<usize> = (0..shapes.len())
+        .filter(|&id| {
+            matches!(
+                shapes[id].geometry,
+                Geometry::Group { .. } | Geometry::Csg { .. }
+            )
+        })
+        .collect();
+    let computed: Vec<(usize, Bounds)> = composite_ids
+        .into_iter()
+        .map(|id| (id, group_bounds(shapes.as_slice(), id)))
+        .collect();
+    for (id, bounds) in computed {
+        shapes[id].bounds_cache = Some(bounds);
     }
 }
 
@@ -829,6 +880,83 @@ mod tests {
     }
 
     #[test]
+    fn group_bounds_cache_invalidated_when_child_added_after_precompute() {
+        use crate::world::World;
+
+        let mut world = World::new();
+        let group_id = world.add(ShapeNode::group());
+        let s1 = ShapeNode::sphere();
+        world.add_child(group_id, s1);
+
+        // Actually populates group_id's bounds_cache (unlike a plain
+        // intersect_shape call, which only ever reads the cache -- see
+        // shape_bounds -- and falls back to a live, always-correct
+        // computation when it's empty). Without this, the cache would
+        // never be primed and this test wouldn't exercise the cached
+        // path's invalidation logic at all.
+        world.precompute_bounds();
+
+        let r = Ray::new(Point::new(10.0, 0.0, -10.0), Vector::new(0.0, 0.0, 1.0));
+        // Cached bounds cover only s1 (at the origin) -- this ray, well
+        // off to the side, should miss.
+        assert!(intersect_shape(&world.shapes, group_id, &r).is_empty());
+
+        let mut s2 = ShapeNode::sphere();
+        s2.set_transform(translation(10.0, 0.0, 0.0));
+        world.add_child(group_id, s2);
+
+        // If add_child hadn't invalidated the primed cache, this would
+        // still report a miss using the stale (s1-only) bounds.
+        let xs = intersect_shape(&world.shapes, group_id, &r);
+        assert_eq!(xs.len(), 2);
+    }
+
+    #[test]
+    fn group_bounds_cache_invalidated_when_child_transform_changes_after_precompute() {
+        use crate::world::World;
+
+        let mut world = World::new();
+        let group_id = world.add(ShapeNode::group());
+        let s = ShapeNode::sphere();
+        let s_id = world.add_child(group_id, s);
+
+        // Primes group_id's cached bounds around the untransformed
+        // sphere (see comment in the sibling test above).
+        world.precompute_bounds();
+
+        let r = Ray::new(Point::new(10.0, 0.0, -10.0), Vector::new(0.0, 0.0, 1.0));
+        assert!(intersect_shape(&world.shapes, group_id, &r).is_empty());
+
+        world.set_shape_transform(s_id, translation(10.0, 0.0, 0.0));
+
+        // If set_shape_transform hadn't invalidated the primed cache,
+        // this would still report a miss using the stale bounds.
+        let xs = intersect_shape(&world.shapes, group_id, &r);
+        assert_eq!(xs.len(), 2);
+    }
+
+    #[test]
+    fn precompute_bounds_matches_live_computation() {
+        use crate::world::World;
+
+        let mut world = World::new();
+        let group_id = world.add(ShapeNode::group());
+        let mut s1 = ShapeNode::sphere();
+        s1.set_transform(translation(-2.0, 0.0, 0.0));
+        world.add_child(group_id, s1);
+        let mut s2 = ShapeNode::sphere();
+        s2.set_transform(translation(2.0, 0.0, 0.0));
+        world.add_child(group_id, s2);
+
+        let live = group_bounds(&world.shapes, group_id);
+        world.precompute_bounds();
+        let cached = shape_bounds(&world.shapes, group_id);
+
+        assert!((live.min.x - cached.min.x).abs() < 1e-9);
+        assert!((live.max.x - cached.max.x).abs() < 1e-9);
+    }
+
+    #[test]
     fn ray_misses_plane() {
         let shapes = vec![ShapeNode::plane()];
         let r = Ray::new(Point::new(0.0, 10.0, 0.0), Vector::new(0.0, 0.0, 1.0));
@@ -901,6 +1029,9 @@ mod tests {
     }
 
     #[test]
+    // These are the book's fixture values (rounded to 5 places), not
+    // meant to be the exact FRAC_1_SQRT_2 constant.
+    #[allow(clippy::approx_constant)]
     fn translated_sphere_normal() {
         let mut s = ShapeNode::sphere();
         s.set_transform(translation(0.0, 1.0, 0.0));

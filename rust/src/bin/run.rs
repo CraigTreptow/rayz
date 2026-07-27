@@ -240,7 +240,7 @@ fn chapter7() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter7.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter7.ppm");
@@ -263,7 +263,7 @@ fn chapter8() {
     // Back wall with gradient
     let back_wall_id = world.add(ShapeNode::plane());
     let bw_t = rotation_x(PI / 2.0) * translation(0.0, 0.0, 5.0);
-    world.shape_mut(back_wall_id).set_transform(bw_t);
+    world.set_shape_transform(back_wall_id, bw_t);
     let mut bw_pat = Pattern::gradient(Color::new(0.5, 0.7, 1.0), Color::new(0.1, 0.1, 0.3));
     bw_pat.set_transform(rotation_z(PI / 2.0) * scaling(2.0, 2.0, 2.0));
     world.shape_mut(back_wall_id).material.pattern = Some(bw_pat);
@@ -310,7 +310,7 @@ fn chapter8() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter8.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter8.ppm");
@@ -372,7 +372,7 @@ fn chapter9() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter9.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter9.ppm");
@@ -455,7 +455,7 @@ fn chapter10() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter10.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter10.ppm");
@@ -508,7 +508,8 @@ fn chapter11() {
 
     // Boxes on table
     let box1_id = world.add(ShapeNode::cube());
-    world.shape_mut(box1_id).set_transform(
+    world.set_shape_transform(
+        box1_id,
         translation(-1.0, 3.7, -0.5) * rotation_y(PI / 8.0) * scaling(0.5, 0.5, 0.5),
     );
     world.shape_mut(box1_id).material.color = Color::new(0.2, 0.4, 0.8);
@@ -536,7 +537,7 @@ fn chapter11() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter11.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter11.ppm");
@@ -603,7 +604,7 @@ fn chapter12() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter12.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter12.ppm");
@@ -647,7 +648,8 @@ fn chapter13() {
     {
         let leaf_id = world.add_child(foliage_id, ShapeNode::sphere());
         let angle = i as f64 * PI * 2.0 / 3.0;
-        world.shape_mut(leaf_id).set_transform(
+        world.set_shape_transform(
+            leaf_id,
             translation(angle.cos() * 0.3, dy, angle.sin() * 0.3) * scaling(s, s, s),
         );
         world.shape_mut(leaf_id).material.color = Color::new(0.1, 0.5, 0.1);
@@ -679,7 +681,7 @@ fn chapter13() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter13.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter13.ppm");
@@ -739,7 +741,7 @@ fn chapter14() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter14.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter14.ppm");
@@ -817,7 +819,7 @@ fn chapter15() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter15.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter15.ppm");
@@ -900,7 +902,7 @@ fn chapter16() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter16.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter16.ppm");
@@ -999,7 +1001,7 @@ fn chapter17() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("chapter17.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote chapter17.ppm");
@@ -1071,7 +1073,7 @@ fn demo_advanced_features() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("advanced_features_demo.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote advanced_features_demo.ppm");
@@ -1134,7 +1136,7 @@ fn demo_obj_parser() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("obj_parser_demo.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote obj_parser_demo.ppm");
@@ -1213,7 +1215,7 @@ fn demo_nested_groups() {
     ));
 
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     println!("  Rendered in {:.2}s", start.elapsed().as_secs_f64());
     std::fs::write("nested_groups_demo.ppm", canvas.to_ppm()).unwrap();
     println!("  Wrote nested_groups_demo.ppm");

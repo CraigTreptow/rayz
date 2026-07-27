@@ -61,7 +61,7 @@ fn main() {
         }
     };
 
-    let world = build_scene();
+    let mut world = build_scene();
 
     let mut camera = Camera::new(width, height, std::f64::consts::PI / 3.0);
     camera.set_transform(view_transform(
@@ -75,7 +75,7 @@ fn main() {
     // For simplicity we always call render() — the benchmark can set RAYON_NUM_THREADS.
     eprintln!("Rendering {scene_name} ({width}x{height}), parallel={parallel}...");
     let start = Instant::now();
-    let canvas = camera.render(&world);
+    let canvas = camera.render(&mut world);
     let elapsed = start.elapsed().as_secs_f64();
 
     std::fs::write(&output_path, canvas.to_ppm()).expect("Failed to write output");
