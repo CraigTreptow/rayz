@@ -46,9 +46,20 @@ class Matrix:
         if isinstance(other, Matrix):
             return Matrix(self._data @ other._data)
         if isinstance(other, Tuple):
-            vec = np.array([other.x, other.y, other.z, other.w])
-            result = self._data @ vec
-            return Tuple(result[0], result[1], result[2], result[3])
+            # Hand-unrolled instead of a numpy matmul: this is the hottest
+            # path in the renderer (twice per shape.intersect, once per
+            # world_to_object/normal_to_world call), and numpy's per-call
+            # allocation/dispatch overhead dwarfs plain float arithmetic at
+            # 4x4-by-4x1 size. numpy is still used for inverse()/
+            # determinant(), which aren't called per-ray.
+            m = self._data
+            x, y, z, w = other.x, other.y, other.z, other.w
+            return Tuple(
+                float(m[0, 0] * x + m[0, 1] * y + m[0, 2] * z + m[0, 3] * w),
+                float(m[1, 0] * x + m[1, 1] * y + m[1, 2] * z + m[1, 3] * w),
+                float(m[2, 0] * x + m[2, 1] * y + m[2, 2] * z + m[2, 3] * w),
+                float(m[3, 0] * x + m[3, 1] * y + m[3, 2] * z + m[3, 3] * w),
+            )
         return NotImplemented
 
     # ------------------------------------------------------------------
