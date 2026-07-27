@@ -29,6 +29,14 @@ class Shape(ABC):
         self._transform = m
         self._transform_inverse = m.inverse()
         self._transform_inverse_transpose = m.inverse().transpose()
+        self.invalidate_bounds_cache()
+
+    def invalidate_bounds_cache(self) -> None:
+        # No-op for shapes that don't cache their own bounds (only Group/CSG
+        # do), but keeps propagating up so an ancestor Group/CSG's cache is
+        # cleared whenever any descendant's transform changes.
+        if self.parent is not None:
+            self.parent.invalidate_bounds_cache()
 
     def intersect(self, ray) -> list:
         if self.motion_transform is not None:
