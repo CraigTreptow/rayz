@@ -12,6 +12,7 @@ module Rayz
     def add_child(shape)
       @children << shape
       shape.parent = self
+      invalidate_bounds_cache
     end
 
     def empty?
@@ -47,6 +48,17 @@ module Rayz
     end
 
     def bounds
+      @cached_bounds ||= compute_bounds
+    end
+
+    def invalidate_bounds_cache
+      @cached_bounds = nil
+      super
+    end
+
+    private
+
+    def compute_bounds
       # Start with an empty bounding box
       result = Bounds.new
 

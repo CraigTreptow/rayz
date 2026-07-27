@@ -4,7 +4,7 @@ module Rayz
   class Shape
     attr_accessor :material, :parent, :motion_transform
     attr_accessor :saved_ray # For test_shape debugging
-    attr_reader :transform
+    attr_reader :transform, :transform_inverse
 
     def initialize
       @transform = Matrix.identity(4)
@@ -19,6 +19,15 @@ module Rayz
       @transform = matrix
       @transform_inverse = matrix.inverse
       @transform_inverse_transpose = @transform_inverse.transpose
+      invalidate_bounds_cache
+    end
+
+    # Group/CSG override this to clear their own cached bounds; the base
+    # implementation just keeps the invalidation propagating up through
+    # nested groups/CSG so a change anywhere in a subtree invalidates every
+    # cached ancestor bounds, not just the immediate parent.
+    def invalidate_bounds_cache
+      @parent&.invalidate_bounds_cache
     end
 
     def intersect(ray, time = 0.0)

@@ -10,8 +10,13 @@ class CSG(Shape):
         self.operation = operation
         self.left = left
         self.right = right
+        self._bounds_cache = None
         left.parent = self
         right.parent = self
+
+    def invalidate_bounds_cache(self) -> None:
+        self._bounds_cache = None
+        super().invalidate_bounds_cache()
 
     def includes(self, shape) -> bool:
         return self.left.includes(shape) or self.right.includes(shape)
@@ -28,9 +33,11 @@ class CSG(Shape):
         raise RuntimeError("CSG shapes have no surface normal")
 
     def bounds(self):
-        l_bounds = self.left.bounds().transform(self.left.transform)
-        r_bounds = self.right.bounds().transform(self.right.transform)
-        return l_bounds.merge(r_bounds)
+        if self._bounds_cache is None:
+            l_bounds = self.left.bounds().transform(self.left.transform)
+            r_bounds = self.right.bounds().transform(self.right.transform)
+            self._bounds_cache = l_bounds.merge(r_bounds)
+        return self._bounds_cache
 
 
 def intersection_allowed(op: str, lhit: bool, inl: bool, inr: bool) -> bool:

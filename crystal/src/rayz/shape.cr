@@ -19,6 +19,16 @@ module Rayz
       @transform = m
       @transform_inverse = m.inverse
       @transform_inverse_transpose = @transform_inverse.transpose
+      invalidate_bounds_cache
+    end
+
+    # Group/CSG cache their merged bounds; changing any shape's transform
+    # (including a leaf nested deep in the hierarchy) can change an
+    # ancestor's bounds, so the invalidation has to propagate upward.
+    # Base shapes have nothing of their own to clear, but still need to
+    # keep the propagation going.
+    def invalidate_bounds_cache : Nil
+      @parent.try(&.invalidate_bounds_cache)
     end
 
     def intersect(ray : Ray) : Array(Intersection)

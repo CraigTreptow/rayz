@@ -36,13 +36,22 @@ module Rayz
     end
 
     def bounds
+      @cached_bounds ||= compute_bounds
+    end
+
+    def invalidate_bounds_cache
+      @cached_bounds = nil
+      super
+    end
+
+    private
+
+    def compute_bounds
       # CSG bounds are the union of left and right child bounds
       left_bounds = @left.bounds.transform(@left.transform)
       right_bounds = @right.bounds.transform(@right.transform)
       left_bounds.merge(right_bounds)
     end
-
-    private
 
     def filter_intersections(xs)
       # Track whether we're inside each child shape
