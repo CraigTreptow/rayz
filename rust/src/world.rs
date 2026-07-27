@@ -3,9 +3,10 @@ use crate::computations::{prepare_computations, schlick, Computations};
 use crate::intersection::{hit, Intersection};
 use crate::light::Light;
 use crate::lighting::{area_light_intensity, lighting, spot_intensity};
+use crate::matrix::Matrix4;
 use crate::point::Point;
 use crate::ray::Ray;
-use crate::shape::{intersect_shape, ShapeNode};
+use crate::shape::{intersect_shape, invalidate_bounds_cache, precompute_bounds, ShapeNode};
 
 pub struct World {
     pub shapes: Vec<ShapeNode>,
@@ -52,6 +53,7 @@ impl World {
         if let crate::shape::Geometry::Group { ref mut children } = self.shapes[group_id].geometry {
             children.push(child_id);
         }
+        invalidate_bounds_cache(&mut self.shapes, group_id);
         child_id
     }
 
@@ -60,6 +62,28 @@ impl World {
     }
     pub fn shape_mut(&mut self, id: usize) -> &mut ShapeNode {
         &mut self.shapes[id]
+    }
+
+    /// Sets a shape's transform and invalidates any cached Group/CSG
+    /// bounds up its ancestor chain. Use this (rather than
+    /// `shape_mut(id).set_transform(...)`) for shapes that may already be
+    /// attached to the graph -- e.g. re-transforming a shape after it's
+    /// been added to a group. Shapes are free to call `set_transform`
+    /// directly while still being built, before being added to the
+    /// world, since they have no `parent_id` yet for invalidation to
+    /// reach.
+    pub fn set_shape_transform(&mut self, id: usize, transform: Matrix4) {
+        self.shapes[id].set_transform(transform);
+        invalidate_bounds_cache(&mut self.shapes, id);
+    }
+
+    /// Precomputes and caches merged Group/CSG bounds for the whole scene
+    /// so `intersect`/`intersect_shape` doesn't re-walk the subtree on
+    /// every ray. Call once after finishing scene construction and
+    /// before rendering; safe to skip (correctness doesn't depend on it)
+    /// or call again if the scene changes and is rendered again.
+    pub fn precompute_bounds(&mut self) {
+        precompute_bounds(&mut self.shapes);
     }
 
     pub fn intersect(&self, ray: &Ray) -> Vec<Intersection> {

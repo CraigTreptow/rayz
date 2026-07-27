@@ -3,12 +3,14 @@ module Rayz
     getter operation : String
     getter left : Shape
     getter right : Shape
+    @cached_bounds : Bounds?
 
     def initialize(operation : String, left : Shape, right : Shape)
       super()
       @operation = operation
       @left = left
       @right = right
+      @cached_bounds = nil
       left.parent = self
       right.parent = self
     end
@@ -51,8 +53,13 @@ module Rayz
       filter_intersections(xs)
     end
 
+    def invalidate_bounds_cache : Nil
+      @cached_bounds = nil
+      super
+    end
+
     def bounds : Bounds
-      @left.bounds.transform(@left.transform).merge(
+      @cached_bounds ||= @left.bounds.transform(@left.transform).merge(
         @right.bounds.transform(@right.transform)
       )
     end

@@ -55,6 +55,37 @@ module Rayz
       xs.size.should eq(2)
     end
 
+    it "cached bounds are invalidated when a child is added after the cache is primed" do
+      g = Group.new
+      s1 = Sphere.new
+      g.add_child(s1)
+
+      r = Ray.new(Point.new(10.0, 0.0, -10.0), Vector.new(0.0, 0.0, 1.0))
+      g.local_intersect(r).should be_empty # primes @cached_bounds, misses s1
+
+      s2 = Sphere.new
+      s2.transform = Transformations.translation(10.0, 0.0, 0.0)
+      g.add_child(s2)
+
+      xs = g.local_intersect(r)
+      xs.size.should eq(2)
+      xs[0].object.same?(s2).should be_true
+    end
+
+    it "cached bounds are invalidated when a child's transform changes after the cache is primed" do
+      g = Group.new
+      s = Sphere.new
+      g.add_child(s)
+
+      r = Ray.new(Point.new(10.0, 0.0, -10.0), Vector.new(0.0, 0.0, 1.0))
+      g.local_intersect(r).should be_empty # primes @cached_bounds around the untransformed sphere
+
+      s.transform = Transformations.translation(10.0, 0.0, 0.0)
+
+      xs = g.local_intersect(r)
+      xs.size.should eq(2)
+    end
+
     it "converting a point from world to object space" do
       g1 = Group.new
       g1.transform = Transformations.rotation_y(Math::PI / 2.0)

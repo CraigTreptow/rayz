@@ -6,7 +6,7 @@ module Rayz
   class TestPattern < Pattern
     def initialize
       # Test pattern doesn't need colors
-      @transform = Matrix.identity(4)
+      self.transform = Matrix.identity(4)
     end
 
     def pattern_at(point)

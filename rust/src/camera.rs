@@ -156,7 +156,10 @@ impl Camera {
         Color::new(total_r / div, total_g / div, total_b / div)
     }
 
-    pub fn render(&self, world: &World) -> Canvas {
+    pub fn render(&self, world: &mut World) -> Canvas {
+        world.precompute_bounds();
+        let world: &World = world;
+
         let width = self.hsize;
         let height = self.vsize;
 
