@@ -1,4 +1,3 @@
-
 module Rayz
   class Chapter5
     def self.run

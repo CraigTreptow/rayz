@@ -47,6 +47,47 @@ test-ruby:
           - ruby/**/*
         compare_to: master
 
+# ── JRuby ─────────────────────────────────────────────────────────────────────
+
+.jruby-base:
+  image: jruby:10.1-jdk25
+  variables:
+    BUNDLE_PATH: vendor/bundle
+  cache:
+    key: jruby-gems-$CI_COMMIT_REF_SLUG
+    paths:
+      - jruby/vendor/bundle
+  before_script:
+    # minitest pulls in prism, which needs a C compiler to build its
+    # native extension; the base jruby image doesn't ship one.
+    - apt-get update -qq && apt-get install -y --no-install-recommends build-essential > /dev/null
+    - cd jruby
+    - bundle install --quiet
+
+lint-jruby:
+  extends: .jruby-base
+  stage: lint
+  script:
+    - bundle exec standardrb
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - changes:
+        paths:
+          - jruby/**/*
+        compare_to: master
+
+test-jruby:
+  extends: .jruby-base
+  stage: test
+  script:
+    - bundle exec cucumber
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - changes:
+        paths:
+          - jruby/**/*
+        compare_to: master
+
 # ── Python ────────────────────────────────────────────────────────────────────
 
 .python-base:

@@ -155,7 +155,7 @@ module Rayz
 
     # JRuby has real OS threads (no GIL), so render_parallel already gives
     # true CPU parallelism. Ractor is MRI-only; alias to render_parallel.
-    alias render_ractor render_parallel
+    alias_method :render_ractor, :render_parallel
 
     private
 
